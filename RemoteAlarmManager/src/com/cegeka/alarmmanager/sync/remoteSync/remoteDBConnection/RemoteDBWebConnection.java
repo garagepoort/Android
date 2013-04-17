@@ -62,4 +62,19 @@ public class RemoteDBWebConnection extends Observable implements RemoteDBConnect
 		setChanged();
 		notifyObservers();
 	}
+
+	@Override
+	public void registerSenderID(String email, String senderID) {
+		r = new RemoteDBSoapRequest();
+		r.addObserver(this);
+		r.execute(RemoteDBSoapRequest.REGISTER_SENDERID, email, senderID);
+	}
+
+	@Override
+	public void unRegisterSenderID(String senderID) {
+		r = new RemoteDBSoapRequest();
+		r.addObserver(this);
+		r.execute(RemoteDBSoapRequest.UNREGISTER_SENDERID, senderID);
+		
+	}
 }

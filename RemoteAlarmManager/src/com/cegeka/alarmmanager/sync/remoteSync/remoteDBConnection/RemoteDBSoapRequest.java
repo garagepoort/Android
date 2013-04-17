@@ -27,6 +27,8 @@ public class RemoteDBSoapRequest extends Observable {
 	// Method names.
 	public static final String GET_USER = "getUser";
 	public static final String GET_ALARMS_FROM_USER = "getAlarmsFromUser";
+	public static final String REGISTER_SENDERID = "registerSenderID";
+	public static final String UNREGISTER_SENDERID = "unRegisterSenderID";
 
 	// METHOD NAME
 	private static String METHOD_NAME = "getAlarmsFromUser";
@@ -35,7 +37,7 @@ public class RemoteDBSoapRequest extends Observable {
 	// TARGETNAMESPACE IN WSDL
 	private static final String NAMESPACE = "http://cegeka.be/";
 	// URL OF WSDL FILE
-	private static final String URL = "http://172.31.207.79:8080/AlarmWebService/AlarmWebService";
+	private static final String URL = "http://172.29.162.254:8080/AlarmWebService/AlarmWebService";
 
 	private User user;
 	private ArrayList<Alarm> alarms = new ArrayList<Alarm>();
@@ -44,8 +46,9 @@ public class RemoteDBSoapRequest extends Observable {
 		new InnerRequestTask().execute(uri);
 	}
 
-	private class InnerRequestTask extends
-			AsyncTask<String, String, SoapObject> {
+	private class InnerRequestTask
+			extends
+				AsyncTask<String, String, SoapObject> {
 
 		private boolean successfulConnection;
 
@@ -67,8 +70,14 @@ public class RemoteDBSoapRequest extends Observable {
 					String paswoord = uri[2];
 					response = soapGetAlarmsFromUserResponse(naam, paswoord);
 				}
+				if (METHOD_NAME.equals(REGISTER_SENDERID)) {
+					String email = uri[1];
+					String senderID = uri[2];
+					response = soapSendSenderID(email, senderID);
+				}
 				successfulConnection = true;
 			} catch (SocketTimeoutException Exception) {
+				Exception.printStackTrace();
 			} catch (IOException e) {
 				System.out.println("TIMEOUT EXCEPTION");
 				e.printStackTrace();
@@ -86,6 +95,8 @@ public class RemoteDBSoapRequest extends Observable {
 					setUser(result);
 				} else if (METHOD_NAME.equals(GET_ALARMS_FROM_USER)) {
 					getAlarms(result);
+				} else if (METHOD_NAME.equals(REGISTER_SENDERID)) {
+					//TODO HANDLE RESULT
 				}
 			}
 			if (successfulConnection) {
@@ -94,7 +105,19 @@ public class RemoteDBSoapRequest extends Observable {
 			}
 			super.onPostExecute(result);
 		}
+		private SoapObject soapSendSenderID(String email, String senderID) throws IOException, XmlPullParserException {
+			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+			request.addProperty("emailadres", email);
+			request.addProperty("senderID", senderID);
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+			envelope.setOutputSoapObject(request);
+			SoapObject response = null;
+			HttpTransportSE ht = new HttpTransportSE(URL, 10000);
+			ht.call(SOAP_ACTION, envelope);
+			response = (SoapObject) envelope.getResponse();
+			return response;
 
+		}
 		/**
 		 * Connects to the web service asking the web service for a user with
 		 * this login credentials.
@@ -108,14 +131,11 @@ public class RemoteDBSoapRequest extends Observable {
 		 * @throws IOException
 		 * @throws XmlPullParserException
 		 */
-		private SoapObject getUserResponse(String username, String paswoord)
-				throws IOException, XmlPullParserException,
-				SocketTimeoutException {
+		private SoapObject getUserResponse(String username, String paswoord) throws IOException, XmlPullParserException, SocketTimeoutException {
 			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 			request.addProperty("emailadres", username);
 			request.addProperty("paswoord", paswoord);
-			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-					SoapEnvelope.VER11);
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			SoapObject response = null;
 			HttpTransportSE ht = new HttpTransportSE(URL, 10000);
@@ -131,12 +151,9 @@ public class RemoteDBSoapRequest extends Observable {
 		 */
 		private void setUser(SoapObject response) {
 			User u;
-			String achternaam = response
-					.getPropertySafelyAsString("achternaam").toString();
-			String email = response.getPropertySafelyAsString("emailadres")
-					.toString();
-			int id = Integer.parseInt(response.getPropertySafelyAsString("id")
-					.toString());
+			String achternaam = response.getPropertySafelyAsString("achternaam").toString();
+			String email = response.getPropertySafelyAsString("emailadres").toString();
+			int id = Integer.parseInt(response.getPropertySafelyAsString("id").toString());
 			String naam = response.getPropertySafelyAsString("naam").toString();
 			u = new User(id, naam, achternaam, email);
 			user = u;
@@ -155,13 +172,11 @@ public class RemoteDBSoapRequest extends Observable {
 		 * @throws XmlPullParserException
 		 */
 		private SoapObject soapGetAlarmsFromUserResponse(String username,
-				String paswoord) throws IOException, XmlPullParserException,
-				SocketTimeoutException {
+				String paswoord) throws IOException, XmlPullParserException, SocketTimeoutException {
 			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 			request.addProperty("emailadres", username);
 			request.addProperty("paswoord", paswoord);
-			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-					SoapEnvelope.VER11);
+			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			SoapObject response = null;
 			try {
@@ -185,23 +200,16 @@ public class RemoteDBSoapRequest extends Observable {
 			for (int i = 0; i < response.getPropertyCount(); i++) {
 				SoapObject o = (SoapObject) response.getProperty(i);
 				String info = o.getProperty("info").toString();
-				int id = Integer.parseInt(o.getPropertySafelyAsString("id")
-						.toString());
+				int id = Integer.parseInt(o.getPropertySafelyAsString("id").toString());
 				AlarmTO a = new AlarmTO();
 				a.setId(id);
 				a.setTitle(o.getPropertySafelyAsString("title").toString());
 				a.setInfo(info);
-				a.setRepeated(Boolean.parseBoolean(o.getPropertySafelyAsString(
-						"repeated").toString()));
-				a.setRepeatUnit(o.getPropertySafelyAsString("repeatUnit")
-						.toString());
-				a.setRepeatQuantity(Integer
-						.parseInt(o.getPropertySafelyAsString("repeatQuantity")
-								.toString()));
-				a.setDate(Long.parseLong(o.getPropertySafelyAsString("date")
-						.toString()));
-				a.setRepeatEndDate(Long.parseLong(o.getPropertySafelyAsString(
-						"repeatEndDate").toString()));
+				a.setRepeated(Boolean.parseBoolean(o.getPropertySafelyAsString("repeated").toString()));
+				a.setRepeatUnit(o.getPropertySafelyAsString("repeatUnit").toString());
+				a.setRepeatQuantity(Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity").toString()));
+				a.setDate(Long.parseLong(o.getPropertySafelyAsString("date").toString()));
+				a.setRepeatEndDate(Long.parseLong(o.getPropertySafelyAsString("repeatEndDate").toString()));
 				Alarm convertedAlarm = AlarmConverter.convertAlarm(a);
 				alarms.add(convertedAlarm);
 			}

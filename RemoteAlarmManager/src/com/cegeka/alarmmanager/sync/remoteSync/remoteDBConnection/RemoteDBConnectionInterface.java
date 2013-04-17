@@ -22,5 +22,9 @@ public interface RemoteDBConnectionInterface {
 			throws WebserviceException;
 
 	public abstract ArrayList<Alarm> getAlarms();
+	
+	public abstract void registerSenderID(String email, String senderID);
+
+	public abstract void unRegisterSenderID(String arg1);
 
 }

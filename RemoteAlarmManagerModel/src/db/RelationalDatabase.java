@@ -7,6 +7,8 @@ import exceptions.DatabaseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -16,17 +18,17 @@ import javax.persistence.Query;
  *
  * @author ivar
  */
-public class RelationalDatabase implements DatabaseInterface {
+public class RelationalDatabase extends Observable implements DatabaseInterface {
 
     private EntityManagerFactory factory = Persistence.createEntityManagerFactory("RemoteAlarmManagerModelPU");
     private EntityManager em = factory.createEntityManager();
-    private static RelationalDatabase instance = new RelationalDatabase();
+    private final static RelationalDatabase instance = new RelationalDatabase();
 
     public static RelationalDatabase getInstance() {
         return instance;
     }
 
-    public RelationalDatabase() {
+    private RelationalDatabase() {
     }
 
     @Override
@@ -105,6 +107,8 @@ public class RelationalDatabase implements DatabaseInterface {
         beginTransaction();
         em.persist(alarm);
         commitTransaction();
+        setChanged();
+        notifyObservers(getUsersForAlarm(alarm));
         return alarm;
     }
 
@@ -128,12 +132,16 @@ public class RelationalDatabase implements DatabaseInterface {
         beginTransaction();
         em.remove(alarm);
         commitTransaction();
+        setChanged();
+        notifyObservers(getUsersForAlarm(alarm));
     }
 
     @Override
     public void deleteAlarm(int id) throws DatabaseException {
         Alarm alarm = getAlarm(id);
         deleteAlarm(alarm);
+        setChanged();
+        notifyObservers(getUsersForAlarm(alarm));
     }
 
     @Override
@@ -144,6 +152,8 @@ public class RelationalDatabase implements DatabaseInterface {
         beginTransaction();
         em.merge(alarm);
         commitTransaction();
+        setChanged();
+        notifyObservers(getUsersForAlarm(alarm));
         return alarm;
     }
 
@@ -177,6 +187,8 @@ public class RelationalDatabase implements DatabaseInterface {
         UserAlarm userAlarm = new UserAlarm(user, alarm);
         user.getUserAlarmList().add(userAlarm);
         updateUser(user);
+         setChanged();
+        notifyObservers(user);
         return user;
     }
 
@@ -204,6 +216,8 @@ public class RelationalDatabase implements DatabaseInterface {
         q.setParameter(2, user);
         q.executeUpdate();
         commitTransaction();
+        setChanged();
+        notifyObservers(user);
         return user;
     }
 
@@ -211,6 +225,8 @@ public class RelationalDatabase implements DatabaseInterface {
     public User removeAlarmFromUser(int userId, int alarmId) throws DatabaseException {
         User user = getUser(userId);
         Alarm alarm = getAlarm(alarmId);
+        setChanged();
+        notifyObservers(user);
         return removeAlarmFromUser(user, alarm);
     }
 
@@ -239,6 +255,8 @@ public class RelationalDatabase implements DatabaseInterface {
     public User addAlarmToUser(int userId, int alarmId) throws DatabaseException {
         User user = getUser(userId);
         Alarm alarm = getAlarm(alarmId);
+        setChanged();
+        notifyObservers(user);
         return addAlarmToUser(user, alarm);
     }
 
@@ -285,6 +303,8 @@ public class RelationalDatabase implements DatabaseInterface {
         q.setParameter(1, user);
         q.executeUpdate();
         commitTransaction();
+        setChanged();
+        notifyObservers(user);
     }
 
     private void beginTransaction() {
@@ -301,13 +321,13 @@ public class RelationalDatabase implements DatabaseInterface {
 
     @Override
     public void upgradeToAdmin(User source, User target) throws DatabaseException {
-        if(source == null){
+        if (source == null) {
             throw new DatabaseException("Source can't be null.");
         }
-        if(target == null){
+        if (target == null) {
             throw new DatabaseException("Target can't be null.");
         }
-        if(!source.getAdmin()){
+        if (!source.getAdmin()) {
             throw new DatabaseException("Source must be admin.");
         }
         target.setAdmin(true);
@@ -318,18 +338,26 @@ public class RelationalDatabase implements DatabaseInterface {
 
     @Override
     public void downgradeToUser(User source, User target) throws DatabaseException {
-        if(source == null){
+        if (source == null) {
             throw new DatabaseException("Source can't be null.");
         }
-        if(target == null){
+        if (target == null) {
             throw new DatabaseException("Target can't be null.");
         }
-        if(!source.getAdmin()){
+        if (!source.getAdmin()) {
             throw new DatabaseException("Source must be admin.");
         }
         target.setAdmin(false);
         beginTransaction();
         updateUser(target);
         commitTransaction();
+    }
+
+    private ArrayList<User> getUsersForAlarm(Alarm alarm) {
+        ArrayList<User> users = new ArrayList<>();
+        for(UserAlarm ua : alarm.getUserAlarmList()){
+            users.add(ua.getUserid());
+        }
+        return users;
     }
 }

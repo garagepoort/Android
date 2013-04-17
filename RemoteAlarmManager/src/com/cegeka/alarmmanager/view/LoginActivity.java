@@ -13,13 +13,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
+import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.infrastructure.InternetChecker;
 import com.cegeka.alarmmanager.model.User;
 import com.cegeka.alarmmanager.services.ServiceStarterStopper;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBConnectionInterface;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBWebConnection;
 import com.cegeka.alarmmanager.utilities.UserLoginLogOut;
-import com.cegeka.alarmtest.R;
 
 public class LoginActivity extends Activity implements Observer {
 	private EditText emailEditText;
@@ -63,8 +63,9 @@ public class LoginActivity extends Activity implements Observer {
 		String email = emailEditText.getText().toString();
 		String pass = paswoordEditText.getText().toString();
 		this.pass = pass;
-		connector.startUserLogin(email, pass);
 		connector.addObserver(this);
+		connector.startUserLogin(email, pass);
+		
 	}
 
 	public void onClickRedirectToUpdate(View view) {
@@ -89,7 +90,8 @@ public class LoginActivity extends Activity implements Observer {
 		if (u != null) {
 			u.setPaswoord(pass);
 			UserLoginLogOut.logInUser(LoginActivity.this, u);
-			ServiceStarterStopper.startSyncService(this);
+//			ServiceStarterStopper.startSyncService(this);
+			ServiceStarterStopper.startGCMUpdates(this);
 			redirectToUpdateActivity();
 			finish();
 		} else {

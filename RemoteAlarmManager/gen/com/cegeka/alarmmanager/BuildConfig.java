@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.cegeka.alarmtest;
+package com.cegeka.alarmmanager;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

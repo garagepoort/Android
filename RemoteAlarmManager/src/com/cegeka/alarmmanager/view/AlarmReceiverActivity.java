@@ -18,11 +18,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.db.LocalAlarmRepository;
 import com.cegeka.alarmmanager.model.Alarm;
 import com.cegeka.alarmmanager.model.RepeatedAlarm;
 import com.cegeka.alarmmanager.sync.localSync.AlarmToAndroidSchedulerSyncer;
-import com.cegeka.alarmtest.R;
 
 public class AlarmReceiverActivity extends Activity {
 

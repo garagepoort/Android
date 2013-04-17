@@ -18,12 +18,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.db.LocalAlarmRepository;
 import com.cegeka.alarmmanager.infrastructure.InternetChecker;
 import com.cegeka.alarmmanager.model.Alarm;
 import com.cegeka.alarmmanager.sync.AlarmSyncer;
 import com.cegeka.alarmmanager.utilities.UserLoginLogOut;
-import com.cegeka.alarmtest.R;
 
 public class UpdateActivity extends Activity implements Observer
 {

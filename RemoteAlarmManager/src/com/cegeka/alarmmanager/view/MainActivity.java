@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.infrastructure.InternetChecker;
 import com.cegeka.alarmmanager.utilities.UserLoginLogOut;
-import com.cegeka.alarmtest.R;
 
 public class MainActivity extends Activity
 {
