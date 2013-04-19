@@ -3,56 +3,91 @@ package be.cegeka.android.alarms.infrastructure;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 
 public class JPARepository implements Repository
 {
+    private EntityManagerFactory factory = Persistence.createEntityManagerFactory("AlarmsServerPU");
+    private EntityManager entityManager = factory.createEntityManager();
+
+
     @Override
     public User getUser(String emailadres)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User returnUser = null;
+        TypedQuery query = entityManager.createNamedQuery("User.findByEmail", User.class).setParameter("email", emailadres);
+        List<User> results = query.getResultList();
+
+        if (!results.isEmpty())
+        {
+            returnUser = results.get(0);
+        }
+
+        return returnUser;
     }
 
 
     @Override
     public Collection<User> getAllUsers()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = entityManager.createQuery("SELECT * FROM user");
+        return query.getResultList();
     }
 
 
     @Override
     public Collection<Alarm> getAllAlarms()
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = entityManager.createQuery("SELECT a FROM Alarm a");
+        return query.getResultList();
+
     }
 
 
     @Override
     public Collection<User> getUsersForAlarm(Alarm alarm)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = entityManager.createQuery("");
+        return query.getResultList();
     }
 
 
     @Override
     public Collection<Alarm> getAlarmsForUser(User user)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Query query = entityManager.createQuery("");
+        return query.getResultList();
+
     }
 
 
     @Override
-    public void addUser(User user) throws DatabaseException
+    public User addUser(User user) throws DatabaseException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User returnUser = null;
+
+        entityManager.getTransaction().begin();
+        returnUser = entityManager.merge(user);
+        entityManager.getTransaction().commit();
+
+        return returnUser;
     }
 
 
     @Override
-    public void addAlarm(Alarm alarm) throws DatabaseException
+    public Alarm addAlarm(Alarm alarm) throws DatabaseException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Alarm returnAlarm = null;
+        entityManager.getTransaction().begin();
+        returnAlarm = entityManager.merge(alarm);
+        entityManager.getTransaction().commit();
+        return returnAlarm;
     }
 
 
@@ -87,14 +122,18 @@ public class JPARepository implements Repository
     @Override
     public void deleteUser(User user) throws DatabaseException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        entityManager.getTransaction().begin();
+        entityManager.remove(user);
+        entityManager.getTransaction().commit();
     }
 
 
     @Override
     public void deleteAlarm(Alarm alarm) throws DatabaseException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        entityManager.getTransaction().begin();
+        entityManager.remove(alarm);
+        entityManager.getTransaction().commit();
     }
 
 

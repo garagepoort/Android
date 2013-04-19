@@ -14,8 +14,8 @@ public interface Repository
     public Collection<User> getUsersForAlarm(Alarm alarm);
     public Collection<Alarm> getAlarmsForUser(User user);
     
-    public void addUser(User user) throws DatabaseException;
-    public void addAlarm(Alarm alarm) throws DatabaseException;
+    public User addUser(User user) throws DatabaseException;
+    public Alarm addAlarm(Alarm alarm) throws DatabaseException;
     public void addUsers(Collection<User> users) throws DatabaseException;
     public void addAlarms(Collection<Alarm> alarms) throws DatabaseException;
 

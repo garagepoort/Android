@@ -3,16 +3,23 @@ package be.cegeka.android.alarms.domain.entities;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 
 @Entity
 @Table(name = "\"user\"")
+@NamedQueries(
+{
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+})
 public class User implements Serializable
 {
     @GeneratedValue
@@ -125,9 +132,35 @@ public class User implements Serializable
     {
         this.admin = admin;
     }
-    
-    
-    
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        final User other = (User) obj;
+        if (!Objects.equals(this.email, other.email))
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.userid);
+        return hash;
+    }
 }
 
 

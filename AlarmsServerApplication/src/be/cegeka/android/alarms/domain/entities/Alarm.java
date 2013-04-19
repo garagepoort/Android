@@ -3,6 +3,7 @@ package be.cegeka.android.alarms.domain.entities;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,6 +67,35 @@ public class Alarm implements Serializable
     public List<User> getUsers()
     {
         return Collections.unmodifiableList(users);
+    }
+
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.alarmid);
+        return hash;
+    }
+
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        final Alarm other = (Alarm) obj;
+        if (!Objects.equals(this.alarmid, other.alarmid))
+        {
+            return false;
+        }
+        return true;
     }
     
     
