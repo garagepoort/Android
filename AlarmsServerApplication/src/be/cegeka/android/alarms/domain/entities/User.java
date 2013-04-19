@@ -1,6 +1,7 @@
 package be.cegeka.android.alarms.domain.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +32,8 @@ public class User implements Serializable
     private String email;
     private String salt;
     private Boolean admin;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "users")
-    private List<Alarm> alarms;
+    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "users")
+    private List<Alarm> alarms = new ArrayList<>();
 
 
     public User()
@@ -133,6 +134,14 @@ public class User implements Serializable
         this.admin = admin;
     }
 
+    
+    public void addAlarm(Alarm a){
+        alarms.add(a);
+    }
+    
+    public void removeAlarm(Alarm a){
+        alarms.remove(a);
+    }
 
     @Override
     public boolean equals(Object obj)
@@ -146,7 +155,7 @@ public class User implements Serializable
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.email, other.email))
+        if (!Objects.equals(this.userid, other.userid))
         {
             return false;
         }

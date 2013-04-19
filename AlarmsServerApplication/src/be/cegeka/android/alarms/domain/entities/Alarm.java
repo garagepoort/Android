@@ -1,16 +1,20 @@
 package be.cegeka.android.alarms.domain.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 @Entity
@@ -23,8 +27,8 @@ public class Alarm implements Serializable
     private String title;
     private String info;
     private long dateInMillis;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<User> users;
+    @ManyToMany(cascade = {CascadeType.PERSIST})
+    private List<User> users = new ArrayList<>();
 
 
     public Alarm()
@@ -68,7 +72,28 @@ public class Alarm implements Serializable
     {
         return Collections.unmodifiableList(users);
     }
+    
+    public void addUser(User u){
+        users.add(u);
+    }
+    
+     public void removeUser(User user)
+    {
+        users.remove(user);
+    }
 
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+
+    public void setInfo(String info)
+    {
+        this.info = info;
+    }
+     
 
     @Override
     public int hashCode()
@@ -97,8 +122,6 @@ public class Alarm implements Serializable
         }
         return true;
     }
-    
-    
 }
 
 

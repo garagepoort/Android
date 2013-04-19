@@ -19,8 +19,8 @@ public interface Repository
     public void addUsers(Collection<User> users) throws DatabaseException;
     public void addAlarms(Collection<Alarm> alarms) throws DatabaseException;
 
-    public void updateUser(User user) throws DatabaseException;
-    public void updateAlarm(Alarm alarm) throws DatabaseException;
+    public User updateUser(User user) throws DatabaseException;
+    public Alarm updateAlarm(Alarm alarm) throws DatabaseException;
     
     public void deleteUser(User user) throws DatabaseException;
     public void deleteAlarm(Alarm alarm) throws DatabaseException;

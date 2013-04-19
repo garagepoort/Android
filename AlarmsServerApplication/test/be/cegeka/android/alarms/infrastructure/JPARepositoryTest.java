@@ -6,6 +6,7 @@ package be.cegeka.android.alarms.infrastructure;
 
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +29,9 @@ public class JPARepositoryTest
     private Alarm testAlarm;
 
 
+    /**
+     *
+     */
     @Before
     public void setUp()
     {
@@ -36,7 +40,9 @@ public class JPARepositoryTest
         testAlarm = new Alarm("testalarm", "testalarm info", 150000);
         try
         {
-            testAlarm  = instance.addAlarm(testAlarm);
+            testUser.addAlarm(testAlarm);
+//            testAlarm.addUser(testUser);
+            testAlarm = instance.addAlarm(testAlarm);
             testUser = instance.addUser(testUser);
         }
         catch (DatabaseException ex)
@@ -52,14 +58,19 @@ public class JPARepositoryTest
     {
         try
         {
-            instance.deleteUser(testUser);
+//            if (instance.entityManager.getTransaction().isActive()) {
+//                   instance.entityManager.getTransaction().commit();
+//            }
             instance.deleteAlarm(testAlarm);
+            instance.deleteUser(testUser);
         }
         catch (DatabaseException ex)
         {
             Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
     /**
      * Test of getUser method, of class JPARepository.
      */
@@ -69,6 +80,7 @@ public class JPARepositoryTest
         String emailadres = "testUserEmail";
         User result = instance.getUser(emailadres);
         assertEquals(testUser, result);
+        assertTrue(testUser.getAlarms().contains(testAlarm));
     }
 
 
@@ -78,12 +90,8 @@ public class JPARepositoryTest
     @Test
     public void testGetAllUsers()
     {
-        System.out.println("getAllUsers");
-        Collection expResult = null;
         Collection result = instance.getAllUsers();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(result.contains(testUser));
     }
 
 
@@ -94,7 +102,7 @@ public class JPARepositoryTest
     public void testGetAllAlarms()
     {
         Collection result = instance.getAllAlarms();
-        assertEquals(Arrays.asList(result).get(0), testAlarm);
+        assertTrue(result.contains(testAlarm));
     }
 
 
@@ -104,13 +112,8 @@ public class JPARepositoryTest
     @Test
     public void testGetUsersForAlarm()
     {
-        System.out.println("getUsersForAlarm");
-        Alarm alarm = null;
-        Collection expResult = null;
-        Collection result = instance.getUsersForAlarm(alarm);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Collection result = instance.getUsersForAlarm(testAlarm);
+        assertTrue(new ArrayList<User>(result).contains(testUser));
     }
 
 
@@ -120,13 +123,8 @@ public class JPARepositoryTest
     @Test
     public void testGetAlarmsForUser()
     {
-        System.out.println("getAlarmsForUser");
-        User user = null;
-        Collection expResult = null;
-        Collection result = instance.getAlarmsForUser(user);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Collection result = instance.getAlarmsForUser(testUser);
+        assertTrue(new ArrayList<Alarm>(result).contains(testAlarm));
     }
 
 
@@ -136,8 +134,7 @@ public class JPARepositoryTest
     @Test
     public void testAddUser() throws Exception
     {
-        User u = instance.addUser(testUser);
-        assertEquals(testUser, u);
+        assertTrue(instance.getAllUsers().contains(testUser));
     }
 
 
@@ -146,9 +143,8 @@ public class JPARepositoryTest
      */
     @Test
     public void testAddAlarm() throws Exception
-    {
-        Alarm a = instance.addAlarm(testAlarm);
-        assertEquals(testAlarm, a);
+    {;
+        assertTrue(instance.getAllAlarms().contains(testAlarm));
     }
 
 
@@ -158,23 +154,42 @@ public class JPARepositoryTest
     @Test
     public void testAddUsers() throws Exception
     {
-        System.out.println("addUsers");
-        Collection<User> users = null;
+        User u1 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u2 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u3 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u4 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        ArrayList<User> users = new ArrayList<>();
+        users.add(u1);
+        users.add(u2);
+        users.add(u3);
+        users.add(u4);
         instance.addUsers(users);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.getAllUsers().contains(u1));
+        assertTrue(instance.getAllUsers().contains(u2));
+        assertTrue(instance.getAllUsers().contains(u3));
+        assertTrue(instance.getAllUsers().contains(u4));
+        instance.deleteUsers(users);
     }
 
 
-   
     @Test
     public void testAddAlarms() throws Exception
     {
-        System.out.println("addAlarms");
-        Collection<Alarm> alarms = null;
+        ArrayList<Alarm> alarms = new ArrayList<>();
+        Alarm a1 = new Alarm("titel", "ingop", 855151);
+        Alarm a2 = new Alarm("titel", "ingop", 855151);
+        Alarm a3 = new Alarm("titel", "ingop", 855151);
+        Alarm a4 = new Alarm("titel", "ingop", 855151);
+        alarms.add(a1);
+        alarms.add(a2);
+        alarms.add(a3);
+        alarms.add(a4);
         instance.addAlarms(alarms);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(instance.getAllAlarms().contains(a1));
+        assertTrue(instance.getAllAlarms().contains(a2));
+        assertTrue(instance.getAllAlarms().contains(a3));
+        assertTrue(instance.getAllAlarms().contains(a4));
+        instance.deleteAlarms(alarms);
     }
 
 
@@ -184,11 +199,12 @@ public class JPARepositoryTest
     @Test
     public void testUpdateUser() throws Exception
     {
-        System.out.println("updateUser");
-        User user = null;
-        instance.updateUser(user);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Alarm alarm2 = new Alarm("newalarm", "info", 4588887);
+        testUser.addAlarm(alarm2);
+        testUser.setNaam("nieuwe naam");
+        User newUser = instance.updateUser(testUser);
+        assertTrue(newUser.getNaam().equals(testUser.getNaam()));
+        assertEquals(2, newUser.getAlarms().size());
     }
 
 
@@ -198,11 +214,12 @@ public class JPARepositoryTest
     @Test
     public void testUpdateAlarm() throws Exception
     {
-        System.out.println("updateAlarm");
-        Alarm alarm = null;
-        instance.updateAlarm(alarm);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        User user2 = new User("", "", "", "", Boolean.TRUE);
+        testAlarm.addUser(user2);
+        testAlarm.setInfo("new info");
+        Alarm newAlarm = instance.updateAlarm(testAlarm);
+        assertTrue(newAlarm.getInfo().equals(testAlarm.getInfo()));
+        assertEquals(2, newAlarm.getUsers().size());
     }
 
 
@@ -224,9 +241,8 @@ public class JPARepositoryTest
     public void testDeleteAlarm() throws Exception
     {
         instance.deleteAlarm(testAlarm);
-        Collection result = instance.getAllAlarms();
-        assertEquals(0, result.size());
-        
+        assertFalse(instance.getAllAlarms().contains(testAlarm));
+
     }
 
 
@@ -236,11 +252,41 @@ public class JPARepositoryTest
     @Test
     public void testDeleteUsers() throws Exception
     {
-        System.out.println("deleteUsers");
-        Collection<User> users = null;
+        User u1 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u2 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u3 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        User u4 = new User("dez", "oezfoiezfe", "fezfezezhfe", "dzazdzedfzefez", Boolean.TRUE);
+        ArrayList<User> users = new ArrayList<>();
+        users.add(u1);
+        users.add(u2);
+        users.add(u3);
+        users.add(u4);
+        instance.addUsers(users);
+        assertTrue(instance.getAllUsers().contains(u1));
+        assertTrue(instance.getAllUsers().contains(u2));
+        assertTrue(instance.getAllUsers().contains(u3));
+        assertTrue(instance.getAllUsers().contains(u4));
         instance.deleteUsers(users);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertFalse(instance.getAllUsers().contains(u1));
+        assertFalse(instance.getAllUsers().contains(u2));
+        assertFalse(instance.getAllUsers().contains(u3));
+        assertFalse(instance.getAllUsers().contains(u4));
+    }
+
+
+    @Test
+    public void whenUserDeleted_ThenDoNotDeleteAlarm()
+    {
+        try
+        {
+            instance.deleteUser(testUser);
+            assertTrue(instance.getAllAlarms().contains(testAlarm));
+        }
+        catch (DatabaseException ex)
+        {
+            Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
 
@@ -250,10 +296,40 @@ public class JPARepositoryTest
     @Test
     public void testDeleteAlarms() throws Exception
     {
-        System.out.println("deleteAlarms");
-        Collection<Alarm> alarms = null;
+        ArrayList<Alarm> alarms = new ArrayList<>();
+        Alarm a1 = new Alarm("titel", "ingop", 855151);
+        Alarm a2 = new Alarm("titel", "ingop", 855151);
+        Alarm a3 = new Alarm("titel", "ingop", 855151);
+        Alarm a4 = new Alarm("titel", "ingop", 855151);
+        alarms.add(a1);
+        alarms.add(a2);
+        alarms.add(a3);
+        alarms.add(a4);
+        instance.addAlarms(alarms);
+        assertTrue(instance.getAllAlarms().contains(a1));
+        assertTrue(instance.getAllAlarms().contains(a2));
+        assertTrue(instance.getAllAlarms().contains(a3));
+        assertTrue(instance.getAllAlarms().contains(a4));
         instance.deleteAlarms(alarms);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertFalse(instance.getAllAlarms().contains(a1));
+        assertFalse(instance.getAllAlarms().contains(a2));
+        assertFalse(instance.getAllAlarms().contains(a3));
+        assertFalse(instance.getAllAlarms().contains(a4));
+    }
+    
+    
+    @Test
+    public void whenAlarmDeleted_ThenDoNotDeleteUser()
+    {
+        try
+        {
+            instance.deleteAlarm(testAlarm);
+            assertTrue(instance.getAllUsers().contains(testUser));
+        }
+        catch (DatabaseException ex)
+        {
+            Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 }
