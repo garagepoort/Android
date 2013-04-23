@@ -36,6 +36,15 @@ public class Alarm implements Serializable
     }
 
 
+    public Alarm(Integer alarmid, String title, String info, long dateInMillis)
+    {
+        this.alarmid = alarmid;
+        this.title = title;
+        this.info = info;
+        this.dateInMillis = dateInMillis;
+    }
+
+    
     public Alarm(String title, String info, long dateInMillis)
     {
         this.title = title;

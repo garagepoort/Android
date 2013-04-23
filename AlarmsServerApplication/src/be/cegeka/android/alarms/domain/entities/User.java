@@ -41,6 +41,16 @@ public class User implements Serializable
     }
 
 
+    public User(Integer userid, String naam, String achternaam, String paswoord, String email, Boolean admin)
+    {
+        this.userid = userid;
+        this.naam = naam;
+        this.achternaam = achternaam;
+        this.paswoord = paswoord;
+        this.email = email;
+        this.admin = admin;
+    }
+
     public User(String naam, String achternaam, String paswoord, String email, Boolean admin)
     {
         this.naam = naam;
@@ -87,7 +97,7 @@ public class User implements Serializable
     }
 
 
-    public Boolean getAdmin()
+    public Boolean isAdmin()
     {
         return admin;
     }

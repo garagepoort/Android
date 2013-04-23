@@ -90,7 +90,6 @@ public class JPARepository implements Repository
         entityManager.getTransaction().begin();
         entityManager.persist(user);
         entityManager.flush();
-        System.out.println("USER PERSISTED: " + entityManager.contains(user));
         for (Alarm a : user.getAlarms())
         {
             a.addUser(user);
@@ -106,7 +105,6 @@ public class JPARepository implements Repository
         entityManager.getTransaction().begin();
         entityManager.persist(alarm);
         entityManager.flush();
-        System.out.println("ALARM PERSISTED: " + entityManager.contains(alarm));
         for (User u : alarm.getUsers())
         {
             u.addAlarm(alarm);
@@ -184,7 +182,6 @@ public class JPARepository implements Repository
     public void deleteAlarm(Alarm alarm) throws DatabaseException
     {
         entityManager.getTransaction().begin();
-        System.out.println("DELETE ALARM PERSISTED: " + entityManager.contains(alarm));
         for (User u : alarm.getUsers())
         {
             u.removeAlarm(alarm);
@@ -211,6 +208,12 @@ public class JPARepository implements Repository
         {
             deleteAlarm(a);
         }
+    }
+
+    @Override
+    public Alarm getAlarm(Integer alarmid)
+    {
+        return entityManager.find(Alarm.class, alarmid);
     }
 }
 

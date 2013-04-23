@@ -5,11 +5,11 @@
 package be.cegeka.android.alarms.infrastructure;
 
 import be.cegeka.android.alarms.domain.entities.Alarm;
+import be.cegeka.android.alarms.domain.entities.RepeatedAlarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -24,9 +24,10 @@ import static org.junit.Assert.*;
  */
 public class JPARepositoryTest
 {
-    private JPARepository instance;
+    private JPARepository jpaRepository;
     private User testUser;
     private Alarm testAlarm;
+    private RepeatedAlarm testRepeatedAlarm;
 
 
     /**
@@ -35,15 +36,18 @@ public class JPARepositoryTest
     @Before
     public void setUp()
     {
-        instance = new JPARepository();
+        jpaRepository = new JPARepository();
         testUser = new User("testuserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
         testAlarm = new Alarm("testalarm", "testalarm info", 150000);
+        testRepeatedAlarm = new RepeatedAlarm(Calendar.DAY_OF_MONTH, 200, 1858952, "testrepeatedalarmtitel", "repeatedInfo", 8748979);
         try
         {
             testUser.addAlarm(testAlarm);
+            testUser.addAlarm(testRepeatedAlarm);
 //            testAlarm.addUser(testUser);
-            testAlarm = instance.addAlarm(testAlarm);
-            testUser = instance.addUser(testUser);
+            testAlarm = jpaRepository.addAlarm(testAlarm);
+            testRepeatedAlarm = (RepeatedAlarm) jpaRepository.addAlarm(testRepeatedAlarm);
+            testUser = jpaRepository.addUser(testUser);
         }
         catch (DatabaseException ex)
         {
@@ -60,9 +64,9 @@ public class JPARepositoryTest
         {
 //            if (instance.entityManager.getTransaction().isActive()) {
 //                   instance.entityManager.getTransaction().commit();
-//            }
-            instance.deleteAlarm(testAlarm);
-            instance.deleteUser(testUser);
+            jpaRepository.deleteAlarm(testRepeatedAlarm);
+            jpaRepository.deleteAlarm(testAlarm);
+            jpaRepository.deleteUser(testUser);
         }
         catch (DatabaseException ex)
         {
@@ -78,9 +82,38 @@ public class JPARepositoryTest
     public void testGetUser()
     {
         String emailadres = "testUserEmail";
-        User result = instance.getUser(emailadres);
+        User result = jpaRepository.getUser(emailadres);
         assertEquals(testUser, result);
-        assertTrue(testUser.getAlarms().contains(testAlarm));
+        assertTrue(result.getAlarms().contains(testAlarm));
+        for(Alarm a : result.getAlarms()){
+            assertTrue(a.getUsers().contains(result));
+        }
+    }
+    
+    /**
+     * Test of getUser method, of class JPARepository.
+     */
+    @Test
+    public void testGetAlarm()
+    {
+        Alarm result = jpaRepository.getAlarm(testAlarm.getAlarmid());
+        assertEquals(testAlarm, result);
+        assertTrue(result.getUsers().contains(testUser));
+        for(User u : result.getUsers()){
+            assertTrue(u.getAlarms().contains(result));
+        }
+    }
+    
+     /**
+     * Test of getUser method, of class JPARepository.
+     */
+    @Test
+    public void testGetRepeatedAlarm()
+    {
+        RepeatedAlarm result = (RepeatedAlarm) jpaRepository.getAlarm(testRepeatedAlarm.getAlarmid());
+        assertEquals(testRepeatedAlarm, result);
+        assertEquals(result.getRepeatEnddate(), testRepeatedAlarm.getRepeatEnddate());
+        assertTrue(result.getUsers().contains(testUser));
     }
 
 
@@ -90,7 +123,7 @@ public class JPARepositoryTest
     @Test
     public void testGetAllUsers()
     {
-        Collection result = instance.getAllUsers();
+        Collection result = jpaRepository.getAllUsers();
         assertTrue(result.contains(testUser));
     }
 
@@ -101,7 +134,7 @@ public class JPARepositoryTest
     @Test
     public void testGetAllAlarms()
     {
-        Collection result = instance.getAllAlarms();
+        Collection result = jpaRepository.getAllAlarms();
         assertTrue(result.contains(testAlarm));
     }
 
@@ -112,7 +145,7 @@ public class JPARepositoryTest
     @Test
     public void testGetUsersForAlarm()
     {
-        Collection result = instance.getUsersForAlarm(testAlarm);
+        Collection result = jpaRepository.getUsersForAlarm(testAlarm);
         assertTrue(new ArrayList<User>(result).contains(testUser));
     }
 
@@ -123,7 +156,7 @@ public class JPARepositoryTest
     @Test
     public void testGetAlarmsForUser()
     {
-        Collection result = instance.getAlarmsForUser(testUser);
+        Collection result = jpaRepository.getAlarmsForUser(testUser);
         assertTrue(new ArrayList<Alarm>(result).contains(testAlarm));
     }
 
@@ -134,7 +167,7 @@ public class JPARepositoryTest
     @Test
     public void testAddUser() throws Exception
     {
-        assertTrue(instance.getAllUsers().contains(testUser));
+        assertTrue(jpaRepository.getAllUsers().contains(testUser));
     }
 
 
@@ -143,10 +176,15 @@ public class JPARepositoryTest
      */
     @Test
     public void testAddAlarm() throws Exception
-    {;
-        assertTrue(instance.getAllAlarms().contains(testAlarm));
+    {
+        assertTrue(jpaRepository.getAllAlarms().contains(testAlarm));
     }
 
+    @Test
+    public void testAddRepeatedAlarm()
+    {
+        jpaRepository.getAllAlarms().contains(testRepeatedAlarm);
+    }
 
     /**
      * Test of addUsers method, of class JPARepository.
@@ -163,12 +201,12 @@ public class JPARepositoryTest
         users.add(u2);
         users.add(u3);
         users.add(u4);
-        instance.addUsers(users);
-        assertTrue(instance.getAllUsers().contains(u1));
-        assertTrue(instance.getAllUsers().contains(u2));
-        assertTrue(instance.getAllUsers().contains(u3));
-        assertTrue(instance.getAllUsers().contains(u4));
-        instance.deleteUsers(users);
+        jpaRepository.addUsers(users);
+        assertTrue(jpaRepository.getAllUsers().contains(u1));
+        assertTrue(jpaRepository.getAllUsers().contains(u2));
+        assertTrue(jpaRepository.getAllUsers().contains(u3));
+        assertTrue(jpaRepository.getAllUsers().contains(u4));
+        jpaRepository.deleteUsers(users);
     }
 
 
@@ -184,12 +222,12 @@ public class JPARepositoryTest
         alarms.add(a2);
         alarms.add(a3);
         alarms.add(a4);
-        instance.addAlarms(alarms);
-        assertTrue(instance.getAllAlarms().contains(a1));
-        assertTrue(instance.getAllAlarms().contains(a2));
-        assertTrue(instance.getAllAlarms().contains(a3));
-        assertTrue(instance.getAllAlarms().contains(a4));
-        instance.deleteAlarms(alarms);
+        jpaRepository.addAlarms(alarms);
+        assertTrue(jpaRepository.getAllAlarms().contains(a1));
+        assertTrue(jpaRepository.getAllAlarms().contains(a2));
+        assertTrue(jpaRepository.getAllAlarms().contains(a3));
+        assertTrue(jpaRepository.getAllAlarms().contains(a4));
+        jpaRepository.deleteAlarms(alarms);
     }
 
 
@@ -202,9 +240,9 @@ public class JPARepositoryTest
         Alarm alarm2 = new Alarm("newalarm", "info", 4588887);
         testUser.addAlarm(alarm2);
         testUser.setNaam("nieuwe naam");
-        User newUser = instance.updateUser(testUser);
+        User newUser = jpaRepository.updateUser(testUser);
         assertTrue(newUser.getNaam().equals(testUser.getNaam()));
-        assertEquals(2, newUser.getAlarms().size());
+        assertEquals(3, newUser.getAlarms().size());
     }
 
 
@@ -217,7 +255,7 @@ public class JPARepositoryTest
         User user2 = new User("", "", "", "", Boolean.TRUE);
         testAlarm.addUser(user2);
         testAlarm.setInfo("new info");
-        Alarm newAlarm = instance.updateAlarm(testAlarm);
+        Alarm newAlarm = jpaRepository.updateAlarm(testAlarm);
         assertTrue(newAlarm.getInfo().equals(testAlarm.getInfo()));
         assertEquals(2, newAlarm.getUsers().size());
     }
@@ -229,8 +267,8 @@ public class JPARepositoryTest
     @Test
     public void testDeleteUser() throws Exception
     {
-        instance.deleteUser(testUser);
-        assertNull(instance.getUser(testUser.getEmail()));
+        jpaRepository.deleteUser(testUser);
+        assertNull(jpaRepository.getUser(testUser.getEmail()));
     }
 
 
@@ -240,8 +278,8 @@ public class JPARepositoryTest
     @Test
     public void testDeleteAlarm() throws Exception
     {
-        instance.deleteAlarm(testAlarm);
-        assertFalse(instance.getAllAlarms().contains(testAlarm));
+        jpaRepository.deleteAlarm(testAlarm);
+        assertFalse(jpaRepository.getAllAlarms().contains(testAlarm));
 
     }
 
@@ -261,16 +299,16 @@ public class JPARepositoryTest
         users.add(u2);
         users.add(u3);
         users.add(u4);
-        instance.addUsers(users);
-        assertTrue(instance.getAllUsers().contains(u1));
-        assertTrue(instance.getAllUsers().contains(u2));
-        assertTrue(instance.getAllUsers().contains(u3));
-        assertTrue(instance.getAllUsers().contains(u4));
-        instance.deleteUsers(users);
-        assertFalse(instance.getAllUsers().contains(u1));
-        assertFalse(instance.getAllUsers().contains(u2));
-        assertFalse(instance.getAllUsers().contains(u3));
-        assertFalse(instance.getAllUsers().contains(u4));
+        jpaRepository.addUsers(users);
+        assertTrue(jpaRepository.getAllUsers().contains(u1));
+        assertTrue(jpaRepository.getAllUsers().contains(u2));
+        assertTrue(jpaRepository.getAllUsers().contains(u3));
+        assertTrue(jpaRepository.getAllUsers().contains(u4));
+        jpaRepository.deleteUsers(users);
+        assertFalse(jpaRepository.getAllUsers().contains(u1));
+        assertFalse(jpaRepository.getAllUsers().contains(u2));
+        assertFalse(jpaRepository.getAllUsers().contains(u3));
+        assertFalse(jpaRepository.getAllUsers().contains(u4));
     }
 
 
@@ -279,8 +317,8 @@ public class JPARepositoryTest
     {
         try
         {
-            instance.deleteUser(testUser);
-            assertTrue(instance.getAllAlarms().contains(testAlarm));
+            jpaRepository.deleteUser(testUser);
+            assertTrue(jpaRepository.getAllAlarms().contains(testAlarm));
         }
         catch (DatabaseException ex)
         {
@@ -305,16 +343,16 @@ public class JPARepositoryTest
         alarms.add(a2);
         alarms.add(a3);
         alarms.add(a4);
-        instance.addAlarms(alarms);
-        assertTrue(instance.getAllAlarms().contains(a1));
-        assertTrue(instance.getAllAlarms().contains(a2));
-        assertTrue(instance.getAllAlarms().contains(a3));
-        assertTrue(instance.getAllAlarms().contains(a4));
-        instance.deleteAlarms(alarms);
-        assertFalse(instance.getAllAlarms().contains(a1));
-        assertFalse(instance.getAllAlarms().contains(a2));
-        assertFalse(instance.getAllAlarms().contains(a3));
-        assertFalse(instance.getAllAlarms().contains(a4));
+        jpaRepository.addAlarms(alarms);
+        assertTrue(jpaRepository.getAllAlarms().contains(a1));
+        assertTrue(jpaRepository.getAllAlarms().contains(a2));
+        assertTrue(jpaRepository.getAllAlarms().contains(a3));
+        assertTrue(jpaRepository.getAllAlarms().contains(a4));
+        jpaRepository.deleteAlarms(alarms);
+        assertFalse(jpaRepository.getAllAlarms().contains(a1));
+        assertFalse(jpaRepository.getAllAlarms().contains(a2));
+        assertFalse(jpaRepository.getAllAlarms().contains(a3));
+        assertFalse(jpaRepository.getAllAlarms().contains(a4));
     }
     
     
@@ -323,13 +361,12 @@ public class JPARepositoryTest
     {
         try
         {
-            instance.deleteAlarm(testAlarm);
-            assertTrue(instance.getAllUsers().contains(testUser));
+            jpaRepository.deleteAlarm(testAlarm);
+            assertTrue(jpaRepository.getAllUsers().contains(testUser));
         }
         catch (DatabaseException ex)
         {
             Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

@@ -1,6 +1,6 @@
 package be.cegeka.android.alarms.domain.entities;
 
-import java.math.BigInteger;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 
@@ -10,9 +10,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="alarmid", referencedColumnName="alarmid")
 public class RepeatedAlarm extends Alarm
 {
-    private String repeatUnit;
+    private int repeatUnit;
     private Integer repeatquantity;
-    private BigInteger repeatEnddate;
+    private long repeatEnddate;
 
 
     public RepeatedAlarm()
@@ -21,7 +21,15 @@ public class RepeatedAlarm extends Alarm
     }
 
 
-    public RepeatedAlarm(String repeatUnit, Integer repeatquantity, BigInteger repeatEnddate, String title, String info, long dateInMillis)
+    public RepeatedAlarm(int repeatUnit, Integer repeatquantity, long repeatEnddate, Integer alarmid, String title, String info, long dateInMillis)
+    {
+        super(alarmid, title, info, dateInMillis);
+        this.repeatUnit = repeatUnit;
+        this.repeatquantity = repeatquantity;
+        this.repeatEnddate = repeatEnddate;
+    }
+
+    public RepeatedAlarm(int repeatUnit, Integer repeatquantity, long repeatEnddate, String title, String info, long dateInMillis)
     {
         super(title, info, dateInMillis);
         this.repeatUnit = repeatUnit;
@@ -30,7 +38,7 @@ public class RepeatedAlarm extends Alarm
     }
 
 
-    public String getRepeatUnit()
+    public int getRepeatUnit()
     {
         return repeatUnit;
     }
@@ -42,13 +50,13 @@ public class RepeatedAlarm extends Alarm
     }
 
 
-    public BigInteger getRepeatEnddate()
+    public long getRepeatEnddate()
     {
         return repeatEnddate;
     }
 
 
-    public void setRepeatEnddate(BigInteger repeatEnddate)
+    public void setRepeatEnddate(long repeatEnddate)
     {
         this.repeatEnddate = repeatEnddate;
     }
