@@ -14,7 +14,7 @@ public class TransferObjectMapper
     public static final String NULL_ERROR_MESSAGE = "Argument is null";
     
     
-    public static AlarmTO convertAlarmToAlarmTO(Alarm alarm) throws BusinessException
+    public AlarmTO convertAlarmToAlarmTO(Alarm alarm) throws BusinessException
     {
         if (alarm == null)
         {
@@ -44,7 +44,7 @@ public class TransferObjectMapper
     }
 
 
-    public static Alarm convertAlarmTOToAlarm(AlarmTO alarmTO) throws BusinessException
+    public Alarm convertAlarmTOToAlarm(AlarmTO alarmTO) throws BusinessException
     {
         if (alarmTO == null)
         {

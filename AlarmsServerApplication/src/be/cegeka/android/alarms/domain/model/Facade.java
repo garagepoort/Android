@@ -12,28 +12,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 
-public class AlarmService
+public class Facade
 {
     public static final String NULL_ERROR_MESSAGE = "Argument is null";
-    private Repository repository;
+    private Service service;
+    private TransferObjectMapper transferObjectMapper;
 
 
-    public AlarmService()
+    public Facade()
     {
-        repository = new JPARepository();
+        service = new Service();
+        transferObjectMapper = new TransferObjectMapper();
     }
 
 
     public UserTO getUser(String emailadres) throws BusinessException
     {
-        return TransferObjectMapper.convertUserToUserTO(repository.getUser(emailadres));
+        return TransferObjectMapper.convertUserToUserTO(service.getUser(emailadres));
     }
 
 
     public Collection<UserTO> getAllUsers() throws BusinessException
     {
         Collection<UserTO> userTOs = new ArrayList<>();
-        for (User u : repository.getAllUsers())
+        for (User u : service.getAllUsers())
         {
             userTOs.add(TransferObjectMapper.convertUserToUserTO(u));
         }
@@ -44,8 +46,8 @@ public class AlarmService
     public Collection<AlarmTO> getAllAlarms() throws BusinessException
     {
         Collection<AlarmTO> alarmTOs = new ArrayList<>();
-        for(Alarm a : repository.getAllAlarms()){
-            alarmTOs.add(TransferObjectMapper.convertAlarmToAlarmTO(a));
+        for(Alarm a : service.getAllAlarms()){
+            alarmTOs.add(transferObjectMapper.convertAlarmToAlarmTO(a));
         }
         return alarmTOs;
     }
@@ -67,7 +69,7 @@ public class AlarmService
     {
         try
         {
-            return TransferObjectMapper.convertUserToUserTO(repository.addUser(TransferObjectMapper.convertUserTOToUser(user)));
+            return TransferObjectMapper.convertUserToUserTO(service.addUser(TransferObjectMapper.convertUserTOToUser(user)));
         }
         catch (DatabaseException ex)
         {
@@ -80,7 +82,8 @@ public class AlarmService
     {
         try
         {
-            return TransferObjectMapper.convertAlarmToAlarmTO(repository.addAlarm(TransferObjectMapper.convertAlarmTOToAlarm(alarm)));
+            final Alarm createdAlarm = service.addAlarm(convertToTO(alarm));
+            return convertToDomain(createdAlarm);
         }
         catch(DatabaseException e){
             throw new BusinessException(e);
@@ -136,7 +139,7 @@ public class AlarmService
     }
     
     public AlarmTO getAlarm(Integer id) throws BusinessException{
-        return TransferObjectMapper.convertAlarmToAlarmTO(repository.getAlarm(id));
+        return transferObjectMapper.convertAlarmToAlarmTO(service.getAlarm(id));
     }
     
     public void addAlarmToUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException{
@@ -147,15 +150,39 @@ public class AlarmService
         
         try
         {
-            Alarm alarm = repository.getAlarm(alarmTO.getAlarmID());
-            User user = repository.getUser(userTO.getEmail());
+            Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+            User user = service.getUser(userTO.getEmail());
             user.addAlarm(alarm);
-            repository.updateUser(user);
+            service.updateUser(user);
         }
         catch (DatabaseException ex)
         {
             throw new BusinessException(ex);
         }
+    }
+
+
+    void setService(Service service)
+    {
+        this.service = service;
+    }
+
+
+    void setTransferObjectMapper(TransferObjectMapper transferObjectMapper)
+    {
+        this.transferObjectMapper = transferObjectMapper;
+    }
+
+
+    private Alarm convertToTO(AlarmTO alarm) throws BusinessException
+    {
+        return transferObjectMapper.convertAlarmTOToAlarm(alarm);
+    }
+
+
+    private AlarmTO convertToDomain(final Alarm createdAlarm) throws BusinessException
+    {
+        return transferObjectMapper.convertAlarmToAlarmTO(createdAlarm);
     }
 }
 

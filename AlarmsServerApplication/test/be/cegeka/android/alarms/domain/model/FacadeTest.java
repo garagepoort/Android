@@ -1,5 +1,6 @@
 package be.cegeka.android.alarms.domain.model;
 
+import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
@@ -9,28 +10,41 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import org.junit.runner.RunWith;
+import org.mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
-public class AlarmServiceTest
+@RunWith(MockitoJUnitRunner.class)
+public class FacadeTest
 {
-    AlarmService alarmService;
-    UserTO user;
-    AlarmTO alarm;
-    String emailadres;        
+    Facade alarmService;
+    UserTO userTO;
+    AlarmTO alarmTO;
+    String emailadres;      
+    @Mock
+    private Service serviceMock;
+    @Mock
+    private TransferObjectMapper transferObjectMapperMock;
+    
+    private Alarm alarm;
     
             
     @Before
     public void setUp() throws BusinessException
     {
-        alarmService = new AlarmService();
-        user = new UserTO(null, "testUserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
-        alarm = new AlarmTO(null, "testAlarmTitle", "testAlarmInfo", 156123);
-        emailadres = "testUserEmail";
-        alarmService.addUser(user);
-        alarmService.addAlarm(alarm);
+        alarmService = new Facade();
+        alarmService.setService(serviceMock);
+        alarmService.setTransferObjectMapper(transferObjectMapperMock);
         
+        userTO = new UserTO(25435, "testUserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
+        alarmTO = new AlarmTO(1354, "testAlarmTitle", "testAlarmInfo", 156123);
+        
+        alarm = new Alarm(1354, "testAlarmTitle", "testAlarmInfo", 156123);
+        
+        emailadres = "testUserEmail";
     }
-    
 
     @After
     public void tearDown()
@@ -43,7 +57,7 @@ public class AlarmServiceTest
     {
         UserTO userTO = alarmService.getUser(emailadres);
         
-        assertEquals(user, userTO);
+        assertEquals(this.userTO, userTO);
     }
 
 
@@ -51,7 +65,7 @@ public class AlarmServiceTest
     public void testGetAllUsers() throws BusinessException
     {
         List<UserTO> userTOs = new ArrayList<>(alarmService.getAllUsers());
-        assertEquals(user, userTOs.get(0));
+        assertEquals(userTO, userTOs.get(0));
     }
 
 
@@ -59,7 +73,7 @@ public class AlarmServiceTest
     public void testGetAllAlarms() throws BusinessException
     {
         List<AlarmTO> alarmTOs = new ArrayList<>(alarmService.getAllAlarms());
-        assertEquals(alarm, alarmTOs.get(0));
+        assertEquals(alarmTO, alarmTOs.get(0));
     }
 
 
@@ -80,15 +94,23 @@ public class AlarmServiceTest
     @Test
     public void testAddUser() throws Exception
     {
-        UserTO userTO = alarmService.getUser(user.getEmail());
-        assertEquals(user, userTO);
+        UserTO userTO = alarmService.getUser(this.userTO.getEmail());
+        assertEquals(this.userTO, userTO);
     }
 
 
     @Test
     public void testAddAlarm() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);        
+        when(serviceMock.addAlarm(Mockito.any(Alarm.class))).thenReturn(alarm);
+        AlarmTO resultedTO = mock(AlarmTO.class);
+        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm)).thenReturn(resultedTO);        
+        
+        AlarmTO result = alarmService.addAlarm(alarmTO);
+        assertSame(resultedTO, result);
+        
+        verify(serviceMock).addAlarm(alarm);
     }
 
 
