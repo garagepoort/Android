@@ -257,63 +257,144 @@ public class FacadeTest
         when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
         when(transferObjectMapperMock.convertUserToUserTO(user)).thenReturn(userTO);
         when(serviceMock.updateUser(user)).thenReturn(user);
+
+        user.setAdmin(true);
+        user.setPaswoord("nieuwPaswoord");
+        user.setAchternaam("nieuweAchternaam");
+        user.setEmail("nieuweEmail");
+        user.setNaam("nieuweNaam");
         
-        user.setAchternaam("nieuw");
-        user.setAdmin(false);
-        user.setEmail("nieuw");
-        user.setNaam("nieuw");
-        user.setPaswoord("nieuw");
-        user.setSalt("nieuw");
+        userTO.setAdmin(true);
+        userTO.setPaswoord("nieuwPaswoord");
+        userTO.setAchternaam("nieuweAchternaam");
+        userTO.setEmail("nieuweEmail");
+        userTO.setNaam("nieuweNaam");
         
         UserTO resultedUserTO = facade.updateUser(userTO);
+        assertEquals(userTO, resultedUserTO);
     }
 
 
     @Test
     public void testUpdateAlarm() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
+        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm)).thenReturn(alarmTO);
+        when(serviceMock.updateAlarm(alarm)).thenReturn(alarm);
+        
+        alarm.setInfo("nieuweInfo");
+        alarm.setTitle("nieuweTitel");
+        
+        alarmTO.setInfo("nieuweInfo");
+        alarmTO.setTitle("nieuweTitel");
+        
+        AlarmTO resultedAlarmTO = facade.updateAlarm(alarmTO);
+        assertEquals(alarmTO, resultedAlarmTO);
     }
 
 
     @Test
     public void testDeleteUser() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+        
+        facade.deleteUser(userTO);
+        
+        verify(serviceMock).deleteUser(user);
     }
 
 
     @Test
     public void testDeleteAlarm() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
+        
+        facade.deleteAlarm(alarmTO);
+        
+        verify(serviceMock).deleteAlarm(alarm);
     }
 
 
     @Test
     public void testDeleteUsers() throws Exception
     {
-        fail();
+        Collection<User> users = new ArrayList<>();
+        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
+        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
+        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        users.add(user1);
+        users.add(user2);
+        users.add(user3);
+
+        Collection<UserTO> usersTOs = new ArrayList<>();
+        UserTO userTO1 = new UserTO(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
+        UserTO userTO2 = new UserTO(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
+        UserTO userTO3 = new UserTO(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        usersTOs.add(userTO1);
+        usersTOs.add(userTO2);
+        usersTOs.add(userTO3);
+
+        when(transferObjectMapperMock.convertUserTOToUser(userTO1)).thenReturn(user1);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO2)).thenReturn(user2);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO3)).thenReturn(user3);
+        
+        facade.deleteUsers(usersTOs);
+        verify(serviceMock).deleteUsers(users);
     }
 
 
     @Test
     public void testDeleteAlarms() throws Exception
     {
-        fail();
+        Collection<Alarm> alarms = new ArrayList<>();
+        Alarm alarm1 = new Alarm(4531, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm2 = new Alarm(54342, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm3 = new Alarm(35423, "testAlarmTitle", "testAlarmInfo", 156123);
+        alarms.add(alarm1);
+        alarms.add(alarm2);
+        alarms.add(alarm3);
+
+        Collection<AlarmTO> alarmTOs = new ArrayList<>();
+        AlarmTO alarmTO1 = new AlarmTO(1, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 156123);
+        alarmTOs.add(alarmTO1);
+        alarmTOs.add(alarmTO2);
+        alarmTOs.add(alarmTO3);
+        
+        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm1)).thenReturn(alarmTO1);
+        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm2)).thenReturn(alarmTO2);
+        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm3)).thenReturn(alarmTO3);
+        
+        facade.deleteAlarms(alarmTOs);
+        verify(serviceMock).deleteAlarms(alarms);
     }
     
     
     @Test
-    public void testRemoveUserFromAlarm(User user, Alarm alarm)
+    public void testRemoveUserFromAlarm() throws BusinessException, DatabaseException
     {
-        fail();
+        alarm.addUser(user);
+        
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+        
+        facade.removeUserFromAlarm(userTO, alarmTO);
+        
+        verify(serviceMock).removeUserFromAlarm(user, alarm);
     }
 
 
     @Test
-    public void testRemoveAlarmFromUser(Alarm alarm, User user)
+    public void testRemoveAlarmFromUser() throws BusinessException, DatabaseException
     {
-        fail();
+        user.addAlarm(alarm);
+        
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+
+        facade.removeAlarmFromUser(alarmTO, userTO);
+        
+        verify(serviceMock).removeAlarmFromUser(alarm, user);
     }
 }

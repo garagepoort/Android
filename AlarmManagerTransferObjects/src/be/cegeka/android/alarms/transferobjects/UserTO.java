@@ -111,6 +111,30 @@ public class UserTO
         this.admin = admin;
     }
 
+
+    public void setUserid(Integer userid)
+    {
+        this.userid = userid;
+    }
+
+
+    public void setNaam(String naam)
+    {
+        this.naam = naam;
+    }
+
+
+    public void setAchternaam(String achternaam)
+    {
+        this.achternaam = achternaam;
+    }
+
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
     @Override
     public int hashCode()
     {

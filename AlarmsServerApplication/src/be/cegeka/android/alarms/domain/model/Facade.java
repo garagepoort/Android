@@ -156,39 +156,103 @@ public class Facade
     }
 
 
-    public UserTO updateUser(UserTO user) 
+    public UserTO updateUser(UserTO userTO) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User user = transferObjectMapper.convertUserTOToUser(userTO);
+        try
+        {
+            user = service.updateUser(user);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
+        userTO = transferObjectMapper.convertUserToUserTO(user);
+        
+        return userTO;
     }
 
 
-    public AlarmTO updateAlarm(AlarmTO alarm) 
+    public AlarmTO updateAlarm(AlarmTO alarmTO) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        try
+        {
+            alarm = service.updateAlarm(alarm);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
+        alarmTO = transferObjectMapper.convertAlarmToAlarmTO(alarm);
+        
+        return alarmTO;
     }
 
 
-    public void deleteUser(UserTO user) 
+    public void deleteUser(UserTO userTO) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User user = transferObjectMapper.convertUserTOToUser(userTO);
+        try
+        {
+            service.deleteUser(user);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
 
-    public void deleteAlarm(AlarmTO alarm) 
+    public void deleteAlarm(AlarmTO alarmTO) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        try
+        {
+            service.deleteAlarm(alarm);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
 
-    public void deleteUsers(Collection<UserTO> users) 
+    public void deleteUsers(Collection<UserTO> userTOs) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Collection<User> users = new ArrayList<>();
+        for(UserTO userTO : userTOs)
+        {
+            User user = transferObjectMapper.convertUserTOToUser(userTO);
+            users.add(user);
+        }
+        try
+        {
+            service.deleteUsers(users);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
 
-    public void deleteAlarms(Collection<AlarmTO> alarms) 
+    public void deleteAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException 
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Collection<Alarm> alarms = new ArrayList<>();
+        for(AlarmTO alarmTO : alarmTOs)
+        {
+            Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+            alarms.add(alarm);
+        }
+        try
+        {
+            service.deleteAlarms(alarms);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
 
@@ -240,19 +304,33 @@ public class Facade
     }
     
     
-    public void removeUserFromAlarm(User user, Alarm alarm) throws DatabaseException
+    public void removeUserFromAlarm(UserTO userTO, AlarmTO alarmTO) throws BusinessException
     {
-        /**
-         * @todo
-         */
+        User user = transferObjectMapper.convertUserTOToUser(userTO);
+        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        try
+        {
+            service.removeUserFromAlarm(user, alarm);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
 
-    public void removeAlarmFromUser(Alarm alarm, User user) throws DatabaseException
+    public void removeAlarmFromUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException
     {
-        /**
-         * @todo
-         */
+        User user = transferObjectMapper.convertUserTOToUser(userTO);
+        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        try
+        {
+            service.removeAlarmFromUser(alarm, user);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
     }
 
     
