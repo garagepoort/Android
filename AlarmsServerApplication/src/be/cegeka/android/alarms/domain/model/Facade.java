@@ -10,6 +10,8 @@ import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Facade
@@ -28,7 +30,11 @@ public class Facade
 
     public UserTO getUser(String emailadres) throws BusinessException
     {
-        return TransferObjectMapper.convertUserToUserTO(service.getUser(emailadres));
+        User user = service.getUser(emailadres);
+        
+        UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
+        
+        return userTO;
     }
 
 
@@ -37,7 +43,8 @@ public class Facade
         Collection<UserTO> userTOs = new ArrayList<>();
         for (User u : service.getAllUsers())
         {
-            userTOs.add(TransferObjectMapper.convertUserToUserTO(u));
+            UserTO userTO = transferObjectMapper.convertUserToUserTO(u);
+            userTOs.add(userTO);
         }
         return userTOs;
     }
@@ -46,16 +53,25 @@ public class Facade
     public Collection<AlarmTO> getAllAlarms() throws BusinessException
     {
         Collection<AlarmTO> alarmTOs = new ArrayList<>();
-        for(Alarm a : service.getAllAlarms()){
+        for (Alarm a : service.getAllAlarms())
+        {
             alarmTOs.add(transferObjectMapper.convertAlarmToAlarmTO(a));
         }
         return alarmTOs;
     }
 
 
-    public Collection<UserTO> getUsersForAlarm(AlarmTO alarm)
+    public Collection<UserTO> getUsersForAlarm(AlarmTO alarmTO) throws BusinessException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        Collection<UserTO> userTOsForAlarm = new ArrayList<>();
+        Collection<User> usersForAlarm = service.getUsersForAlarm(alarm);
+        for(User user : usersForAlarm)
+        {
+            UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
+            userTOsForAlarm.add(userTO);
+        }
+        return userTOsForAlarm;
     }
 
 
@@ -69,7 +85,7 @@ public class Facade
     {
         try
         {
-            return TransferObjectMapper.convertUserToUserTO(service.addUser(TransferObjectMapper.convertUserTOToUser(user)));
+            return transferObjectMapper.convertUserToUserTO(service.addUser(transferObjectMapper.convertUserTOToUser(user)));
         }
         catch (DatabaseException ex)
         {
@@ -85,7 +101,8 @@ public class Facade
             final Alarm createdAlarm = service.addAlarm(convertToTO(alarm));
             return convertToDomain(createdAlarm);
         }
-        catch(DatabaseException e){
+        catch (DatabaseException e)
+        {
             throw new BusinessException(e);
         }
     }
@@ -137,17 +154,21 @@ public class Facade
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public AlarmTO getAlarm(Integer id) throws BusinessException{
+
+
+    public AlarmTO getAlarm(Integer id) throws BusinessException
+    {
         return transferObjectMapper.convertAlarmToAlarmTO(service.getAlarm(id));
     }
-    
-    public void addAlarmToUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException{
-        if(alarmTO == null || userTO == null)
+
+
+    public void addAlarmToUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException
+    {
+        if (alarmTO == null || userTO == null)
         {
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
-        
+
         try
         {
             Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
@@ -162,17 +183,6 @@ public class Facade
     }
 
 
-    void setService(Service service)
-    {
-        this.service = service;
-    }
-
-
-    void setTransferObjectMapper(TransferObjectMapper transferObjectMapper)
-    {
-        this.transferObjectMapper = transferObjectMapper;
-    }
-
 
     private Alarm convertToTO(AlarmTO alarm) throws BusinessException
     {
@@ -183,6 +193,26 @@ public class Facade
     private AlarmTO convertToDomain(final Alarm createdAlarm) throws BusinessException
     {
         return transferObjectMapper.convertAlarmToAlarmTO(createdAlarm);
+    }
+
+    
+    /**
+     * ONLY FOR TESTING
+     * @param service 
+     */
+    void setService(Service service)
+    {
+        this.service = service;
+    }
+
+
+    /**
+     * ONLY FOR TESTING
+     * @param transferObjectMapper 
+     */
+    void setTransferObjectMapper(TransferObjectMapper transferObjectMapper)
+    {
+        this.transferObjectMapper = transferObjectMapper;
     }
 }
 

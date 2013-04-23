@@ -24,7 +24,7 @@ public class TransferObjectMapper
     }
 
 
-    public static UserTO convertUserToUserTO(User u) throws BusinessException
+    public UserTO convertUserToUserTO(User u) throws BusinessException
     {
         if (u == null)
         {
@@ -34,7 +34,7 @@ public class TransferObjectMapper
     }
 
 
-    public static User convertUserTOToUser(UserTO userTO) throws BusinessException
+    public User convertUserTOToUser(UserTO userTO) throws BusinessException
     {
         if (userTO == null)
         {
@@ -54,7 +54,7 @@ public class TransferObjectMapper
     }
 
 
-    public static RepeatedAlarmTO convertRepeatedAlarmToRepeatedAlarmTO(RepeatedAlarm repeatedAlarm) throws BusinessException
+    public RepeatedAlarmTO convertRepeatedAlarmToRepeatedAlarmTO(RepeatedAlarm repeatedAlarm) throws BusinessException
     {
         if (repeatedAlarm == null)
         {
@@ -64,7 +64,7 @@ public class TransferObjectMapper
     }
 
 
-    public static RepeatedAlarm convertRepeatedAlarmTOToRepeatedAlarm(RepeatedAlarmTO repeatedAlarmTO) throws BusinessException
+    public RepeatedAlarm convertRepeatedAlarmTOToRepeatedAlarm(RepeatedAlarmTO repeatedAlarmTO) throws BusinessException
     {
         if (repeatedAlarmTO == null)
         {
