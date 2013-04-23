@@ -122,4 +122,16 @@ public class Service
     {
         return repository.getUserById(id);
     }
+    
+    
+    public void removeUserFromAlarm(User user, Alarm alarm) throws DatabaseException
+    {
+        repository.removeUserFromAlarm(user, alarm);
+    }
+
+
+    public void removeAlarmFromUser(Alarm alarm, User user) throws DatabaseException
+    {
+        repository.removeAlarmFromUser(alarm, user);
+    }
 }

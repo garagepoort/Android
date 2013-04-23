@@ -3,6 +3,7 @@ package be.cegeka.android.alarms.domain.model;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.infrastructure.DatabaseException;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
@@ -214,22 +215,57 @@ public class FacadeTest
         usersTOs.add(userTO3);
 
         when(transferObjectMapperMock.convertUserTOToUser(userTO1)).thenReturn(user1);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO2)).thenReturn(user2);
+        when(transferObjectMapperMock.convertUserTOToUser(userTO3)).thenReturn(user3);
         
         facade.addUsers(usersTOs);
+        verify(serviceMock).addUsers(users);
     }
 
 
     @Test
     public void testAddAlarms() throws Exception
     {
-        fail();
+        Collection<Alarm> alarms = new ArrayList<>();
+        Alarm alarm1 = new Alarm(4531, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm2 = new Alarm(54342, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm3 = new Alarm(35423, "testAlarmTitle", "testAlarmInfo", 156123);
+        alarms.add(alarm1);
+        alarms.add(alarm2);
+        alarms.add(alarm3);
+
+        Collection<AlarmTO> alarmTOs = new ArrayList<>();
+        AlarmTO alarmTO1 = new AlarmTO(1, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 156123);
+        alarmTOs.add(alarmTO1);
+        alarmTOs.add(alarmTO2);
+        alarmTOs.add(alarmTO3);
+        
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO1)).thenReturn(alarm1);
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO2)).thenReturn(alarm2);
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO3)).thenReturn(alarm3);
+        
+        facade.addAlarms(alarmTOs);
+        verify(serviceMock).addAlarms(alarms);
     }
 
 
     @Test
     public void testUpdateUser() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+        when(transferObjectMapperMock.convertUserToUserTO(user)).thenReturn(userTO);
+        when(serviceMock.updateUser(user)).thenReturn(user);
+        
+        user.setAchternaam("nieuw");
+        user.setAdmin(false);
+        user.setEmail("nieuw");
+        user.setNaam("nieuw");
+        user.setPaswoord("nieuw");
+        user.setSalt("nieuw");
+        
+        UserTO resultedUserTO = facade.updateUser(userTO);
     }
 
 
@@ -263,6 +299,20 @@ public class FacadeTest
 
     @Test
     public void testDeleteAlarms() throws Exception
+    {
+        fail();
+    }
+    
+    
+    @Test
+    public void testRemoveUserFromAlarm(User user, Alarm alarm)
+    {
+        fail();
+    }
+
+
+    @Test
+    public void testRemoveAlarmFromUser(Alarm alarm, User user)
     {
         fail();
     }

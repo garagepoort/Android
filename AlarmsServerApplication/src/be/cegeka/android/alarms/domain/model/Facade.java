@@ -4,8 +4,6 @@ import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
 import be.cegeka.android.alarms.infrastructure.DatabaseException;
-import be.cegeka.android.alarms.infrastructure.JPARepository;
-import be.cegeka.android.alarms.infrastructure.Repository;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
@@ -120,49 +118,75 @@ public class Facade
     }
 
 
-    public void addUsers(Collection<UserTO> users) throws DatabaseException
+    public void addUsers(Collection<UserTO> userTOs) throws BusinessException
+    {
+        Collection<User> users = new ArrayList<>();
+        for(UserTO userTO : userTOs)
+        {
+            User user = transferObjectMapper.convertUserTOToUser(userTO);
+            users.add(user);
+        }
+        try
+        {
+            service.addUsers(users);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
+    }
+
+
+    public void addAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException 
+    {
+        Collection<Alarm> alarms = new ArrayList<>();
+        for(AlarmTO alarmTO : alarmTOs)
+        {
+            Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+            alarms.add(alarm);
+        }
+        try
+        {
+            service.addAlarms(alarms);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
+    }
+
+
+    public UserTO updateUser(UserTO user) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-    public void addAlarms(Collection<AlarmTO> alarms) throws DatabaseException
+    public AlarmTO updateAlarm(AlarmTO alarm) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-    public UserTO updateUser(UserTO user) throws DatabaseException
+    public void deleteUser(UserTO user) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-    public AlarmTO updateAlarm(AlarmTO alarm) throws DatabaseException
+    public void deleteAlarm(AlarmTO alarm) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-    public void deleteUser(UserTO user) throws DatabaseException
+    public void deleteUsers(Collection<UserTO> users) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 
-    public void deleteAlarm(AlarmTO alarm) throws DatabaseException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    public void deleteUsers(Collection<UserTO> users) throws DatabaseException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    public void deleteAlarms(Collection<AlarmTO> alarms) throws DatabaseException
+    public void deleteAlarms(Collection<AlarmTO> alarms) 
     {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
@@ -203,8 +227,7 @@ public class Facade
         return userTO;
     }
 
-
-
+    
     private Alarm convertToTO(AlarmTO alarm) throws BusinessException
     {
         return transferObjectMapper.convertAlarmTOToAlarm(alarm);
@@ -214,6 +237,22 @@ public class Facade
     private AlarmTO convertToDomain(final Alarm createdAlarm) throws BusinessException
     {
         return transferObjectMapper.convertAlarmToAlarmTO(createdAlarm);
+    }
+    
+    
+    public void removeUserFromAlarm(User user, Alarm alarm) throws DatabaseException
+    {
+        /**
+         * @todo
+         */
+    }
+
+
+    public void removeAlarmFromUser(Alarm alarm, User user) throws DatabaseException
+    {
+        /**
+         * @todo
+         */
     }
 
     

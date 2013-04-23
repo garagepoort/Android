@@ -390,4 +390,17 @@ public class JPARepositoryTest
             Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    @Test
+    public void testRemoveUserFromAlarm()
+    {
+        fail();
+    }
+
+
+    @Test
+    public void testRemoveAlarmFromUser()
+    {
+        fail();
+    }
 }
