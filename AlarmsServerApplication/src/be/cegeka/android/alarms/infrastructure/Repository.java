@@ -9,6 +9,7 @@ import java.util.Collection;
 public interface Repository
 {
     public User getUser(String emailadres);
+    public User getUserById(int id);
     public Alarm getAlarm(Integer id);
     public Collection<User> getAllUsers();
     public Collection<Alarm> getAllAlarms();

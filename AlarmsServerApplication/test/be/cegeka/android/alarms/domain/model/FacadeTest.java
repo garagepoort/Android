@@ -7,7 +7,6 @@ import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
 import java.util.Collection;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -168,7 +167,15 @@ public class FacadeTest
     @Test
     public void testAddUser() throws Exception
     {
-        fail();
+        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+        when(serviceMock.addUser(any(User.class))).thenReturn(user);
+        UserTO resultedTO = mock(UserTO.class);
+        when(transferObjectMapperMock.convertUserToUserTO(user)).thenReturn(resultedTO);
+        
+        UserTO result = facade.addUser(userTO);
+        assertSame(resultedTO, result);
+        
+        verify(serviceMock).addUser(user);
     }
 
 
@@ -190,7 +197,25 @@ public class FacadeTest
     @Test
     public void testAddUsers() throws Exception
     {
-        fail();
+        Collection<User> users = new ArrayList<>();
+        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
+        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
+        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        users.add(user1);
+        users.add(user2);
+        users.add(user3);
+
+        Collection<UserTO> usersTOs = new ArrayList<>();
+        UserTO userTO1 = new UserTO(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
+        UserTO userTO2 = new UserTO(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
+        UserTO userTO3 = new UserTO(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        usersTOs.add(userTO1);
+        usersTOs.add(userTO2);
+        usersTOs.add(userTO3);
+
+        when(transferObjectMapperMock.convertUserTOToUser(userTO1)).thenReturn(user1);
+        
+        facade.addUsers(usersTOs);
     }
 
 

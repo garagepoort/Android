@@ -215,6 +215,22 @@ public class JPARepository implements Repository
     {
         return entityManager.find(Alarm.class, alarmid);
     }
+
+
+    @Override
+    public User getUserById(int id)
+    {
+        User returnUser = null;
+        TypedQuery query = entityManager.createNamedQuery("User.findById", User.class).setParameter("id", id);
+        List<User> results = query.getResultList();
+        
+        if (!results.isEmpty())
+        {
+            returnUser = results.get(0);
+        }
+        
+        return returnUser;
+    }
 }
 
 

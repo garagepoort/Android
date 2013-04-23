@@ -64,20 +64,32 @@ public class Facade
     public Collection<UserTO> getUsersForAlarm(AlarmTO alarmTO) throws BusinessException
     {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
-        Collection<UserTO> userTOsForAlarm = new ArrayList<>();
         Collection<User> usersForAlarm = service.getUsersForAlarm(alarm);
+        
+        Collection<UserTO> userTOsForAlarm = new ArrayList<>();
         for(User user : usersForAlarm)
         {
             UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
             userTOsForAlarm.add(userTO);
         }
+        
         return userTOsForAlarm;
     }
 
 
-    public Collection<AlarmTO> getAlarmsForUser(UserTO user)
+    public Collection<AlarmTO> getAlarmsForUser(UserTO userTO) throws BusinessException
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        User user = transferObjectMapper.convertUserTOToUser(userTO);
+        Collection<Alarm> alarmsForUser = service.getAlarmsForUser(user);
+        
+        Collection<AlarmTO> alarmTOsForUser = new ArrayList<>();
+        for(Alarm alarm : alarmsForUser)
+        {
+            AlarmTO alarmTO = transferObjectMapper.convertAlarmToAlarmTO(alarm);
+            alarmTOsForUser.add(alarmTO);
+        }
+        
+        return alarmTOsForUser;
     }
 
 
@@ -180,6 +192,15 @@ public class Facade
         {
             throw new BusinessException(ex);
         }
+    }
+    
+    
+    public UserTO getUserById(int id) throws BusinessException
+    {
+        User user = service.getUserById(id);
+        UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
+
+        return userTO;
     }
 
 

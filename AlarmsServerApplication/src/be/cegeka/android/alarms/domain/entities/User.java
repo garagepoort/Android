@@ -19,7 +19,8 @@ import javax.persistence.Table;
 @Table(name = "\"user\"")
 @NamedQueries(
 {
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email")
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.userid = :id")
 })
 public class User implements Serializable
 {

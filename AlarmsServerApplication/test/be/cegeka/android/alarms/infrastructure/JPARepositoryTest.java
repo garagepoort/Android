@@ -85,11 +85,28 @@ public class JPARepositoryTest
         User result = jpaRepository.getUser(emailadres);
         assertEquals(testUser, result);
         assertTrue(result.getAlarms().contains(testAlarm));
-        for(Alarm a : result.getAlarms()){
+        for (Alarm a : result.getAlarms())
+        {
             assertTrue(a.getUsers().contains(result));
         }
     }
-    
+
+
+    @Test
+    public void testGetUserById()
+    {
+        int id = testUser.getUserid();
+        User result = jpaRepository.getUserById(id);
+        assertEquals(testUser, result);
+        assertTrue(result.getAlarms().contains(testAlarm));
+        for (Alarm a : result.getAlarms())
+        {
+            assertTrue(a.getUsers().contains(result));
+        }
+
+    }
+
+
     /**
      * Test of getUser method, of class JPARepository.
      */
@@ -99,12 +116,14 @@ public class JPARepositoryTest
         Alarm result = jpaRepository.getAlarm(testAlarm.getAlarmid());
         assertEquals(testAlarm, result);
         assertTrue(result.getUsers().contains(testUser));
-        for(User u : result.getUsers()){
+        for (User u : result.getUsers())
+        {
             assertTrue(u.getAlarms().contains(result));
         }
     }
-    
-     /**
+
+
+    /**
      * Test of getUser method, of class JPARepository.
      */
     @Test
@@ -180,11 +199,13 @@ public class JPARepositoryTest
         assertTrue(jpaRepository.getAllAlarms().contains(testAlarm));
     }
 
+
     @Test
     public void testAddRepeatedAlarm()
     {
         jpaRepository.getAllAlarms().contains(testRepeatedAlarm);
     }
+
 
     /**
      * Test of addUsers method, of class JPARepository.
@@ -354,8 +375,8 @@ public class JPARepositoryTest
         assertFalse(jpaRepository.getAllAlarms().contains(a3));
         assertFalse(jpaRepository.getAllAlarms().contains(a4));
     }
-    
-    
+
+
     @Test
     public void whenAlarmDeleted_ThenDoNotDeleteUser()
     {
