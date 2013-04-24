@@ -29,6 +29,10 @@ public class Facade
     public UserTO getUser(String emailadres) throws BusinessException
     {
         User user = service.getUser(emailadres);
+        
+        if(user == null){
+            return null;
+        }
 
         UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
 
@@ -385,6 +389,7 @@ public class Facade
     {
         this.transferObjectMapper = transferObjectMapper;
     }
+    
 }
 
 

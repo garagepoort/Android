@@ -13,6 +13,10 @@ public class UserTO
     private String repeatPaswoord;
     private String email;
     private Boolean admin;
+    
+    public UserTO(){
+        
+    }
 
     public UserTO(Integer userid, String naam, String achternaam, String paswoord, String repeatPaswoord, String email, Boolean admin)
     {
