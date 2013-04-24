@@ -29,9 +29,9 @@ public class Facade
     public UserTO getUser(String emailadres) throws BusinessException
     {
         User user = service.getUser(emailadres);
-        
+
         UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
-        
+
         return userTO;
     }
 
@@ -63,14 +63,14 @@ public class Facade
     {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
         Collection<User> usersForAlarm = service.getUsersForAlarm(alarm);
-        
+
         Collection<UserTO> userTOsForAlarm = new ArrayList<>();
-        for(User user : usersForAlarm)
+        for (User user : usersForAlarm)
         {
             UserTO userTO = transferObjectMapper.convertUserToUserTO(user);
             userTOsForAlarm.add(userTO);
         }
-        
+
         return userTOsForAlarm;
     }
 
@@ -79,14 +79,14 @@ public class Facade
     {
         User user = transferObjectMapper.convertUserTOToUser(userTO);
         Collection<Alarm> alarmsForUser = service.getAlarmsForUser(user);
-        
+
         Collection<AlarmTO> alarmTOsForUser = new ArrayList<>();
-        for(Alarm alarm : alarmsForUser)
+        for (Alarm alarm : alarmsForUser)
         {
             AlarmTO alarmTO = transferObjectMapper.convertAlarmToAlarmTO(alarm);
             alarmTOsForUser.add(alarmTO);
         }
-        
+
         return alarmTOsForUser;
     }
 
@@ -121,7 +121,7 @@ public class Facade
     public void addUsers(Collection<UserTO> userTOs) throws BusinessException
     {
         Collection<User> users = new ArrayList<>();
-        for(UserTO userTO : userTOs)
+        for (UserTO userTO : userTOs)
         {
             User user = transferObjectMapper.convertUserTOToUser(userTO);
             users.add(user);
@@ -137,10 +137,10 @@ public class Facade
     }
 
 
-    public void addAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException 
+    public void addAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException
     {
         Collection<Alarm> alarms = new ArrayList<>();
-        for(AlarmTO alarmTO : alarmTOs)
+        for (AlarmTO alarmTO : alarmTOs)
         {
             Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
             alarms.add(alarm);
@@ -156,7 +156,7 @@ public class Facade
     }
 
 
-    public UserTO updateUser(UserTO userTO) throws BusinessException 
+    public UserTO updateUser(UserTO userTO) throws BusinessException
     {
         User user = transferObjectMapper.convertUserTOToUser(userTO);
         try
@@ -168,12 +168,12 @@ public class Facade
             throw new BusinessException(ex);
         }
         userTO = transferObjectMapper.convertUserToUserTO(user);
-        
+
         return userTO;
     }
 
 
-    public AlarmTO updateAlarm(AlarmTO alarmTO) throws BusinessException 
+    public AlarmTO updateAlarm(AlarmTO alarmTO) throws BusinessException
     {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
         try
@@ -185,12 +185,12 @@ public class Facade
             throw new BusinessException(ex);
         }
         alarmTO = transferObjectMapper.convertAlarmToAlarmTO(alarm);
-        
+
         return alarmTO;
     }
 
 
-    public void deleteUser(UserTO userTO) throws BusinessException 
+    public void deleteUser(UserTO userTO) throws BusinessException
     {
         User user = transferObjectMapper.convertUserTOToUser(userTO);
         try
@@ -204,7 +204,7 @@ public class Facade
     }
 
 
-    public void deleteAlarm(AlarmTO alarmTO) throws BusinessException 
+    public void deleteAlarm(AlarmTO alarmTO) throws BusinessException
     {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
         try
@@ -218,10 +218,10 @@ public class Facade
     }
 
 
-    public void deleteUsers(Collection<UserTO> userTOs) throws BusinessException 
+    public void deleteUsers(Collection<UserTO> userTOs) throws BusinessException
     {
         Collection<User> users = new ArrayList<>();
-        for(UserTO userTO : userTOs)
+        for (UserTO userTO : userTOs)
         {
             User user = transferObjectMapper.convertUserTOToUser(userTO);
             users.add(user);
@@ -237,10 +237,10 @@ public class Facade
     }
 
 
-    public void deleteAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException 
+    public void deleteAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException
     {
         Collection<Alarm> alarms = new ArrayList<>();
-        for(AlarmTO alarmTO : alarmTOs)
+        for (AlarmTO alarmTO : alarmTOs)
         {
             Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
             alarms.add(alarm);
@@ -262,6 +262,29 @@ public class Facade
     }
 
 
+    public void addUserToAlarm(UserTO userTO, AlarmTO alarmTO) throws BusinessException
+    {
+        if (alarmTO == null || userTO == null)
+        {
+            throw new BusinessException(NULL_ERROR_MESSAGE);
+        }
+
+        User user = service.getUser(userTO.getEmail());
+        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+
+        alarm.addUser(user);
+
+        try
+        {
+            service.updateAlarm(alarm);
+        }
+        catch (DatabaseException ex)
+        {
+            throw new BusinessException(ex);
+        }
+    }
+
+
     public void addAlarmToUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException
     {
         if (alarmTO == null || userTO == null)
@@ -269,11 +292,13 @@ public class Facade
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
 
+        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+        User user = service.getUser(userTO.getEmail());
+
+        user.addAlarm(alarm);
+
         try
         {
-            Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
-            User user = service.getUser(userTO.getEmail());
-            user.addAlarm(alarm);
             service.updateUser(user);
         }
         catch (DatabaseException ex)
@@ -281,8 +306,8 @@ public class Facade
             throw new BusinessException(ex);
         }
     }
-    
-    
+
+
     public UserTO getUserById(int id) throws BusinessException
     {
         User user = service.getUserById(id);
@@ -291,7 +316,7 @@ public class Facade
         return userTO;
     }
 
-    
+
     private Alarm convertToTO(AlarmTO alarm) throws BusinessException
     {
         return transferObjectMapper.convertAlarmTOToAlarm(alarm);
@@ -302,15 +327,18 @@ public class Facade
     {
         return transferObjectMapper.convertAlarmToAlarmTO(createdAlarm);
     }
-    
-    
+
+
     public void removeUserFromAlarm(UserTO userTO, AlarmTO alarmTO) throws BusinessException
     {
-        User user = transferObjectMapper.convertUserTOToUser(userTO);
-        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        User user = service.getUser(userTO.getEmail());
+        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+        
+        alarm.removeUser(user);
+        
         try
         {
-            service.removeUserFromAlarm(user, alarm);
+            service.updateAlarm(alarm);
         }
         catch (DatabaseException ex)
         {
@@ -321,11 +349,14 @@ public class Facade
 
     public void removeAlarmFromUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException
     {
-        User user = transferObjectMapper.convertUserTOToUser(userTO);
-        Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
+        User user = service.getUser(userTO.getEmail());
+        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+        
+        user.removeAlarm(alarm);
+        
         try
         {
-            service.removeAlarmFromUser(alarm, user);
+            service.updateUser(user);
         }
         catch (DatabaseException ex)
         {
@@ -333,10 +364,11 @@ public class Facade
         }
     }
 
-    
+
     /**
-     * ONLY FOR TESTING
-     * @param service 
+     * ONLY FOR TESTING.
+     *
+     * @param service
      */
     void setService(Service service)
     {
@@ -345,8 +377,9 @@ public class Facade
 
 
     /**
-     * ONLY FOR TESTING
-     * @param transferObjectMapper 
+     * ONLY FOR TESTING.
+     *
+     * @param transferObjectMapper
      */
     void setTransferObjectMapper(TransferObjectMapper transferObjectMapper)
     {

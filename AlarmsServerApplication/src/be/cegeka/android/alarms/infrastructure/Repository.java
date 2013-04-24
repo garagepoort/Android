@@ -28,7 +28,4 @@ public interface Repository
     public void deleteAlarm(Alarm alarm) throws DatabaseException;
     public void deleteUsers(Collection<User> users) throws DatabaseException;
     public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException;
-
-    public void removeUserFromAlarm(User user, Alarm alarm) throws DatabaseException;
-    public void removeAlarmFromUser(Alarm alarm, User user) throws DatabaseException;
 }

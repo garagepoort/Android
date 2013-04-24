@@ -375,13 +375,13 @@ public class FacadeTest
     public void testRemoveUserFromAlarm() throws BusinessException, DatabaseException
     {
         alarm.addUser(user);
-        
-        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
-        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
         
         facade.removeUserFromAlarm(userTO, alarmTO);
         
-        verify(serviceMock).removeUserFromAlarm(user, alarm);
+        verify(serviceMock).updateAlarm(alarm);
+        assertTrue(alarm.getUsers().isEmpty());
     }
 
 
@@ -389,12 +389,36 @@ public class FacadeTest
     public void testRemoveAlarmFromUser() throws BusinessException, DatabaseException
     {
         user.addAlarm(alarm);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
         
-        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO)).thenReturn(alarm);
-        when(transferObjectMapperMock.convertUserTOToUser(userTO)).thenReturn(user);
-
         facade.removeAlarmFromUser(alarmTO, userTO);
         
-        verify(serviceMock).removeAlarmFromUser(alarm, user);
+        verify(serviceMock).updateUser(user);
+        assertTrue(user.getAlarms().isEmpty());
+    }
+    
+    
+    @Test
+    public void testAddUserToAlarm() throws BusinessException, DatabaseException
+    {
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        
+        facade.addUserToAlarm(userTO, alarmTO);
+        
+        verify(serviceMock).updateAlarm(alarm);
+        assertTrue(alarm.getUsers().size() == 1);
+    }
+    
+    
+    @Test
+    public void testAddAlarmToUser() throws BusinessException, DatabaseException
+    {
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        
+        facade.addAlarmToUser(alarmTO, userTO);
+        
+        verify(serviceMock).updateUser(user);
+        assertTrue(user.getAlarms().size() == 1);
     }
 }

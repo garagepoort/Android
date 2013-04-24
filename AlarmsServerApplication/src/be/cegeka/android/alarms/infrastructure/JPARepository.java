@@ -231,20 +231,6 @@ public class JPARepository implements Repository
         
         return returnUser;
     }
-
-
-    @Override
-    public void removeUserFromAlarm(User user, Alarm alarm) throws DatabaseException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-    @Override
-    public void removeAlarmFromUser(Alarm alarm, User user) throws DatabaseException
-    {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
 
 
