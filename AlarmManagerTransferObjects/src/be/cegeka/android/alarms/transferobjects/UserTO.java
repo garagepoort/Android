@@ -1,10 +1,8 @@
 package be.cegeka.android.alarms.transferobjects;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.Serializable;
 
-public class UserTO
+public class UserTO implements Serializable
 {
     private Integer userid;
     private String naam;
