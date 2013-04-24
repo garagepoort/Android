@@ -271,12 +271,10 @@ public class Facade
 
         User user = service.getUser(userTO.getEmail());
         Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
-
-        alarm.addUser(user);
-
+        
         try
         {
-            service.updateAlarm(alarm);
+            service.addUserToAlarm(user, alarm);
         }
         catch (DatabaseException ex)
         {
@@ -294,12 +292,10 @@ public class Facade
 
         Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
         User user = service.getUser(userTO.getEmail());
-
-        user.addAlarm(alarm);
-
+        
         try
         {
-            service.updateUser(user);
+            service.addAlarmToUser(alarm, user);
         }
         catch (DatabaseException ex)
         {

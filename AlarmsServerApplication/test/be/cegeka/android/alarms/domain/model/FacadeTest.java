@@ -402,12 +402,12 @@ public class FacadeTest
     @Test
     public void testAddUserToAlarm() throws BusinessException, DatabaseException
     {
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
         when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
         
         facade.addUserToAlarm(userTO, alarmTO);
         
-        verify(serviceMock).updateAlarm(alarm);
-        assertTrue(alarm.getUsers().size() == 1);
+        verify(serviceMock).addUserToAlarm(user, alarm);
     }
     
     
@@ -415,10 +415,10 @@ public class FacadeTest
     public void testAddAlarmToUser() throws BusinessException, DatabaseException
     {
         when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
         
         facade.addAlarmToUser(alarmTO, userTO);
         
-        verify(serviceMock).updateUser(user);
-        assertTrue(user.getAlarms().size() == 1);
+        verify(serviceMock).addAlarmToUser(alarm, user);
     }
 }

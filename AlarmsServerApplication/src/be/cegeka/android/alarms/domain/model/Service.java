@@ -2,22 +2,24 @@ package be.cegeka.android.alarms.domain.model;
 
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
+import be.cegeka.android.alarms.domain.exceptions.BusinessException;
 import be.cegeka.android.alarms.infrastructure.DatabaseException;
 import be.cegeka.android.alarms.infrastructure.JPARepository;
 import be.cegeka.android.alarms.infrastructure.Repository;
 import java.util.Collection;
-import java.util.Collections;
 
 
 
 public class Service
 {
     private Repository repository;
-
+    private GCMCommunication gcmCommunication;
+    
 
     public Service()
     {
         repository = new JPARepository();
+        gcmCommunication = new GCMCommunication(this);
     }
     
     
@@ -121,5 +123,33 @@ public class Service
     public User getUserById(int id)
     {
         return repository.getUserById(id);
+    }
+
+
+    void addAlarmToUser(Alarm alarm, User user) throws DatabaseException
+    {
+        user.addAlarm(alarm);
+
+        updateUser(user);
+        
+        gcmCommunication.notifyUserOfChange(user);
+    }
+
+
+    void addUserToAlarm(User user, Alarm alarm) throws DatabaseException
+    {
+        alarm.addUser(user);
+
+        updateAlarm(alarm);
+    }
+    
+    
+    /**
+     * ONLY FOR TESTING.
+     * @param gcmCommunication 
+     */
+    void setGCMCommunication(GCMCommunication gcmCommunication)
+    {
+        this.gcmCommunication = gcmCommunication;
     }
 }
