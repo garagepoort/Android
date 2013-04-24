@@ -17,11 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
 import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.db.LocalAlarmRepository;
 import com.cegeka.alarmmanager.infrastructure.InternetChecker;
-import com.cegeka.alarmmanager.model.Alarm;
 import com.cegeka.alarmmanager.sync.AlarmSyncer;
 import com.cegeka.alarmmanager.utilities.UserLoginLogOut;
 
@@ -69,7 +69,7 @@ public class UpdateActivity extends Activity implements Observer
 	 */
 	private void initListview()
 	{
-		ArrayAdapter<Alarm> arrayAdapter = new ArrayAdapter<Alarm>(this,
+		ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(this,
 				android.R.layout.simple_list_item_1,
 				LocalAlarmRepository.getLocalAlarms(this));
 		listView.setAdapter(arrayAdapter);
@@ -129,7 +129,7 @@ public class UpdateActivity extends Activity implements Observer
 		public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 				long arg3)
 		{
-			final Alarm alarm = (Alarm) listView.getItemAtPosition(position);
+			final AlarmTO alarm = (AlarmTO) listView.getItemAtPosition(position);
 			runOnUiThread(new Runnable()
 			{
 				@Override
@@ -138,7 +138,7 @@ public class UpdateActivity extends Activity implements Observer
 					final AlertDialog alertDialog = new AlertDialog.Builder(
 							UpdateActivity.this).create();
 					alertDialog.setTitle(alarm.getTitle());
-					alertDialog.setMessage(alarm.getFullInformation());
+					alertDialog.setMessage(alarm.toString());
 					alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
 							new DialogInterface.OnClickListener()
 							{

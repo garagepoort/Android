@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
+
 import com.cegeka.alarmmanager.exceptions.WebserviceException;
-import com.cegeka.alarmmanager.model.Alarm;
-import com.cegeka.alarmmanager.model.User;
 
 public class RemoteDBWebConnection extends Observable implements RemoteDBConnectionInterface, Observer{
 
@@ -25,7 +26,7 @@ public class RemoteDBWebConnection extends Observable implements RemoteDBConnect
 	 * @see com.cegeka.alarmmanager.RemoteDBConnectionInterface.ConnectionInterface#getUser()
 	 */
 	@Override
-	public User getUser(){
+	public UserTO getUser(){
 		return r.getUser();
 	}
 	
@@ -34,10 +35,10 @@ public class RemoteDBWebConnection extends Observable implements RemoteDBConnect
 	 * @see com.cegeka.alarmmanager.RemoteDBConnectionInterface.ConnectionInterface#startAlarmsFromUser(com.cegeka.alarmmanager.model.User)
 	 */
 	@Override
-	public void startAlarmsFromUser(User u){
+	public void startAlarmsFromUser(UserTO u){
 		r = new RemoteDBSoapRequest();
 		r.addObserver(this);
-		r.execute(RemoteDBSoapRequest.GET_ALARMS_FROM_USER, u.getEmailadres(), u.getPaswoord());
+		r.execute(RemoteDBSoapRequest.GET_ALARMS_FROM_USER, u.getEmail(), u.getPaswoord());
 	}
 
 	/** 
@@ -53,7 +54,7 @@ public class RemoteDBWebConnection extends Observable implements RemoteDBConnect
 	 * @see com.cegeka.alarmmanager.RemoteDBConnectionInterface.ConnectionInterface#getAlarms()
 	 */
 	@Override
-	public ArrayList<Alarm> getAlarms(){
+	public ArrayList<AlarmTO> getAlarms(){
 		return r.getAlarms();
 	}
 
