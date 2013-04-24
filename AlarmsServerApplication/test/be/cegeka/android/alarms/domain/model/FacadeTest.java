@@ -227,17 +227,17 @@ public class FacadeTest
     public void testAddAlarms() throws Exception
     {
         Collection<Alarm> alarms = new ArrayList<>();
-        Alarm alarm1 = new Alarm(4531, "testAlarmTitle", "testAlarmInfo", 156123);
-        Alarm alarm2 = new Alarm(54342, "testAlarmTitle", "testAlarmInfo", 156123);
-        Alarm alarm3 = new Alarm(35423, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm1 = new Alarm(1, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm2 = new Alarm(2, "testAlarmTitle", "testAlarmInfo", 15612);
+        Alarm alarm3 = new Alarm(3, "testAlarmTitle", "testAlarmInfo", 1561);
         alarms.add(alarm1);
         alarms.add(alarm2);
         alarms.add(alarm3);
 
         Collection<AlarmTO> alarmTOs = new ArrayList<>();
         AlarmTO alarmTO1 = new AlarmTO(1, "testAlarmTitle", "testAlarmInfo", 156123);
-        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 156123);
-        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 15612);
+        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 1561);
         alarmTOs.add(alarmTO1);
         alarmTOs.add(alarmTO2);
         alarmTOs.add(alarmTO3);
@@ -347,24 +347,24 @@ public class FacadeTest
     public void testDeleteAlarms() throws Exception
     {
         Collection<Alarm> alarms = new ArrayList<>();
-        Alarm alarm1 = new Alarm(4531, "testAlarmTitle", "testAlarmInfo", 156123);
-        Alarm alarm2 = new Alarm(54342, "testAlarmTitle", "testAlarmInfo", 156123);
-        Alarm alarm3 = new Alarm(35423, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm1 = new Alarm(1, "testAlarmTitle", "testAlarmInfo", 156123);
+        Alarm alarm2 = new Alarm(2, "testAlarmTitle", "testAlarmInfo", 15612);
+        Alarm alarm3 = new Alarm(3, "testAlarmTitle", "testAlarmInfo", 1561);
         alarms.add(alarm1);
         alarms.add(alarm2);
         alarms.add(alarm3);
 
         Collection<AlarmTO> alarmTOs = new ArrayList<>();
         AlarmTO alarmTO1 = new AlarmTO(1, "testAlarmTitle", "testAlarmInfo", 156123);
-        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 156123);
-        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 156123);
+        AlarmTO alarmTO2 = new AlarmTO(2, "testAlarmTitle", "testAlarmInfo", 15612);
+        AlarmTO alarmTO3 = new AlarmTO(3, "testAlarmTitle", "testAlarmInfo", 1561);
         alarmTOs.add(alarmTO1);
         alarmTOs.add(alarmTO2);
         alarmTOs.add(alarmTO3);
         
-        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm1)).thenReturn(alarmTO1);
-        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm2)).thenReturn(alarmTO2);
-        when(transferObjectMapperMock.convertAlarmToAlarmTO(alarm3)).thenReturn(alarmTO3);
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO1)).thenReturn(alarm1);
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO2)).thenReturn(alarm2);
+        when(transferObjectMapperMock.convertAlarmTOToAlarm(alarmTO3)).thenReturn(alarm3);
         
         facade.deleteAlarms(alarmTOs);
         verify(serviceMock).deleteAlarms(alarms);
