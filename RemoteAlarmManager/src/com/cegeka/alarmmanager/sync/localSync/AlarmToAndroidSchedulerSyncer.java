@@ -7,22 +7,23 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
-import com.cegeka.alarmmanager.model.Alarm;
+import com.cegeka.alarmmanager.utilities.DateChecker;
 import com.cegeka.alarmmanager.view.AlarmReceiverActivity;
 
 public class AlarmToAndroidSchedulerSyncer {
 
 	/**
-	 * schedule an {@link Alarm} in the {@link AlarmManager}.
+	 * schedule an {@link AlarmTO} in the {@link AlarmManager}.
 	 * 
 	 * @param context
 	 *            The context
 	 * @param alarm
-	 *            The {@link Alarm} to be scheduled.
+	 *            The {@link AlarmTO} to be scheduled.
 	 */
-	public static void scheduleAlarms(Context context, List<Alarm> alarmen) {
-		for (Alarm alarm : alarmen) {
+	public static void scheduleAlarms(Context context, List<AlarmTO> alarmen) {
+		for (AlarmTO alarm : alarmen) {
 			scheduleAlarm(context, alarm);
 		}
 
@@ -36,13 +37,13 @@ public class AlarmToAndroidSchedulerSyncer {
 	 * @param alarmen
 	 *            The alarms to cancel.
 	 */
-	public static void cancelAlarms(Context context, List<Alarm> alarmen) {
-		for (Alarm a : alarmen) {
+	public static void cancelAlarms(Context context, List<AlarmTO> alarmen) {
+		for (AlarmTO a : alarmen) {
 			cancelAlarm(context, a);
 		}
 	}
 
-	private static void cancelAlarm(Context context, Alarm alarm) {
+	private static void cancelAlarm(Context context, AlarmTO alarm) {
 		PendingIntent pintent = createPendingIntentFor(context, alarm);
 		boolean wasScheduledBefore = pintent != null;
 		if (wasScheduledBefore) {
@@ -51,25 +52,25 @@ public class AlarmToAndroidSchedulerSyncer {
 	}
 
 
-	public static void scheduleAlarm(Context context, Alarm alarm) {
-		if (alarm.isDateInPast()) { 
+	public static void scheduleAlarm(Context context, AlarmTO alarm) {
+		if (DateChecker.isDateInPast(alarm)) { 
 			return;
 		}
 		
 		PendingIntent pendingIntent = createPendingIntentFor(context, alarm);
 		alarmManager(context).set(
 				AlarmManager.RTC_WAKEUP, 
-				alarm.getDate().getTimeInMillis(),
+				alarm.getDateInMillis(),
 				pendingIntent);
 	}
 	
 
-	private static PendingIntent createPendingIntentFor(Context context, Alarm alarm) {
+	private static PendingIntent createPendingIntentFor(Context context, AlarmTO alarm) {
 		Intent intent = new Intent(context, AlarmReceiverActivity.class);
-		intent.putExtra("Alarm", alarm);
+		intent.putExtra("AlarmTO", alarm);
 		return PendingIntent.getActivity(
 				context,
-				(int) alarm.getId(), 
+				(int) alarm.getAlarmID(), 
 				intent, 
 				PendingIntent.FLAG_CANCEL_CURRENT);
 	}

@@ -3,17 +3,16 @@ package com.cegeka.alarmmanager.utilities;
 import java.io.IOException;
 
 import android.content.Context;
-
-import com.cegeka.alarmmanager.model.User;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 public final class UserLoginLogOut {
 	
-	public static User getLoggedInUser(Context ctx){
+	public static UserTO getLoggedInUser(Context ctx){
 		return UserLoaderSaver.loadUser(ctx);
 	}
 	
 	public static boolean userLoggedIn(Context context){
-		User u = getLoggedInUser(context);
+		UserTO u = getLoggedInUser(context);
 		return u != null; 
 	}
 	
@@ -25,7 +24,7 @@ public final class UserLoginLogOut {
 		}
 	}
 	
-	public static void logInUser(Context ctx, User u){
+	public static void logInUser(Context ctx, UserTO u){
 		try {
 			UserLoaderSaver.saveUser(ctx, u);
 		} catch (IOException e) {

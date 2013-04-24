@@ -9,12 +9,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
 
-import com.cegeka.alarmmanager.exceptions.AlarmException;
 import com.cegeka.alarmmanager.exceptions.DatabaseException;
-import com.cegeka.alarmmanager.model.Alarm;
-import com.cegeka.alarmmanager.model.Repeat_Unit;
-import com.cegeka.alarmmanager.model.RepeatedAlarm;
 
 class LocalAlarmDatabase {
 
@@ -57,66 +55,66 @@ class LocalAlarmDatabase {
 		database.delete(AlarmSQLHelper.TABLE_ALARMS, "", null);
 	}
 
-	public RepeatedAlarm createRepeatedAlarm(RepeatedAlarm alarm) throws DatabaseException 
+	public RepeatedAlarmTO createRepeatedAlarmTO(RepeatedAlarmTO alarm) throws DatabaseException 
 	{
-		ContentValues values = getRepeatedAlarmContentValues(alarm);
+		ContentValues values = getRepeatedAlarmTOContentValues(alarm);
 		long insertId = database.insert(AlarmSQLHelper.TABLE_ALARMS, null, values);
 		Cursor cursor = database.query(AlarmSQLHelper.TABLE_ALARMS, allColumns, AlarmSQLHelper.COLUMN_ID + " = " + insertId, null, null, null, null);
 		cursor.moveToFirst();
-		RepeatedAlarm newAlarm = cursorToRepeatedAlarm(cursor);
+		RepeatedAlarmTO newAlarmTO = cursorToRepeatedAlarmTO(cursor);
 		cursor.close();
-		return newAlarm;
+		return newAlarmTO;
 
 	}
 
-	private ContentValues getRepeatedAlarmContentValues(RepeatedAlarm alarm) {
+	private ContentValues getRepeatedAlarmTOContentValues(RepeatedAlarmTO alarm) {
 		ContentValues values = new ContentValues();
-		values.put(AlarmSQLHelper.COLUMN_ID, alarm.getId());
+		values.put(AlarmSQLHelper.COLUMN_ID, alarm.getAlarmID());
 		values.put(AlarmSQLHelper.COLUMN_TITLE, alarm.getTitle());
-		values.put(AlarmSQLHelper.COLUMN_DESCR, alarm.getDescription());
-		values.put(AlarmSQLHelper.COLUMN_DATE, alarm.getDate().getTimeInMillis());
+		values.put(AlarmSQLHelper.COLUMN_DESCR, alarm.getInfo());
+		values.put(AlarmSQLHelper.COLUMN_DATE, alarm.getDateInMillis());
 		values.put(AlarmSQLHelper.COLUMN_REPEATED, true);
-		values.put(AlarmSQLHelper.COLUMN_REPEAT_UNIT, alarm.getRepeatUnit().ordinal());
-		values.put(AlarmSQLHelper.COLUMN_REPEAT_UNIT_QUANTITY, alarm.getRepeatUnitQuantity());
-		values.put(AlarmSQLHelper.COLUMN_REPEAT_END_DATE, alarm.getRepeatEndDate().getTimeInMillis());
+		values.put(AlarmSQLHelper.COLUMN_REPEAT_UNIT, alarm.getRepeatUnit());
+		values.put(AlarmSQLHelper.COLUMN_REPEAT_UNIT_QUANTITY, alarm.getRepeatQuantity());
+		values.put(AlarmSQLHelper.COLUMN_REPEAT_END_DATE, alarm.getRepeatEnddate());
 		return values;
 	}
 
-	public Alarm createAlarm(Alarm alarm) throws DatabaseException 
+	public AlarmTO createAlarmTO(AlarmTO alarm) throws DatabaseException 
 	{
 
-		ContentValues values = getAlarmContentValues(alarm);
+		ContentValues values = getAlarmTOContentValues(alarm);
 		long insertId = database.insert(AlarmSQLHelper.TABLE_ALARMS, null, values);
 		Cursor cursor = database.query(AlarmSQLHelper.TABLE_ALARMS, allColumns, AlarmSQLHelper.COLUMN_ID + " = " + insertId, null, null, null, null);
 		cursor.moveToFirst();
-		Alarm newAlarm = cursorToAlarm(cursor);
+		AlarmTO newAlarmTO = cursorToAlarmTO(cursor);
 		cursor.close();
-		return newAlarm;
+		return newAlarmTO;
 
 	}
 	
 	
-	public void storeAlarms(List<Alarm> alarms) throws DatabaseException
+	public void storeAlarmTOs(List<AlarmTO> alarms) throws DatabaseException
 	{
-		for(Alarm alarm : alarms)
+		for(AlarmTO alarm : alarms)
 		{
-			if(alarm instanceof RepeatedAlarm)
+			if(alarm instanceof RepeatedAlarmTO)
 			{
-				createRepeatedAlarm((RepeatedAlarm) alarm);
+				createRepeatedAlarmTO((RepeatedAlarmTO) alarm);
 			}
 			else
 			{
-				createAlarm(alarm);
+				createAlarmTO(alarm);
 			}
 		}
 	}
 
-	private ContentValues getAlarmContentValues(Alarm alarm) {
+	private ContentValues getAlarmTOContentValues(AlarmTO alarm) {
 		ContentValues values = new ContentValues();
-		values.put(AlarmSQLHelper.COLUMN_ID, alarm.getId());
+		values.put(AlarmSQLHelper.COLUMN_ID, alarm.getAlarmID());
 		values.put(AlarmSQLHelper.COLUMN_TITLE, alarm.getTitle());
-		values.put(AlarmSQLHelper.COLUMN_DESCR, alarm.getDescription());
-		values.put(AlarmSQLHelper.COLUMN_DATE, alarm.getDate().getTimeInMillis());
+		values.put(AlarmSQLHelper.COLUMN_DESCR, alarm.getInfo());
+		values.put(AlarmSQLHelper.COLUMN_DATE, alarm.getDateInMillis());
 		values.put(AlarmSQLHelper.COLUMN_REPEATED, false);
 		values.putNull(AlarmSQLHelper.COLUMN_REPEAT_UNIT);
 		values.putNull(AlarmSQLHelper.COLUMN_REPEAT_UNIT_QUANTITY);
@@ -124,44 +122,44 @@ class LocalAlarmDatabase {
 		return values;
 	}
 
-	public void deleteAlarm(Alarm alarm) 
+	public void deleteAlarmTO(AlarmTO alarm) 
 	{
-		long id = alarm.getId();
+		long id = alarm.getAlarmID();
 		database.delete(AlarmSQLHelper.TABLE_ALARMS, AlarmSQLHelper.COLUMN_ID + " = " + id, null);
 	}
 
-	public Alarm updateAlarm(Alarm alarm)
+	public AlarmTO updateAlarmTO(AlarmTO alarm)
 	{
-		ContentValues values = getAlarmContentValues(alarm);
+		ContentValues values = getAlarmTOContentValues(alarm);
 		String where = "id=?";
-		String[] whereArgs = new String[] {String.valueOf(alarm.getId())};
+		String[] whereArgs = new String[] {String.valueOf(alarm.getAlarmID())};
 		database.update(AlarmSQLHelper.TABLE_ALARMS, values, where, whereArgs);
-		return (Alarm) getAlarmById(alarm.getId());
+		return (AlarmTO) getAlarmTOById(alarm.getAlarmID());
 	}
 
-	public RepeatedAlarm updateRepeatedAlarm(RepeatedAlarm alarm)
+	public RepeatedAlarmTO updateRepeatedAlarmTO(RepeatedAlarmTO alarm)
 	{
-		ContentValues values = getRepeatedAlarmContentValues(alarm);
+		ContentValues values = getRepeatedAlarmTOContentValues(alarm);
 		String where = "id=?";
-		String[] whereArgs = new String[] {String.valueOf(alarm.getId())};
+		String[] whereArgs = new String[] {String.valueOf(alarm.getAlarmID())};
 		database.update(AlarmSQLHelper.TABLE_ALARMS, values, where, whereArgs);
-		return (RepeatedAlarm) getAlarmById(alarm.getId());
+		return (RepeatedAlarmTO) getAlarmTOById(alarm.getAlarmID());
 	}
 
-	public ArrayList<Alarm> getAllAlarms() throws DatabaseException 
+	public ArrayList<AlarmTO> getAllAlarmTOs() throws DatabaseException 
 	{
 		
-		ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+		ArrayList<AlarmTO> alarms = new ArrayList<AlarmTO>();
 		Cursor cursor = database.query(AlarmSQLHelper.TABLE_ALARMS, allColumns, null, null, null, null, null);
 		cursor.moveToFirst();
 
 		while (!cursor.isAfterLast()) {
-			Alarm alarm;
+			AlarmTO alarm;
 			if(cursor.getInt(4) == 1){
-				alarm = cursorToRepeatedAlarm(cursor);
+				alarm = cursorToRepeatedAlarmTO(cursor);
 			}
 			else {
-				alarm = cursorToAlarm(cursor);
+				alarm = cursorToAlarmTO(cursor);
 			}
 			alarms.add(alarm);
 			cursor.moveToNext();
@@ -172,44 +170,19 @@ class LocalAlarmDatabase {
 
 	}
 
-	private RepeatedAlarm cursorToRepeatedAlarm(Cursor cursor) throws DatabaseException 
+	private RepeatedAlarmTO cursorToRepeatedAlarmTO(Cursor cursor) throws DatabaseException 
 	{
-		try {
-
-			RepeatedAlarm alarm = new RepeatedAlarm();
-
-			alarm.setId(cursor.getLong(0));
-			alarm.setTitle(cursor.getString(1));
-			alarm.setDescription(cursor.getString(2));
-			alarm.setDate(getMillis(cursor.getString(3)));
-			alarm.setRepeatUnit(Repeat_Unit.values()[cursor.getInt(5)]);
-			alarm.setRepeatUnitQuantity(cursor.getInt(6));
-			alarm.setRepeatEndDate(getMillis(cursor.getString(7)));
-
+		
+			RepeatedAlarmTO alarm = new RepeatedAlarmTO(cursor.getInt(5),cursor.getInt(6),cursor.getLong(7),cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getLong(3));
 			return alarm;
 
-		} catch (AlarmException e) {
-			throw new DatabaseException(e);
-		}
 	}
 
-	private Alarm cursorToAlarm(Cursor cursor) throws DatabaseException{
+	private AlarmTO cursorToAlarmTO(Cursor cursor) throws DatabaseException{
 
-		try {
 
-			Alarm alarm = new Alarm();
-
-			alarm.setId(cursor.getLong(0));
-			alarm.setTitle(cursor.getString(1));
-			alarm.setDescription(cursor.getString(2));
-			alarm.setDate(getMillis(cursor.getString(3)));
-
+			AlarmTO alarm = new AlarmTO(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getLong(3));
 			return alarm;
-
-		}
-		catch (AlarmException e) {
-			throw new DatabaseException(e);
-		}
 	}
 
 	private Calendar getMillis(String millisString)
@@ -234,12 +207,12 @@ class LocalAlarmDatabase {
 			if(cursor.getInt(4) == 1){
 				Calendar repeatEndDate = getMillis(cursor.getString(7));
 				Calendar date = getMillis(cursor.getString(3));
-				Repeat_Unit unit = Repeat_Unit.values()[cursor.getInt(5)];
+				int unit = cursor.getInt(5);
 				int repeatUnitQuantity = cursor.getInt(6);
 				if(date.before(Calendar.getInstance())){
 
 					while(date.before(Calendar.getInstance()) && date.before(repeatEndDate)){
-						date.add(unit.getCalendarUnit(), repeatUnitQuantity);
+						date.add(unit, repeatUnitQuantity);
 					}
 
 					if(date.after(Calendar.getInstance()) && date.before(repeatEndDate)){
@@ -269,15 +242,15 @@ class LocalAlarmDatabase {
 	}
 
 
-	public Alarm getAlarmById(long id){
-		Alarm alarm = null;
+	public AlarmTO getAlarmTOById(long id){
+		AlarmTO alarm = null;
 		Cursor cursor = database.query(AlarmSQLHelper.TABLE_ALARMS, allColumns, null, null, null, null, null);
 		cursor.moveToFirst();
 		boolean found =false;
 		while(!cursor.isAfterLast() && !found){
 			// If repeating alarm
 			if(cursor.getInt(0) == id){
-				alarm = createAlarmFromCursor(cursor); 
+				alarm = createAlarmTOFromCursor(cursor); 
 				found=true;
 			}
 			cursor.moveToNext();
@@ -286,34 +259,34 @@ class LocalAlarmDatabase {
 		return alarm;
 	}
 
-	public void deleteAlarmsByIds(ArrayList<Long> idsToDelete){
+	public void deleteAlarmTOsByIds(ArrayList<Long> idsToDelete){
 		for(Long id : idsToDelete){
 			database.delete(AlarmSQLHelper.TABLE_ALARMS, AlarmSQLHelper.COLUMN_ID + " = " + id, null);
 		}
 	}
 
-	public void deleteAlarms(ArrayList<Alarm> alarms){
-		for(Alarm alarm : alarms){
+	public void deleteAlarmTOs(ArrayList<AlarmTO> alarms){
+		for(AlarmTO alarm : alarms){
 			if(alarm!=null){
-				database.delete(AlarmSQLHelper.TABLE_ALARMS, AlarmSQLHelper.COLUMN_ID + " = " + alarm.getId(), null);
+				database.delete(AlarmSQLHelper.TABLE_ALARMS, AlarmSQLHelper.COLUMN_ID + " = " + alarm.getAlarmID(), null);
 			}
 		}
 	}
 
-	public ArrayList<Alarm> getAllAlarmsExcept(ArrayList<Alarm> alarms){
-		ArrayList<Alarm> alarmsresult = new ArrayList<Alarm>();
+	public ArrayList<AlarmTO> getAllAlarmTOsExcept(ArrayList<AlarmTO> alarms){
+		ArrayList<AlarmTO> alarmsresult = new ArrayList<AlarmTO>();
 		Cursor cursor = database.query(AlarmSQLHelper.TABLE_ALARMS, allColumns, null, null, null, null, null);
 		cursor.moveToFirst();
 		while(!cursor.isAfterLast()){
 			long id = cursor.getLong(0);
 			boolean contains = false;
-			for(Alarm a : alarms){
-				if(id==a.getId()){
+			for(AlarmTO a : alarms){
+				if(id==a.getAlarmID()){
 					contains=true;
 				}
 			}
 			if(!contains){
-				alarmsresult.add(createAlarmFromCursor(cursor));
+				alarmsresult.add(createAlarmTOFromCursor(cursor));
 			}
 			cursor.moveToNext();
 		}
@@ -321,25 +294,18 @@ class LocalAlarmDatabase {
 		return alarmsresult;
 	}
 
-	private Alarm createAlarmFromCursor(Cursor cursor){
-		Alarm alarm = null;
+	private AlarmTO createAlarmTOFromCursor(Cursor cursor){
+		AlarmTO alarm = null;
 		if(cursor.getInt(4) == 1){
-			Calendar date = getMillis(cursor.getString(3));
-			Calendar enddate = getMillis(cursor.getString(7));
-			Repeat_Unit unit = Repeat_Unit.values()[cursor.getInt(5)];
+			long date = cursor.getLong(3);
+			long enddate = cursor.getLong(7);
+			int unit = cursor.getInt(5);
 			int repeatUnitQuantity = cursor.getInt(6);
-			try {
-				alarm = new RepeatedAlarm(cursor.getLong(0), cursor.getString(1), cursor.getString(2), date, unit, repeatUnitQuantity, enddate);
-			} catch (AlarmException e) {
-				e.printStackTrace();
-			}
+				alarm = new RepeatedAlarmTO(unit, repeatUnitQuantity, enddate, cursor.getInt(0), cursor.getString(1), cursor.getString(2), date);
+		
 		}else{
-			Calendar date = getMillis(cursor.getString(3));
-			try {
-				alarm = new Alarm(cursor.getLong(0), cursor.getString(1), cursor.getString(2), date);
-			} catch (AlarmException e) {
-				e.printStackTrace();
-			}
+			long date = cursor.getLong(3);
+			alarm = new AlarmTO(cursor.getInt(0), cursor.getString(1), cursor.getString(2), date);
 		}
 		return alarm;
 	}

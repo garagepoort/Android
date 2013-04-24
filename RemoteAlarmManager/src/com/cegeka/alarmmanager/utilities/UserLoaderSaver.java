@@ -4,8 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
-import com.cegeka.alarmmanager.model.User;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
 class UserLoaderSaver
@@ -17,15 +16,16 @@ class UserLoaderSaver
 	 * @param user The {@link User} to be saved in the {@link SharedPreferences}.
 	 * @throws IOException
 	 */
-	public static void saveUser(Context ctx, User user) throws IOException
+	public static void saveUser(Context ctx, UserTO user) throws IOException
 	{
 		SharedPreferences settings = ctx.getSharedPreferences("file", 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt("id", user.getId());
+		editor.putInt("id", user.getUserid());
 		editor.putString("naam", user.getPaswoord());
-		editor.putString("achternaam", user.getEmailadres());
-		editor.putString("email", user.getEmailadres());
+		editor.putString("achternaam", user.getEmail());
+		editor.putString("email", user.getEmail());
 		editor.putString("paswoord", user.getPaswoord());
+		editor.putBoolean("admin", user.isAdmin());
 		editor.commit();
 	}
 
@@ -35,7 +35,7 @@ class UserLoaderSaver
 	 * 
 	 * @return A {@link User} if the user was saved else null
 	 */
-	public static User loadUser(Context ctx)
+	public static UserTO loadUser(Context ctx)
 	{
 		SharedPreferences settings = ctx.getSharedPreferences("file", 0);
 		
@@ -48,8 +48,8 @@ class UserLoaderSaver
 		String achternaam = settings.getString("achternaam", "");
 		String email = settings.getString("email", "");
 		String paswoord = settings.getString("paswoord", "");
-		
-		User user = new User(id, naam, achternaam, email);
+		boolean admin = settings.getBoolean("admin", false);
+		UserTO user = new UserTO(id, naam, achternaam, email, admin);
 		user.setPaswoord(paswoord);
 		
 		return user;

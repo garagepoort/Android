@@ -3,8 +3,8 @@ package com.cegeka.alarmmanager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
-import com.cegeka.alarmmanager.model.User;
 import com.cegeka.alarmmanager.sync.AlarmSyncer;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBConnectionInterface;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBWebConnection;
@@ -30,9 +30,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onRegistered(Context arg0, String arg1) {
-		User user = UserLoginLogOut.getLoggedInUser(arg0);
+		UserTO user = UserLoginLogOut.getLoggedInUser(arg0);
 		RemoteDBConnectionInterface remoteDBConnection = new RemoteDBWebConnection();
-		remoteDBConnection.registerSenderID(user.getEmailadres(), arg1);
+		remoteDBConnection.registerSenderID(user.getEmail(), arg1);
 	}
 
 	@Override

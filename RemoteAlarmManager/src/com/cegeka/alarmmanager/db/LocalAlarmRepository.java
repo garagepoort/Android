@@ -5,24 +5,23 @@ import java.util.Calendar;
 import java.util.List;
 
 import android.content.Context;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
 
 import com.cegeka.alarmmanager.exceptions.DatabaseException;
 import com.cegeka.alarmmanager.exceptions.TechnicalException;
-import com.cegeka.alarmmanager.model.Alarm;
-import com.cegeka.alarmmanager.model.Repeat_Unit;
-import com.cegeka.alarmmanager.model.RepeatedAlarm;
 
 public class LocalAlarmRepository
 {
 
-	public static List<Alarm> getLocalAlarms(Context context)
+	public static List<AlarmTO> getLocalAlarms(Context context)
 	{
 		LocalAlarmDatabase alarmsDataSource = new LocalAlarmDatabase(context);
 		alarmsDataSource.open();
-		List<Alarm> alarms = new ArrayList<Alarm>();
+		List<AlarmTO> alarms = new ArrayList<AlarmTO>();
 		try
 		{
-			alarms = alarmsDataSource.getAllAlarms();
+			alarms = alarmsDataSource.getAllAlarmTOs();
 		} catch (DatabaseException e)
 		{
 			throw new TechnicalException(e);
@@ -33,7 +32,7 @@ public class LocalAlarmRepository
 		return alarms;
 	}
 
-	public static void replaceAll(Context context, List<Alarm> alarms)
+	public static void replaceAll(Context context, List<AlarmTO> alarms)
 	{
 		LocalAlarmDatabase alarmsDataSource = new LocalAlarmDatabase(context);
 		alarmsDataSource.open();
@@ -57,39 +56,39 @@ public class LocalAlarmRepository
 	}
 
 	private static void insertAllNew(LocalAlarmDatabase alarmsDataSource,
-			List<Alarm> alarms) throws DatabaseException
+			List<AlarmTO> alarms) throws DatabaseException
 	{
-		alarmsDataSource.storeAlarms(alarms);
+		alarmsDataSource.storeAlarmTOs(alarms);
 	}
 
-	public static void deleteAlarm(Context context, Alarm alarm)
+	public static void deleteAlarm(Context context, AlarmTO alarm)
 	{
 		LocalAlarmDatabase alarmDS = new LocalAlarmDatabase(context);
 		alarmDS.open();
-		alarmDS.deleteAlarm(alarm);
+		alarmDS.deleteAlarmTO(alarm);
 		alarmDS.close();
 	}
 
-	public static RepeatedAlarm updateRepeatedAlarm(Context context,
-			RepeatedAlarm repAlarm)
+	public static RepeatedAlarmTO updateRepeatedAlarm(Context context,
+			RepeatedAlarmTO repAlarm)
 	{
 		try
 		{
-			Repeat_Unit unit = repAlarm.getRepeatUnit();
-			int repeatQuantity = repAlarm.getRepeatUnitQuantity();
-			Calendar calRepeat = repAlarm.getRepeatEndDate();
-
+			int unit = repAlarm.getRepeatUnit();
+			int repeatQuantity = repAlarm.getRepeatQuantity();
+			Calendar calRepeat = Calendar.getInstance();
+			calRepeat.setTimeInMillis(repAlarm.getRepeatEnddate());
 			if (calRepeat.after(Calendar.getInstance()))
 			{
-				Calendar newCal = (Calendar) repAlarm.getDate().clone();
-				newCal.add(unit.getCalendarUnit(), repeatQuantity);
-				if (newCal.before(repAlarm.getRepeatEndDate()))
+				Calendar newCal = Calendar.getInstance(); 
+				newCal.setTimeInMillis(repAlarm.getDateInMillis());
+				newCal.add(unit, repeatQuantity);
+				if (newCal.before(calRepeat))
 				{
-					repAlarm.setDate(newCal);
+					repAlarm.setDateInMillis(newCal.getTimeInMillis());
 					LocalAlarmDatabase alarmDS = new LocalAlarmDatabase(context);
 					alarmDS.open();
-					RepeatedAlarm newAlarm = alarmDS
-							.updateRepeatedAlarm(repAlarm);
+					RepeatedAlarmTO newAlarm = alarmDS.updateRepeatedAlarmTO(repAlarm);
 					alarmDS.close();
 
 					return newAlarm;

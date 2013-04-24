@@ -17,17 +17,17 @@ import android.view.View.OnTouchListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
 
 import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.db.LocalAlarmRepository;
-import com.cegeka.alarmmanager.model.Alarm;
-import com.cegeka.alarmmanager.model.RepeatedAlarm;
 import com.cegeka.alarmmanager.sync.localSync.AlarmToAndroidSchedulerSyncer;
 
 public class AlarmReceiverActivity extends Activity {
 
 	private MediaPlayer mMediaPlayer;
-	private Alarm alarm;
+	private AlarmTO alarm;
 	boolean loaded = false;
 	Dialog mDialog;
 
@@ -43,11 +43,11 @@ public class AlarmReceiverActivity extends Activity {
 
 	private void checkAlarm() {
 		Object o = getIntent().getSerializableExtra("Alarm");
-		if (o instanceof RepeatedAlarm) {
-			setAlarm((RepeatedAlarm) o);
+		if (o instanceof RepeatedAlarmTO) {
+			setAlarm((RepeatedAlarmTO) o);
 			setNextAlarm();
 		} else {
-			setAlarm((Alarm) o);
+			setAlarm((AlarmTO) o);
 		}
 	}
 
@@ -58,7 +58,7 @@ public class AlarmReceiverActivity extends Activity {
 		mDialog.setContentView(R.layout.alarm);
 
 		TextView descrfield = (TextView) mDialog.findViewById(R.id.description);
-		descrfield.setText(getAlarm().getDescription());
+		descrfield.setText(getAlarm().getInfo());
 
 		Button stopAlarm = (Button) mDialog.findViewById(R.id.stopAlarm);
 		stopAlarm.setOnTouchListener(new OnTouchListener() {
@@ -129,27 +129,27 @@ public class AlarmReceiverActivity extends Activity {
 	}
 
 	private void deleteIfNotRepeatedAlarm() {
-		if (!(getAlarm() instanceof RepeatedAlarm)) {
+		if (!(getAlarm() instanceof RepeatedAlarmTO)) {
 			deleteAlarm(getAlarm());
 		}
 	}
 
-	private void deleteAlarm(Alarm alarm) {
+	private void deleteAlarm(AlarmTO alarm) {
 		LocalAlarmRepository.deleteAlarm(getApplicationContext(), alarm);
 	}
 
 	private void setNextAlarm() {
-		RepeatedAlarm repeatedAlarm = (RepeatedAlarm) getAlarm();
+		RepeatedAlarmTO repeatedAlarm = (RepeatedAlarmTO) getAlarm();
 		repeatedAlarm = LocalAlarmRepository.updateRepeatedAlarm(this,
 				repeatedAlarm);
 		AlarmToAndroidSchedulerSyncer.scheduleAlarm(this, repeatedAlarm);
 	}
 
-	public Alarm getAlarm() {
+	public AlarmTO getAlarm() {
 		return alarm;
 	}
 
-	public void setAlarm(Alarm alarm) {
+	public void setAlarm(AlarmTO alarm) {
 		this.alarm = alarm;
 	}
 }
