@@ -1,12 +1,11 @@
 package be.cegeka.android.alarms.transferobjects;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Objects;
 
 
 
-public class AlarmTO
+public class AlarmTO implements Serializable
 {
     private Integer alarmID;
     private String title;

@@ -1,9 +1,13 @@
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.Alarm;
-import entities.User;
-import exceptions.DatabaseException;
+import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.infrastructure.DatabaseException;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
+import commandobjects.AlarmCommand;
+import commandobjects.CommandObjectConverter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,16 +19,13 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import transferobjects.AlarmTO;
-import transferobjects.UserTO;
 import utils.LoginChecker;
-import utils.TransferObjectConverter;
 
 @Controller
 public class AlarmUserRelationController {
 
     @Autowired
-    private AlarmOrganizer organizer;
+    private Facade organizer;
 
     @RequestMapping("/editAlarmUsers")
     public ModelAndView goToAddUserToAlarm(HttpServletRequest request) throws Exception {
@@ -34,26 +35,26 @@ public class AlarmUserRelationController {
 
             // Get Alarm to add to
             Integer id = ServletRequestUtils.getIntParameter(request, "aID");
-            Alarm alarm = organizer.getAlarm(id);
-            AlarmTO alarmTO = TransferObjectConverter.getAlarmTO(alarm);
+            AlarmTO alarm = organizer.getAlarm(id);
+            AlarmCommand alarmCO = CommandObjectConverter.convertAlarmTOToAlarmCommandObject(alarm);
 
             // Create list of users to show and a list of users already linked
             List<UserTO> userTOsLinked = new LinkedList<UserTO>();
             List<UserTO> userTOsAvailable = new LinkedList<UserTO>();
 
-            List<User> allUsers = organizer.getAllUsers();
-            List<User> usersLinked = organizer.getUsersFromAlarm(alarm);
-            for (User u : allUsers) {
+            List<UserTO> allUsers = new ArrayList<UserTO>(organizer.getAllUsers());
+            List<UserTO> usersLinked = new ArrayList<UserTO>(organizer.getUsersForAlarm(alarm));
+            for (UserTO u : allUsers) {
                 if (usersLinked.contains(u)) {
-                    userTOsLinked.add(TransferObjectConverter.getUserTO(u));
+                    userTOsLinked.add(u);
                 } else {
-                    userTOsAvailable.add(TransferObjectConverter.getUserTO(u));
+                    userTOsAvailable.add(u);
                 }
             }
 
             model.put("usersAvailable", userTOsAvailable);
             model.put("usersLinked", userTOsLinked);
-            model.put("alarm", alarmTO);
+            model.put("alarm", alarmCO);
 
             return new ModelAndView("EditAlarmUsers", model);
         }
@@ -87,25 +88,24 @@ public class AlarmUserRelationController {
 
             // Get Alarm to add to
             Integer id = ServletRequestUtils.getIntParameter(request, "uID");
-            User user = organizer.getUser(id);
-            UserTO userTO = TransferObjectConverter.getUserTO(user);
+            UserTO userTO = organizer.getUserById(id);
 
             // Create list of users to show and a list of users already linked
-            List<AlarmTO> alarmTOsLinked = new LinkedList<AlarmTO>();
-            List<AlarmTO> alarmTOsAvailable = new LinkedList<AlarmTO>();
+            List<AlarmCommand> alarmCOsLinked = new LinkedList<AlarmCommand>();
+            List<AlarmCommand> alarmCOsAvailable = new LinkedList<AlarmCommand>();
 
-            List<Alarm> allAlarms = organizer.getAllAlarms();
-            List<Alarm> alarmsLinked = organizer.getAlarmsFromUser(user);
-            for (Alarm a : allAlarms) {
+            List<AlarmTO> allAlarms = new ArrayList<AlarmTO>(organizer.getAllAlarms());
+            List<AlarmTO> alarmsLinked = new ArrayList<AlarmTO>(organizer.getAlarmsForUser(userTO));
+            for (AlarmTO a : allAlarms) {
                 if (alarmsLinked.contains(a)) {
-                    alarmTOsLinked.add(TransferObjectConverter.getAlarmTO(a));
+                    alarmCOsLinked.add(CommandObjectConverter.convertAlarmTOToAlarmCommandObject(a));
                 } else {
-                    alarmTOsAvailable.add(TransferObjectConverter.getAlarmTO(a));
+                    alarmCOsAvailable.add(CommandObjectConverter.convertAlarmTOToAlarmCommandObject(a));
                 }
             }
 
-            model.put("alarmsAvailable", alarmTOsAvailable);
-            model.put("alarmsLinked", alarmTOsLinked);
+            model.put("alarmsAvailable", alarmCOsAvailable);
+            model.put("alarmsLinked", alarmCOsLinked);
             model.put("user", userTO);
 
             return new ModelAndView("EditUserAlarms", model);
@@ -131,20 +131,24 @@ public class AlarmUserRelationController {
         return new ModelAndView("redirect:loginForm.htm?info='You have to be logged in as admin to view this page.'");
     }
 
-    private Map<String, Integer> addAlarmUserRelation(HttpServletRequest request) throws DatabaseException, ServletRequestBindingException {
+    private Map<String, Integer> addAlarmUserRelation(HttpServletRequest request) throws DatabaseException, ServletRequestBindingException, BusinessException {
         Integer uID = ServletRequestUtils.getIntParameter(request, "uID");
         Integer aID = ServletRequestUtils.getIntParameter(request, "aID");
-        organizer.addAlarmToUser(uID, aID);
+        UserTO userTO = organizer.getUserById(uID);
+        AlarmTO alarmTO = organizer.getAlarm(aID);
+        organizer.addAlarmToUser(alarmTO, userTO);
         Map<String, Integer> ids = new HashMap<String, Integer>();
         ids.put("uID", uID);
         ids.put("aID", aID);
         return ids;
     }
 
-    private Map<String, Integer> removeAlarmUserRelation(HttpServletRequest request) throws ServletRequestBindingException, DatabaseException {
+    private Map<String, Integer> removeAlarmUserRelation(HttpServletRequest request) throws ServletRequestBindingException, DatabaseException, BusinessException {
         Integer uID = ServletRequestUtils.getIntParameter(request, "uID");
         Integer aID = ServletRequestUtils.getIntParameter(request, "aID");
-        organizer.removeAlarmFromUser(uID, aID);
+        UserTO userTO = organizer.getUserById(uID);
+        AlarmTO alarmTO = organizer.getAlarm(aID);
+        
         Map<String, Integer> ids = new HashMap<String, Integer>();
         ids.put("uID", uID);
         ids.put("aID", aID);

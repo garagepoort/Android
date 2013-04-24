@@ -4,9 +4,9 @@
  */
 package utils;
 
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import transferobjects.UserTO;
 
 /**
  *

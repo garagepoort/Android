@@ -1,8 +1,12 @@
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.Alarm;
-import entities.User;
+import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
+import commandobjects.AlarmCommand;
+import commandobjects.CommandObjectConverter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -10,39 +14,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import transferobjects.AlarmTO;
-import transferobjects.UserTO;
 import utils.LoginChecker;
-import utils.TransferObjectConverter;
 
 @Controller
 public class OverviewController {
 
     @Autowired
-    AlarmOrganizer organizer;
+    Facade organizer;
 
     @RequestMapping("/alarms")
-    public ModelAndView showAlarms(HttpServletRequest request) {
+    public ModelAndView showAlarms(HttpServletRequest request) throws BusinessException {
         if (LoginChecker.userLoggedInAndAdmin(request)) {
-            List<Alarm> alarms = organizer.getAllAlarms();
-            List<AlarmTO> alarmTOs = new LinkedList<AlarmTO>();
-            for (Alarm a : alarms) {
-                alarmTOs.add(TransferObjectConverter.getAlarmTO(a));
+            List<AlarmTO> alarmsTOs = new ArrayList<AlarmTO>(organizer.getAllAlarms());
+            List<AlarmCommand> alarmCOs = new LinkedList<AlarmCommand>();
+            for (AlarmTO a : alarmsTOs) {
+                alarmCOs.add(CommandObjectConverter.convertAlarmTOToAlarmCommandObject(a));
             }
-            return new ModelAndView("Alarms", "alarms", alarmTOs);
+            return new ModelAndView("Alarms", "alarms", alarmCOs);
         }
         return new ModelAndView("redirect:loginForm.htm?info='You have to be logged in as admin to view this page.'");
     }
 
     @RequestMapping("/users")
-    public ModelAndView showUsers(HttpServletRequest request) {
+    public ModelAndView showUsers(HttpServletRequest request) throws BusinessException {
         if (LoginChecker.userLoggedInAndAdmin(request)) {
-            List<User> users = organizer.getAllUsers();
-            List<UserTO> userTOs = new LinkedList<UserTO>();
-            for (User u : users) {
-                userTOs.add(TransferObjectConverter.getUserTO(u));
-            }
-            return new ModelAndView("Users", "users", userTOs);
+            List<UserTO> users = new ArrayList<UserTO>(organizer.getAllUsers());
+            return new ModelAndView("Users", "users", users);
         }
         return new ModelAndView("redirect:loginForm.htm?info='You have to be logged in as admin to view this page.'");
     }

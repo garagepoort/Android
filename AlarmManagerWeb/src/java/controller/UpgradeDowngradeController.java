@@ -4,16 +4,14 @@
  */
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.User;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import transferobjects.UserTO;
 
 /**
  *
@@ -23,33 +21,33 @@ import transferobjects.UserTO;
 public class UpgradeDowngradeController {
     
     @Autowired
-    AlarmOrganizer organizer;
+    Facade organizer;
     
     @RequestMapping("/downgradeUser")
     public String downgradeUser(HttpServletRequest request) throws Exception{
         Integer tId = ServletRequestUtils.getIntParameter(request, "uID");
-        User user = organizer.getUser(tId);
+        UserTO user = organizer.getUserById(tId);
         HttpSession session = request.getSession();
         UserTO sourceTO = (UserTO) session.getAttribute("user");
         if(sourceTO == null){
             return "redirect:loginForm.htm?info='You have to be logged in as admin to view this page.'";
         }
-        User source = organizer.getUser(sourceTO.getId());
-        organizer.downgradeToUser(source, user);
+        user.setAdmin(false);
+        organizer.updateUser(user);
         return "redirect:users.htm";
     }
     
     @RequestMapping("/upgradeUser")
     public String upgradeUser(HttpServletRequest request) throws Exception {
         Integer tId = ServletRequestUtils.getIntParameter(request, "uID");
-        User user = organizer.getUser(tId);
+        UserTO user = organizer.getUserById(tId);
         HttpSession session = request.getSession();
         UserTO sourceTO = (UserTO) session.getAttribute("user");
         if(sourceTO == null){
             return "redirect:loginForm.htm?info='You have to be logged in as admin to view this page.'";
         }
-        User source = organizer.getUser(sourceTO.getId());
-        organizer.upgradeToAdmin(source, user);
+        user.setAdmin(true);
+        organizer.updateUser(user);
         return "redirect:users.htm";
     }
 }

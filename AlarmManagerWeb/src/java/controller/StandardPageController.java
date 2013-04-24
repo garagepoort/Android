@@ -1,31 +1,26 @@
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.Alarm;
-import entities.User;
-import entities.UserAlarm;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
+import commandobjects.AlarmCommand;
+import commandobjects.CommandObjectConverter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import transferobjects.AlarmTO;
-import transferobjects.UserTO;
 import utils.LoginChecker;
-import utils.TransferObjectConverter;
 
 @Controller
 public class StandardPageController {
     
     @Autowired
-    AlarmOrganizer organizer;
+    Facade organizer;
 
     @RequestMapping("/home")
     public String goHome() {
@@ -68,16 +63,14 @@ public class StandardPageController {
             Map<String, Object> model = new HashMap<String, Object>();
 
             // Get Alarm to add to
-            Integer id = ((UserTO) request.getSession().getAttribute("user")).getId();
-            User user = organizer.getUser(id);
-            UserTO userTO = TransferObjectConverter.getUserTO(user);
+            UserTO userTO = (UserTO) request.getSession().getAttribute("user");
 
             // Create list of users to show and a list of users already linked
-            List<AlarmTO> alarmTOsLinked = new ArrayList<AlarmTO>();
-            for(UserAlarm ua : user.getUserAlarmList()){
-                alarmTOsLinked.add(TransferObjectConverter.getAlarmTO(ua.getAlarmid()));
+            List<AlarmCommand> alarmCOsLinked = new ArrayList<AlarmCommand>();
+            for(AlarmTO a : organizer.getAlarmsForUser(userTO)){
+                alarmCOsLinked.add(CommandObjectConverter.convertAlarmTOToAlarmCommandObject(a));
             }
-            model.put("alarmsLinked", alarmTOsLinked);
+            model.put("alarmsLinked", alarmCOsLinked);
             model.put("user", userTO);
 
             return new ModelAndView("UserInfoPage", model);

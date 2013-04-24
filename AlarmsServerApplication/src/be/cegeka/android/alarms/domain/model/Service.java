@@ -126,7 +126,7 @@ public class Service
     }
 
 
-    void addAlarmToUser(Alarm alarm, User user) throws DatabaseException
+    void addAlarmToUser(Alarm alarm, User user) throws DatabaseException, BusinessException
     {
         user.addAlarm(alarm);
 

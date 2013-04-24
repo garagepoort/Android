@@ -1,8 +1,11 @@
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.Alarm;
-import exceptions.DatabaseException;
+import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.infrastructure.DatabaseException;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import commandobjects.AlarmCommand;
+import commandobjects.CommandObjectConverter;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,9 +16,7 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import transferobjects.AlarmTO;
 import utils.LoginChecker;
-import utils.TransferObjectConverter;
 import validators.AlarmValidator;
 
 @Controller
@@ -23,7 +24,7 @@ import validators.AlarmValidator;
 public class AlarmFormController {
 
     @Autowired
-    AlarmOrganizer organizer;
+    Facade organizer;
 
     //Show Form
     @RequestMapping(method = RequestMethod.GET)
@@ -36,31 +37,28 @@ public class AlarmFormController {
 
     //Set Command Object
     @ModelAttribute("editAlarm")
-    private AlarmTO formBackingObject(HttpServletRequest request) throws ServletRequestBindingException, DatabaseException {
+    private AlarmCommand formBackingObject(HttpServletRequest request) throws ServletRequestBindingException, DatabaseException, BusinessException {
         Integer id = ServletRequestUtils.getIntParameter(request, "id");
-        AlarmTO alarmTO = null;
+        AlarmCommand alarmCommandObject = null;
         if (id != null && id != -1) {
-            Alarm alarm = organizer.getAlarm(id);
-            alarmTO = new AlarmTO(alarm.getAlarmid(), alarm.getTitle(), alarm.getInfo(),
-                    alarm.getRepeated(), alarm.getRepeatUnit(), alarm.getRepeatquantity(), alarm.getRepeatEnddate(), alarm.getDateInMillis());
-        } else {
-            alarmTO = new AlarmTO();
+            AlarmTO alarm = organizer.getAlarm(id);
+            alarmCommandObject = CommandObjectConverter.convertAlarmTOToAlarmCommandObject(alarm);
         }
-        return alarmTO;
+        return alarmCommandObject;
     }
 
     // Set submit processing
     @RequestMapping(method = RequestMethod.POST)
-    public String processSubmit(@ModelAttribute("editAlarm") AlarmTO alarmTO, BindingResult result, HttpServletRequest request) throws Exception {
+    public String processSubmit(@ModelAttribute("editAlarm") AlarmCommand alarmCO, BindingResult result, HttpServletRequest request) throws Exception {
         if (LoginChecker.userLoggedInAndAdmin(request)) {
             AlarmValidator validator = new AlarmValidator();
-            validator.validate(alarmTO, result);
+            validator.validate(alarmCO, result);
             if (result.hasErrors()) {
                 return "AlarmForm";
             } else {
-                Alarm alarm = TransferObjectConverter.getAlarm(alarmTO);
-                if (alarmTO.getId() == null || alarmTO.getId() == -1) {
-                    organizer.createAlarm(alarm);
+                AlarmTO alarm = CommandObjectConverter.convertAlarmCommandObjectToAlarmTO(alarmCO);
+                if (alarmCO.getId() == null || alarmCO.getId() == -1) {
+                    organizer.addAlarm(alarm);
                 } else {
                     organizer.updateAlarm(alarm);
                 }

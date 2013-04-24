@@ -43,8 +43,8 @@
                         </tr>
                         <tr>
                             <td><label>Repeat Password:</label></td>
-                            <td><form:password path="paswoordRepeat"></form:password></td>
-                            <td><span class="help-inline control-group"><form:errors path="paswoordRepeat"/></span></td>
+                            <td><form:password path="repeatPaswoord"></form:password></td>
+                            <td><span class="help-inline control-group"><form:errors path="repeatPaswoord"/></span></td>
                         </tr>
                         <tr>
                             <td></td>

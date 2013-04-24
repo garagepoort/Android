@@ -1,10 +1,9 @@
 package controller;
 
-import domain.AlarmOrganizer;
-import entities.User;
-import exceptions.DatabaseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.infrastructure.DatabaseException;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +14,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import transferobjects.LoginUser;
-import transferobjects.UserTO;
 
 @Controller
 @RequestMapping("/loginForm")
 public class LoginController {
 
     @Autowired
-    AlarmOrganizer organizer;
+    Facade organizer;
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView initForm(ModelMap model, HttpServletRequest request) throws Exception {
@@ -32,18 +29,18 @@ public class LoginController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView login(@ModelAttribute("login") LoginUser lUser, HttpServletRequest request) throws DatabaseException {
-        return loginAction(lUser, request);
+    public ModelAndView login(@ModelAttribute("login") UserTO userTO, HttpServletRequest request) throws DatabaseException, BusinessException {
+        return loginAction(userTO, request);
     }
 
-    private ModelAndView loginAction(LoginUser lUser, HttpServletRequest request) throws DatabaseException {
-        String username = lUser.getName();
-        String password = lUser.getPass();
-        User user = organizer.getUser(username);
-        if (user != null && user.authenticate(password)) {
+    private ModelAndView loginAction(UserTO userTO, HttpServletRequest request) throws DatabaseException, BusinessException {
+        String username = userTO.getEmail();
+        String password = userTO.getPaswoord();
+        //TODO moet login worden.
+        UserTO user = organizer.getUser(username);
+        if (user != null) {
             HttpSession session = request.getSession();
-            UserTO sUser = new UserTO(user);
-            session.setAttribute("user", sUser);
+            session.setAttribute("user", user);
             return new ModelAndView("Home");
         } else {
             return new ModelAndView("Login", "error", "Username or password were wrong.");
@@ -51,7 +48,7 @@ public class LoginController {
     }
 
     @ModelAttribute("login")
-    private LoginUser formBackingObject(HttpServletRequest request) {
-        return new LoginUser();
+    private UserTO formBackingObject(HttpServletRequest request) {
+        return new UserTO();
     }
 }

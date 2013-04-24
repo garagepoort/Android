@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package transferobjects;
+package commandobjects;
 
 import java.math.BigInteger;
 import java.text.ParseException;
@@ -13,30 +13,28 @@ import java.util.Calendar;
  *
  * @author ivarv
  */
-public class AlarmTO {
+public class AlarmCommand {
 
     private Integer id = -1;
     private String title;
     private String info;
     private boolean repeated;
-    private String repeatunit = "N/A";
+    private int repeatunit;
     private int repeatQuantity = 0;
     private String eventDateTimeString = formatCalendar(Calendar.getInstance());
     private String endRepeatDateTimeString = formatCalendar(Calendar.getInstance());
 
-    public AlarmTO(Integer id, String title, String info, boolean repeated, String repeatunit, Integer repeatQuantity, BigInteger endDate, long date) {
+    public AlarmCommand(Integer id, String title, String info, boolean repeated, int repeatunit, Integer repeatQuantity, long endDate, long date) {
         this.id = id;
         this.title = title;
         this.info = info;
         this.repeated = repeated;
-        if (repeatunit != null) {
-            this.repeatunit = repeatunit;
-        }
+        this.repeatunit = repeatunit;
         if (repeatQuantity != null) {
             this.repeatQuantity = repeatQuantity;
         }
-        if (endDate != null) {
-            Calendar endDateCal = calendarFromBigInt(endDate);
+        if (endDate != 0) {
+            Calendar endDateCal = calendarFromLong(endDate);
             this.endRepeatDateTimeString = formatCalendar(endDateCal);
         }
         Calendar dateCal = calendarFromLong(date);
@@ -56,7 +54,7 @@ public class AlarmTO {
         return cal.getTimeInMillis();
     }
 
-    public AlarmTO() {
+    public AlarmCommand() {
     }
 
     public Integer getId() {
@@ -91,11 +89,11 @@ public class AlarmTO {
         this.repeated = repeated;
     }
 
-    public String getRepeatunit() {
+    public int getRepeatunit() {
         return repeatunit;
     }
 
-    public void setRepeatunit(String repeatunit) {
+    public void setRepeatunit(int repeatunit) {
         this.repeatunit = repeatunit;
     }
 
@@ -140,7 +138,7 @@ public class AlarmTO {
         return stringToMillis(getEventDateTimeString());
     }
 
-    public BigInteger getEndDateInMillis() throws ParseException {
-        return BigInteger.valueOf(stringToMillis(getEndRepeatDateTimeString()));
+    public long getEndDateInMillis() throws ParseException {
+        return stringToMillis(getEndRepeatDateTimeString());
     }
 }
