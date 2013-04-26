@@ -369,4 +369,59 @@ public class FacadeTest
         facade.deleteAlarms(alarmTOs);
         verify(serviceMock).deleteAlarms(alarms);
     }
+<<<<<<< HEAD
+=======
+    
+    
+    @Test
+    public void testRemoveUserFromAlarm() throws BusinessException, DatabaseException
+    {
+        alarm.addUser(user);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        
+        facade.removeUserFromAlarm(userTO, alarmTO);
+        
+        verify(serviceMock).updateAlarm(alarm);
+        assertTrue(alarm.getUsers().isEmpty());
+    }
+
+
+    @Test
+    public void testRemoveAlarmFromUser() throws BusinessException, DatabaseException
+    {
+        user.addAlarm(alarm);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        
+        facade.removeAlarmFromUser(alarmTO, userTO);
+        
+        verify(serviceMock).updateUser(user);
+        assertTrue(user.getAlarms().isEmpty());
+    }
+    
+    
+    @Test
+    public void testAddUserToAlarm() throws BusinessException, DatabaseException
+    {
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        
+        facade.addUserToAlarm(userTO, alarmTO);
+        
+        verify(serviceMock).addUserToAlarm(user, alarm);
+    }
+    
+    
+    @Test
+    public void testAddAlarmToUser() throws BusinessException, DatabaseException
+    {
+        when(serviceMock.getUser(userTO.getEmail())).thenReturn(user);
+        when(serviceMock.getAlarm(alarmTO.getAlarmID())).thenReturn(alarm);
+        
+        facade.addAlarmToUser(alarmTO, userTO);
+        
+        verify(serviceMock).addAlarmToUser(alarm, user);
+    }
+>>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
 }

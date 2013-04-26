@@ -12,10 +12,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 import com.cegeka.alarmmanager.R;
 import com.cegeka.alarmmanager.infrastructure.InternetChecker;
-import com.cegeka.alarmmanager.model.User;
 import com.cegeka.alarmmanager.services.ServiceStarterStopper;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBConnectionInterface;
 import com.cegeka.alarmmanager.sync.remoteSync.remoteDBConnection.RemoteDBWebConnection;
@@ -84,7 +84,7 @@ public class LoginActivity extends Activity implements Observer {
 
 	@Override
 	public void update(Observable observable, Object data) {
-		User u = connector.getUser();
+		UserTO u = connector.getUser();
 		myPd_ring.dismiss();
 
 		if (u != null) {

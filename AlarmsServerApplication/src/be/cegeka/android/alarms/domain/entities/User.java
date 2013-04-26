@@ -30,8 +30,9 @@ public class User implements Serializable {
     private String paswoord;
     @Column(unique = true, nullable = false)
     private String email;
+    private String GCMid;
     private String salt;
-    private Boolean admin;
+    private Boolean adminBoolean;
     @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "users")
     private List<Alarm> alarms = new ArrayList<>();
 
@@ -44,7 +45,7 @@ public class User implements Serializable {
         this.achternaam = achternaam;
         this.paswoord = paswoord;
         this.email = email;
-        this.admin = admin;
+        this.adminBoolean = admin;
     }
 
     public User(String naam, String achternaam, String paswoord, String email, Boolean admin) {
@@ -52,7 +53,7 @@ public class User implements Serializable {
         this.achternaam = achternaam;
         this.paswoord = paswoord;
         this.email = email;
-        this.admin = admin;
+        this.adminBoolean = admin;
     }
 
     public Integer getUserid() {
@@ -83,8 +84,21 @@ public class User implements Serializable {
         return salt;
     }
 
+<<<<<<< HEAD
     public Boolean isAdmin() {
         return admin;
+=======
+
+    public String getGCMid()
+    {
+        return GCMid;
+    }
+
+
+    public Boolean isAdmin()
+    {
+        return adminBoolean;
+>>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
     }
 
     public List<Alarm> getAlarms() {
@@ -113,8 +127,21 @@ public class User implements Serializable {
         this.salt = salt;
     }
 
+<<<<<<< HEAD
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+=======
+
+    public void setAdmin(Boolean admin)
+    {
+        this.adminBoolean = admin;
+    }
+
+
+    public void setGCMid(String GCMid)
+    {
+        this.GCMid = GCMid;
+>>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
     }
 
     public void addAlarm(Alarm a) {

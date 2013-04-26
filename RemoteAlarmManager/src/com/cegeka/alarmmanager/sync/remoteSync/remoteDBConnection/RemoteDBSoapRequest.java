@@ -13,11 +13,9 @@ import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.os.AsyncTask;
-
-import com.cegeka.alarmmanager.model.Alarm;
-import com.cegeka.alarmmanager.model.User;
-import com.cegeka.alarmmanager.sync.remoteSync.connection.transferobject.AlarmTO;
-import com.cegeka.alarmmanager.utilities.AlarmConverter;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 /**
  * The class that makes the connection with the web service using SOAP messages.
@@ -39,8 +37,8 @@ public class RemoteDBSoapRequest extends Observable {
 	// URL OF WSDL FILE
 	private static final String URL = "http://172.29.162.254:8080/AlarmWebService/AlarmWebService";
 
-	private User user;
-	private ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+	private UserTO user;
+	private ArrayList<AlarmTO> alarms = new ArrayList<AlarmTO>();
 
 	public void execute(String... uri) {
 		new InnerRequestTask().execute(uri);
@@ -96,7 +94,7 @@ public class RemoteDBSoapRequest extends Observable {
 				} else if (METHOD_NAME.equals(GET_ALARMS_FROM_USER)) {
 					getAlarms(result);
 				} else if (METHOD_NAME.equals(REGISTER_SENDERID)) {
-					//TODO HANDLE RESULT
+					// TODO HANDLE RESULT
 				}
 			}
 			if (successfulConnection) {
@@ -150,12 +148,13 @@ public class RemoteDBSoapRequest extends Observable {
 		 * @param response
 		 */
 		private void setUser(SoapObject response) {
-			User u;
+			UserTO u;
 			String achternaam = response.getPropertySafelyAsString("achternaam").toString();
 			String email = response.getPropertySafelyAsString("emailadres").toString();
 			int id = Integer.parseInt(response.getPropertySafelyAsString("id").toString());
 			String naam = response.getPropertySafelyAsString("naam").toString();
-			u = new User(id, naam, achternaam, email);
+			boolean admin = Boolean.getBoolean(response.getPropertySafelyAsString("admin").toString());
+			u = new UserTO(id, naam, achternaam, email, admin);
 			user = u;
 		}
 
@@ -196,42 +195,45 @@ public class RemoteDBSoapRequest extends Observable {
 		 *            A {@link SoapObject} containing the response.
 		 */
 		private void getAlarms(SoapObject response) {
-			ArrayList<Alarm> alarms = new ArrayList<Alarm>();
+			ArrayList<AlarmTO> alarms = new ArrayList<AlarmTO>();
 			for (int i = 0; i < response.getPropertyCount(); i++) {
 				SoapObject o = (SoapObject) response.getProperty(i);
 				String info = o.getProperty("info").toString();
 				int id = Integer.parseInt(o.getPropertySafelyAsString("id").toString());
-				AlarmTO a = new AlarmTO();
-				a.setId(id);
-				a.setTitle(o.getPropertySafelyAsString("title").toString());
-				a.setInfo(info);
-				a.setRepeated(Boolean.parseBoolean(o.getPropertySafelyAsString("repeated").toString()));
-				a.setRepeatUnit(o.getPropertySafelyAsString("repeatUnit").toString());
-				a.setRepeatQuantity(Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity").toString()));
-				a.setDate(Long.parseLong(o.getPropertySafelyAsString("date").toString()));
-				a.setRepeatEndDate(Long.parseLong(o.getPropertySafelyAsString("repeatEndDate").toString()));
-				Alarm convertedAlarm = AlarmConverter.convertAlarm(a);
-				alarms.add(convertedAlarm);
+				String titel = o.getPropertySafelyAsString("title").toString();
+
+				int repeatUnit = Integer.parseInt(o.getPropertySafelyAsString("repeatUnit", -1).toString());
+				int repeatQuantity = Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity").toString());
+				long date = Long.parseLong(o.getPropertySafelyAsString("date").toString());
+				long endDate = Long.parseLong(o.getPropertySafelyAsString("repeatEndDate").toString());
+				AlarmTO a = null;
+				if (repeatUnit == -1) {
+					a = new AlarmTO(id, titel, info, date);
+					alarms.add(a);
+				} else {
+					a = new RepeatedAlarmTO(repeatUnit, repeatQuantity, endDate, id, titel, info, date);
+					alarms.add(a);
+				}
 			}
 			setAlarms(alarms);
 		}
 
 	}
 
-	public User getUser() {
+	public UserTO getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserTO user) {
 		RemoteDBSoapRequest.this.user = user;
 	}
 
-	public ArrayList<Alarm> getAlarms() {
+	public ArrayList<AlarmTO> getAlarms() {
 		alarms.removeAll(Collections.singleton(null));
 		return alarms;
 	}
 
-	public void setAlarms(ArrayList<Alarm> alarms) {
+	public void setAlarms(ArrayList<AlarmTO> alarms) {
 		RemoteDBSoapRequest.this.alarms = alarms;
 	}
 
