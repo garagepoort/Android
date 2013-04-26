@@ -2,10 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/Users/hannesc/Documents/GitHub/Android/AlarmsServerApplication/src/be/cegeka/android/alarms/domain/model/Service.java</file>
-        <file>file:/C:/Users/hannesc/Documents/GitHub/Android/AlarmsServerApplication/test/be/cegeka/android/alarms/domain/model/ServiceTest.java</file>
-        <file>file:/C:/Users/hannesc/Documents/GitHub/Android/AlarmsServerApplication/src/be/cegeka/android/alarms/domain/model/GCMCommunication.java</file>
-        <file>file:/C:/Users/hannesc/Documents/GitHub/Android/AlarmsServerApplication/test/be/cegeka/android/alarms/domain/model/GCMCommunicationTest.java</file>
-        <file>file:/C:/Users/hannesc/Documents/GitHub/Android/AlarmsServerApplication/src/be/cegeka/android/alarms/domain/entities/Alarm.java</file>
+        <file>file:/C:/Users/davidm/Documents/GitHub/Android/AlarmsServerApplication/src/be/cegeka/android/alarms/infrastructure/JPARepository.java</file>
     </open-files>
 </project-private>
