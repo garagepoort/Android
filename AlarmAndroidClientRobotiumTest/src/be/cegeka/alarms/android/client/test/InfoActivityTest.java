@@ -1,10 +1,12 @@
 package be.cegeka.alarms.android.client.test;
 
+import org.easymock.EasyMock;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
 import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
+import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -12,7 +14,7 @@ import com.jayway.android.robotium.solo.Solo;
 public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActivity> {
 
 	private Solo solo; 
-//	private InternetChecker internetChecker;
+	private InternetChecker internetChecker;
 	
 	public InfoActivityTest() {
 		super(InfoActivity.class);
@@ -21,7 +23,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
-//		internetChecker = EasyMock.createMock(InternetChecker.class);
+		internetChecker = EasyMock.createMock(InternetChecker.class);
 //		getActivity().setInternetChecker(internetChecker);
 	}
 
