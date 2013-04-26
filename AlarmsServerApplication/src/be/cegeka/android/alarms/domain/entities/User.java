@@ -8,42 +8,37 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-
+import be.cegeka.android.alarms.domain.model.PasswordEncrypter;
+import javax.persistence.Column;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "\"user\"")
-@NamedQueries(
-{
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.userid = :id")
-})
-public class User implements Serializable
-{
-    @GeneratedValue
+@Table(name = "\"USER\"")
+public class User implements Serializable {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userid;
     private String naam;
     private String achternaam;
     private String paswoord;
+    @Column(unique = true, nullable = false)
     private String email;
     private String salt;
     private Boolean admin;
     @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "users")
     private List<Alarm> alarms = new ArrayList<>();
 
-
-    public User()
-    {
+    public User() {
     }
 
-
-    public User(Integer userid, String naam, String achternaam, String paswoord, String email, Boolean admin)
-    {
+    public User(Integer userid, String naam, String achternaam, String paswoord, String email, Boolean admin) {
         this.userid = userid;
         this.naam = naam;
         this.achternaam = achternaam;
@@ -52,8 +47,7 @@ public class User implements Serializable
         this.admin = admin;
     }
 
-    public User(String naam, String achternaam, String paswoord, String email, Boolean admin)
-    {
+    public User(String naam, String achternaam, String paswoord, String email, Boolean admin) {
         this.naam = naam;
         this.achternaam = achternaam;
         this.paswoord = paswoord;
@@ -61,126 +55,114 @@ public class User implements Serializable
         this.admin = admin;
     }
 
-
-    public Integer getUserid()
-    {
+    public Integer getUserid() {
         return userid;
     }
 
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
 
-    public String getNaam()
-    {
+    public String getNaam() {
         return naam;
     }
 
-
-    public String getAchternaam()
-    {
+    public String getAchternaam() {
         return achternaam;
     }
 
-
-    public String getPaswoord()
-    {
+    public String getPaswoord() {
         return paswoord;
     }
 
-
-    public String getEmail()
-    {
+    public String getEmail() {
         return email;
     }
 
-
-    public String getSalt()
-    {
+    public String getSalt() {
         return salt;
     }
 
-
-    public Boolean isAdmin()
-    {
+    public Boolean isAdmin() {
         return admin;
     }
 
-
-    public List<Alarm> getAlarms()
-    {
+    public List<Alarm> getAlarms() {
         return Collections.unmodifiableList(alarms);
     }
 
-
-    public void setNaam(String naam)
-    {
+    public void setNaam(String naam) {
         this.naam = naam;
     }
 
-
-    public void setAchternaam(String achternaam)
-    {
+    public void setAchternaam(String achternaam) {
         this.achternaam = achternaam;
     }
 
-
-    public void setPaswoord(String paswoord)
-    {
-        this.paswoord = paswoord;
+    public void setPaswoord(String paswoord) {
+        PasswordEncrypter.EncryptionResult res = PasswordEncrypter.encryptNewPassword(paswoord);
+        this.paswoord = res.getHash();
+        this.salt = res.getSalt();
     }
 
-
-    public void setEmail(String email)
-    {
+    public void setEmail(String email) {
         this.email = email;
     }
 
-
-    public void setSalt(String salt)
-    {
+    public void setSalt(String salt) {
         this.salt = salt;
     }
 
-
-    public void setAdmin(Boolean admin)
-    {
+    public void setAdmin(Boolean admin) {
         this.admin = admin;
     }
 
-    
-    public void addAlarm(Alarm a){
+    public void addAlarm(Alarm a) {
         alarms.add(a);
     }
-    
-    public void removeAlarm(Alarm a){
+
+    public void removeAlarm(Alarm a) {
         alarms.remove(a);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (obj == null)
-        {
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass())
-        {
+        if (getClass() != obj.getClass()) {
             return false;
         }
         final User other = (User) obj;
-        if (!Objects.equals(this.userid, other.userid))
-        {
+        if (!Objects.equals(this.userid, other.userid)) {
             return false;
         }
         return true;
     }
 
-
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         int hash = 7;
         hash = 79 * hash + Objects.hashCode(this.userid);
         return hash;
     }
+
+    public boolean authenticate(String password) {
+        return PasswordEncrypter.isCorrect(getPaswoord(), password, getSalt());
+    }
+
+    @PreRemove
+    @SuppressWarnings("unused")
+    private void removeAlarms() {
+        for (Alarm a : alarms) {
+            a.removeUser(this);
+        }
+    }
+
+    @PrePersist
+    private void addusers() {
+        for (Alarm a : alarms) {
+            a.addUser(this);
+        }
+    }
 }
-
-

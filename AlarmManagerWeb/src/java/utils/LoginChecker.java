@@ -21,10 +21,7 @@ public class LoginChecker {
         }
         //
         UserTO user = (UserTO) session.getAttribute("user");
-        if(user.isAdmin()){
-            return true;
-        }
-        return false;
+        return user.isAdmin();
     }
     
     public static boolean userLoggedIn(HttpServletRequest request) {

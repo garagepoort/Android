@@ -16,7 +16,7 @@
         <script type="text/javascript" src="js/functions.js"></script>
         <title>Alarm Editor | RemoteAlarmManager</title>
     </head>
-    <body onload="createDatepickers();">
+    <body onload="createDatepickers();repeatedChecked();">
 
         <%@include file="../jspf/navbar.jspf" %>
 
@@ -50,18 +50,18 @@
                             </tr>
                             <tr>
                                 <td><label for="repeated">Repeated:</label></td>
-                                <td><form:checkbox cssClass="checkbox" path="repeated" id="repeated"></form:checkbox> </td>
+                                <td><form:checkbox cssClass="checkbox" path="repeated" id="repeated" onclick="repeatedChecked();"></form:checkbox> </td>
                             </tr>
                             <tr>
                                 <td><label>Repeat unit:</label></td>
                                 <td>
-                                <form:select path="repeatunit">
-                                    <form:option value="MINUTE" label="Minute"></form:option>
-                                    <form:option value="HOUR" label="Hour"></form:option>
-                                    <form:option value="DAY" label="Day"></form:option>
-                                    <form:option value="WEEK" label="Week"></form:option>
-                                    <form:option value="MONTH" label="Month"></form:option>
-                                    <form:option value="YEAR" label="Year"></form:option>
+                                <form:select path="repeatunit" id="repeatunit">
+                                    <form:option value="12" label="Minute"></form:option>
+                                    <form:option value="10" label="Hour"></form:option>
+                                    <form:option value="5" label="Day"></form:option>
+                                    <form:option value="3" label="Week"></form:option>
+                                    <form:option value="2" label="Month"></form:option>
+                                    <form:option value="1" label="Year"></form:option>
                                 </form:select>
                             </td>
                         </tr>

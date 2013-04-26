@@ -7,7 +7,6 @@ package commandobjects;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
 import java.text.ParseException;
-import java.util.Calendar;
 
 /**
  *
@@ -26,7 +25,7 @@ public class CommandObjectConverter {
     }
     
     public static AlarmTO convertAlarmCommandObjectToAlarmTO(AlarmCommand alarm) throws ParseException{
-        if(alarm.isRepeated()){
+        if(!alarm.isRepeated()){
             return new AlarmTO(alarm.getId(), alarm.getTitle(), alarm.getInfo(), alarm.getEventDateInMillis());
         }
         else {

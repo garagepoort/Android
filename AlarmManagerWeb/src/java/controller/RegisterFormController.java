@@ -31,12 +31,14 @@ public class RegisterFormController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String register(@ModelAttribute("registerUser") UserTO rUser, HttpServletRequest request, BindingResult result) throws BusinessException {
+        rUser.setAdmin(Boolean.TRUE);
         UserValidator validator = new UserValidator();
         validator.validate(rUser, result);
         if (result.hasErrors()) {
             return "Register";
         } else {
             // TODO: Setuserid moet weg.
+            //rUser.setUserid(800);
             organizer.addUser(rUser);
             return "Home";
         }

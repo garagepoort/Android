@@ -51,7 +51,7 @@
                 <c:if test="${alarm.repeated == true}">
                     <tr>
                         <td>Repeat unit: </td>
-                        <td>${alarm.repeatunit}</td>
+                        <td>${alarm.repeatUnitName}</td>
                     </tr>
                     <tr>
                         <td>Repeat quantity: </td>
@@ -78,7 +78,7 @@
                         <td>${u.naam}</td>
                         <td>${u.achternaam}</td>
                         <td>${u.email}</td>
-                        <td><a href="addUserToAlarmAction.htm?uID=${u.id}&aID=${alarm.id}"><i class="icon-plus-sign"></i></a></td>
+                        <td><a href="addUserToAlarmAction.htm?uID=${u.userid}&aID=${alarm.id}"><i class="icon-plus-sign"></i></a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -96,7 +96,7 @@
                         <td>${u.naam}</td>
                         <td>${u.achternaam}</td>
                         <td>${u.email}</td>
-                        <td><a href="removeUserFromAlarm.htm?uID=${u.id}&aID=${alarm.id}"><i class="icon-minus-sign"></i></a></td>
+                        <td><a href="removeUserFromAlarm.htm?uID=${u.userid}&aID=${alarm.id}"><i class="icon-minus-sign"></i></a></td>
                     </tr>
                 </c:forEach>
             </table>

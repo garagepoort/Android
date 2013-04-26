@@ -95,7 +95,7 @@ public class TransferObjectMapperTest
     @Test
     public void testConvertRepeatedAlarmToRepeatedAlarmTO() throws BusinessException
     {
-        RepeatedAlarmTO r = transferObjectMapper.convertRepeatedAlarmToRepeatedAlarmTO(repeatedAlarm);
+        RepeatedAlarmTO r = (RepeatedAlarmTO) transferObjectMapper.convertAlarmToAlarmTO(repeatedAlarm);
         assertTrue(r instanceof RepeatedAlarmTO);
         assertEquals(r.getAlarmID(), repeatedAlarm.getAlarmid());
         assertEquals(r.getDateInMillis(), repeatedAlarm.getDateInMillis());
@@ -110,7 +110,7 @@ public class TransferObjectMapperTest
     @Test
     public void testConvertRepeatedAlarmTOToRepeatedAlarm() throws BusinessException
     {
-        RepeatedAlarm r = transferObjectMapper.convertRepeatedAlarmTOToRepeatedAlarm(repeatedAlarmTO);
+        RepeatedAlarm r = (RepeatedAlarm) transferObjectMapper.convertAlarmTOToAlarm(repeatedAlarmTO);
         assertTrue(r instanceof RepeatedAlarm);
         assertEquals(r.getAlarmid(), repeatedAlarmTO.getAlarmID());
         assertEquals(r.getDateInMillis(), repeatedAlarmTO.getDateInMillis());
@@ -145,17 +145,5 @@ public class TransferObjectMapperTest
     public void testBusinessExceptionThrownWhenNullAsArgumentForConvertUserTOToUser() throws BusinessException
     {
         transferObjectMapper.convertUserTOToUser(null);
-    }
-
-    @Test(expected = BusinessException.class)
-    public void testBusinessExceptionThrownWhenNullAsArgumentForConvertRepeatedAlarmToReapeatedAlarmTO() throws BusinessException
-    {
-        transferObjectMapper.convertRepeatedAlarmToRepeatedAlarmTO(null);
-    }
-
-    @Test(expected = BusinessException.class)
-    public void testBusinessExceptionThrownWhenNullAsArgumentForConvertRepeatedAlarmTOToReapeatedAlarm() throws BusinessException
-    {
-        transferObjectMapper.convertRepeatedAlarmTOToRepeatedAlarm(null);
     }
 }

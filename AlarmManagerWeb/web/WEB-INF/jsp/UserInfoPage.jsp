@@ -16,7 +16,7 @@
             <table class="table">
                 <tr>
                     <td>ID: </td>
-                    <td>${user.id}</td>
+                    <td>${user.userid}</td>
                 </tr>
                 <tr>
                     <td>Naam: </td>
@@ -73,7 +73,7 @@
                         <td>${a.repeated}</td>
                         <c:choose>
                             <c:when test="${a.repeated == true}">
-                                <td>${a.repeatunit}</td>
+                                <td>${a.repeatUnitName}</td>
                                 <td>${a.repeatQuantity}</td>
                                 <td>${a.endRepeatDateTimeString}</td>
                             </c:when>

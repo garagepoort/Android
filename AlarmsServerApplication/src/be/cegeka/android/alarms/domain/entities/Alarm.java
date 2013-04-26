@@ -15,6 +15,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 
 
 @Entity
@@ -130,6 +132,20 @@ public class Alarm implements Serializable
             return false;
         }
         return true;
+    }
+    
+    @PreRemove
+    public void detachUsers(){
+        for(User u : users){
+            u.removeAlarm(this);
+        }
+    }
+    
+    @PrePersist
+    public void attachUsers(){
+        for(User u : users){
+            u.addAlarm(this);
+        }
     }
 }
 

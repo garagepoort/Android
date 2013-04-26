@@ -60,7 +60,7 @@
                         </td>
                         <c:choose>
                             <c:when test="${a.repeated == true}">
-                                <td>${a.repeatunit}</td>
+                                <td>${a.repeatUnitName}</td>
                                 <td>${a.repeatQuantity}</td>
                                 <td>${a.endRepeatDateTimeString}</td>
                             </c:when>

@@ -36,9 +36,10 @@ public class LoginController {
     private ModelAndView loginAction(UserTO userTO, HttpServletRequest request) throws DatabaseException, BusinessException {
         String username = userTO.getEmail();
         String password = userTO.getPaswoord();
-        //TODO moet login worden.
         UserTO user = organizer.getUser(username);
-        if (user != null) {
+        if (user != null && organizer.authenticateUser(user, password)) {
+            user.setPaswoord(null);
+            user.setRepeatPaswoord(null);
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             return new ModelAndView("Home");

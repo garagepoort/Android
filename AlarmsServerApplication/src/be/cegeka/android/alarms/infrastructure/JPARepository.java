@@ -1,6 +1,7 @@
 package be.cegeka.android.alarms.infrastructure;
 
 import be.cegeka.android.alarms.domain.entities.Alarm;
+import be.cegeka.android.alarms.domain.entities.RepeatedAlarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,228 +10,228 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.sound.midi.Soundbank;
 
+public class JPARepository implements Repository {
 
-public class JPARepository implements Repository
-{
-    private EntityManagerFactory factory = Persistence.createEntityManagerFactory("AlarmsServerPU");
-    public EntityManager entityManager = factory.createEntityManager();
+    private EntityManagerFactory factory = Persistence.createEntityManagerFactory("AlarmsServerApplicationPU");
+    private EntityManager entityManager = factory.createEntityManager();
+    private static JPARepository instance = new JPARepository();
 
-
-    @Override
-    public User getUser(String emailadres)
-    {
-        User returnUser = null;
-        TypedQuery query = entityManager.createNamedQuery("User.findByEmail", User.class).setParameter("email", emailadres);
-        List<User> results = query.getResultList();
-
-        if (!results.isEmpty())
-        {
-            returnUser = results.get(0);
-        }
-
-        return returnUser;
+    private JPARepository() {
     }
 
+    public static JPARepository getInstance() {
+        return instance;
+    }
 
     @Override
-    public Collection<User> getAllUsers()
-    {
+    public User getUser(String emailadres) {
+        Query q = entityManager.createQuery("SELECT u FROM User u WHERE u.email = ?1", User.class);
+        q.setParameter(1, emailadres);
+        List<User> users = q.getResultList();
+        if (users.isEmpty()) {
+            return null;
+        }
+        return users.get(0);
+    }
+
+    @Override
+    public Collection<User> getAllUsers() {
         Query query = entityManager.createQuery("SELECT U FROM User u");
         return query.getResultList();
     }
 
-
     @Override
-    public Collection<Alarm> getAllAlarms()
-    {
+    public Collection<Alarm> getAllAlarms() {
         Query query = entityManager.createQuery("SELECT a FROM Alarm a");
         return query.getResultList();
 
     }
 
-
     @Override
-    public Collection<User> getUsersForAlarm(Alarm alarm)
-    {
-        ArrayList<User> users = new ArrayList<>(getAllUsers());
-        ArrayList<User> returnUsers = new ArrayList<>();
-        for (User u : users)
-        {
-            if (u.getAlarms().contains(alarm))
-            {
-                returnUsers.add(u);
-            }
-        }
-        return returnUsers;
+    public Collection<User> getUsersForAlarm(Alarm alarm) {
+        alarm = getAlarm(alarm.getAlarmid());
+        return alarm.getUsers();
     }
 
-
     @Override
-    public Collection<Alarm> getAlarmsForUser(User user)
-    {
-        ArrayList<Alarm> alarms = new ArrayList<>(getAllAlarms());
-        ArrayList<Alarm> returnAlarms = new ArrayList<>();
-        for (Alarm a : alarms)
-        {
-            if (a.getUsers().contains(user))
-            {
-                returnAlarms.add(a);
-            }
-        }
-        return returnAlarms;
-
+    public Collection<Alarm> getAlarmsForUser(User user) {
+        user = getUser(user.getEmail());
+        return user.getAlarms();
     }
 
-
     @Override
-    public User addUser(User user) throws DatabaseException
-    {
-        entityManager.getTransaction().begin();
+    public User addUser(User user) throws DatabaseException {
+        beginTransaction();
+        // This is called because the constructor doesn't use the setPaswoord
+        // method and you need to call that method because it generates the salt en hashes the password.
+        user.setPaswoord(user.getPaswoord());
         entityManager.persist(user);
         entityManager.flush();
-        for (Alarm a : user.getAlarms())
-        {
-            a.addUser(user);
-        }
-        entityManager.getTransaction().commit();
+        commitTransaction();
         return user;
     }
 
-
     @Override
-    public Alarm addAlarm(Alarm alarm) throws DatabaseException
-    {
-        entityManager.getTransaction().begin();
+    public Alarm addAlarm(Alarm alarm) throws DatabaseException {
+        beginTransaction();
+        if(alarm instanceof RepeatedAlarm){
+            System.out.println("het is een repeated alarm");
+        }
+        else {
+            System.out.println("het is geen repeated alarm");
+        }
         entityManager.persist(alarm);
         entityManager.flush();
-        for (User u : alarm.getUsers())
-        {
-            u.addAlarm(alarm);
-        }
-        entityManager.getTransaction().commit();
+        commitTransaction();
 
         return alarm;
     }
 
-
     @Override
-    public void addUsers(Collection<User> users) throws DatabaseException
-    {
-        for (User u : users)
-        {
+    public void addUsers(Collection<User> users) throws DatabaseException {
+        for (User u : users) {
             addUser(u);
         }
     }
 
-
     @Override
-    public void addAlarms(Collection<Alarm> alarms) throws DatabaseException
-    {
-        for (Alarm a : alarms)
-        {
+    public void addAlarms(Collection<Alarm> alarms) throws DatabaseException {
+        for (Alarm a : alarms) {
             addAlarm(a);
         }
     }
 
-
     @Override
-    public User updateUser(User user) throws DatabaseException
-    {
-        User returnUser = null;
-        entityManager.getTransaction().begin();
-        for (Alarm a : user.getAlarms())
-        {
-            a.removeUser(user);
-        }
-        returnUser = entityManager.merge(user);
-        entityManager.getTransaction().commit();
-        return returnUser;
+    public User updateUser(User user) throws DatabaseException {
+        beginTransaction();
+        user = entityManager.merge(user);
+        commitTransaction();
+        return user;
     }
 
-
     @Override
-    public Alarm updateAlarm(Alarm alarm) throws DatabaseException
-    {
-        Alarm returnAlarm = null;
-        entityManager.getTransaction().begin();
-        for (User u : alarm.getUsers())
-        {
-            u.removeAlarm(alarm);
-        }
-        returnAlarm = entityManager.merge(alarm);
-        entityManager.getTransaction().commit();
-        return returnAlarm;
+    public Alarm updateAlarm(Alarm alarm) throws DatabaseException {
+        beginTransaction();
+        alarm = entityManager.merge(alarm);
+        commitTransaction();
+        return alarm;
     }
 
-
     @Override
-    public void deleteUser(User user) throws DatabaseException
-    {
-        entityManager.getTransaction().begin();
-        for (Alarm a : user.getAlarms())
-        {
-            a.removeUser(user);
-        }
+    public void deleteUser(User user) throws DatabaseException {
+        beginTransaction();
+        user = getUserById(user.getUserid());
+        entityManager.refresh(user);
         entityManager.remove(user);
-        entityManager.getTransaction().commit();
+        commitTransaction();
     }
 
-
     @Override
-    public void deleteAlarm(Alarm alarm) throws DatabaseException
-    {
-        entityManager.getTransaction().begin();
-        for (User u : alarm.getUsers())
-        {
-            u.removeAlarm(alarm);
-        }
+    public void deleteAlarm(Alarm alarm) throws DatabaseException {
+        beginTransaction();
+        alarm = getAlarm(alarm.getAlarmid());
+        entityManager.refresh(alarm);
         entityManager.remove(alarm);
-        entityManager.getTransaction().commit();
+        commitTransaction();
     }
 
-
     @Override
-    public void deleteUsers(Collection<User> users) throws DatabaseException
-    {
-        for (User u : users)
-        {
+    public void deleteUsers(Collection<User> users) throws DatabaseException {
+        for (User u : users) {
             deleteUser(u);
         }
     }
 
-
     @Override
-    public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException
-    {
-        for (Alarm a : alarms)
-        {
+    public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException {
+        for (Alarm a : alarms) {
             deleteAlarm(a);
         }
     }
 
     @Override
-    public Alarm getAlarm(Integer alarmid)
-    {
+    public Alarm getAlarm(Integer alarmid) {
         return entityManager.find(Alarm.class, alarmid);
     }
 
+    @Override
+    public User getUserById(int id) {
+        return entityManager.find(User.class, id);
+    }
+
+    private void beginTransaction() {
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
+    }
+
+    private void commitTransaction() {
+        if (entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().commit();
+        }
+    }
 
     @Override
-    public User getUserById(int id)
-    {
-        User returnUser = null;
-        TypedQuery query = entityManager.createNamedQuery("User.findById", User.class).setParameter("id", id);
-        List<User> results = query.getResultList();
-        
-        if (!results.isEmpty())
-        {
-            returnUser = results.get(0);
-        }
-        
-        return returnUser;
+    public void closeDatabase() {
+        entityManager.close();
+        factory.close();
+    }
+
+    public boolean authenticateUser(User user, String paswoord) {
+        return user.authenticate(paswoord);
+    }
+
+    @Override
+    public User upgradeUser(User user) throws DatabaseException {
+        beginTransaction();
+        user = entityManager.merge(user);
+        user.setAdmin(Boolean.TRUE);
+        updateUser(user);
+        commitTransaction();
+        return user;
+    }
+
+    @Override
+    public User downgradeUser(User user) throws DatabaseException {
+        beginTransaction();
+        user = entityManager.merge(user);
+        user.setAdmin(Boolean.FALSE);
+        updateUser(user);
+        commitTransaction();
+        return user;
+    }
+
+    @Override
+    public void addUserAlarmRelation(User user, Alarm alarm) throws DatabaseException {
+        beginTransaction();
+        user.addAlarm(alarm);
+        alarm.addUser(user);
+        entityManager.merge(alarm);
+        entityManager.merge(user);
+        commitTransaction();
+    }
+
+    @Override
+    public void removeUserAlarmRelation(User user, Alarm alarm) throws DatabaseException {
+        beginTransaction();
+        user.removeAlarm(alarm);
+        alarm.removeUser(user);
+        entityManager.merge(alarm);
+        entityManager.merge(user);
+        commitTransaction();
+    }
+
+    @Override
+    public User refreshUser(User user) throws DatabaseException {
+        entityManager.refresh(user);
+        return user;
+    }
+
+    @Override
+    public Alarm refreshAlarm(Alarm alarm) throws DatabaseException {
+        entityManager.refresh(alarm);
+        return alarm;
     }
 }
-
-

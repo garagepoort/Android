@@ -4,6 +4,7 @@
  */
 package commandobjects;
 
+import be.cegeka.android.alarms.transferobjects.calendarExtensions.CalendarUnitEnum;
 import java.math.BigInteger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ public class AlarmCommand {
     private String info;
     private boolean repeated;
     private int repeatunit;
+    private String repeatUnitName;
     private int repeatQuantity = 0;
     private String eventDateTimeString = formatCalendar(Calendar.getInstance());
     private String endRepeatDateTimeString = formatCalendar(Calendar.getInstance());
@@ -30,6 +32,7 @@ public class AlarmCommand {
         this.info = info;
         this.repeated = repeated;
         this.repeatunit = repeatunit;
+        this.repeatUnitName = CalendarUnitEnum.of(repeatunit).getDisplayName();
         if (repeatQuantity != null) {
             this.repeatQuantity = repeatQuantity;
         }
@@ -90,7 +93,7 @@ public class AlarmCommand {
     }
 
     public int getRepeatunit() {
-        return repeatunit;
+        return this.repeatunit;
     }
 
     public void setRepeatunit(int repeatunit) {
@@ -141,4 +144,10 @@ public class AlarmCommand {
     public long getEndDateInMillis() throws ParseException {
         return stringToMillis(getEndRepeatDateTimeString());
     }
+
+    public String getRepeatUnitName() {
+        return CalendarUnitEnum.of(repeatunit).getDisplayName();
+    }
+
+    
 }

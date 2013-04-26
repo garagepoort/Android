@@ -39,7 +39,7 @@ public class AlarmFormController {
     @ModelAttribute("editAlarm")
     private AlarmCommand formBackingObject(HttpServletRequest request) throws ServletRequestBindingException, DatabaseException, BusinessException {
         Integer id = ServletRequestUtils.getIntParameter(request, "id");
-        AlarmCommand alarmCommandObject = null;
+        AlarmCommand alarmCommandObject = new AlarmCommand();
         if (id != null && id != -1) {
             AlarmTO alarm = organizer.getAlarm(id);
             alarmCommandObject = CommandObjectConverter.convertAlarmTOToAlarmCommandObject(alarm);
@@ -58,6 +58,7 @@ public class AlarmFormController {
             } else {
                 AlarmTO alarm = CommandObjectConverter.convertAlarmCommandObjectToAlarmTO(alarmCO);
                 if (alarmCO.getId() == null || alarmCO.getId() == -1) {
+                    alarm.setAlarmID(null);
                     organizer.addAlarm(alarm);
                 } else {
                     organizer.updateAlarm(alarm);

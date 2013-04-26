@@ -31,7 +31,7 @@
 
                 <c:forEach items="${users}" var="u">
                     <tr>
-                        <td>${u.id}</td>
+                        <td>${u.userid}</td>
                         <td>${u.naam}</td>
                         <td>${u.achternaam}</td>
                         <td>${u.email}</td>
@@ -45,18 +45,18 @@
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td><a href="editUserAlarms.htm?uID=${u.id}"><i class="icon-time"></i></a></td>
+                        <td><a href="editUserAlarms.htm?uID=${u.userid}"><i class="icon-time"></i></a></td>
                         <td>
                             <c:choose>
                                 <c:when test="${u.admin == true}">
-                                    <a href="downgradeUser.htm?uID=${u.id}"><i class="icon-arrow-down"></i></a>
+                                    <a href="downgradeUser.htm?uID=${u.userid}"><i class="icon-arrow-down"></i></a>
                                     </c:when>
                                     <c:otherwise>
-                                    <a href="upgradeUser.htm?uID=${u.id}"><i class="icon-arrow-up"></i></a> 
+                                    <a href="upgradeUser.htm?uID=${u.userid}"><i class="icon-arrow-up"></i></a> 
                                     </c:otherwise>
                                 </c:choose>
                         </td>
-                        <td><a href="deleteUser.htm?uID=${u.id}"><i class="icon-remove"</a></td>
+                        <td><a href="deleteUser.htm?uID=${u.userid}"><i class="icon-remove"</a></td>
                     </tr>
                 </c:forEach>
             </table>

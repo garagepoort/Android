@@ -28,4 +28,16 @@ public interface Repository
     public void deleteAlarm(Alarm alarm) throws DatabaseException;
     public void deleteUsers(Collection<User> users) throws DatabaseException;
     public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException;
+    
+    public void addUserAlarmRelation(User user, Alarm alarm) throws DatabaseException;
+    public void removeUserAlarmRelation(User user, Alarm alarm) throws DatabaseException;
+    
+    public User upgradeUser(User user) throws DatabaseException;
+    public User downgradeUser(User user) throws DatabaseException;
+    
+    public User refreshUser(User user) throws DatabaseException;
+    public Alarm refreshAlarm(Alarm alarm) throws DatabaseException;
+    
+    public boolean authenticateUser(User user, String paswoord);
+    public void closeDatabase();
 }

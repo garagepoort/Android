@@ -6,7 +6,6 @@ import be.cegeka.android.alarms.infrastructure.DatabaseException;
 import be.cegeka.android.alarms.infrastructure.JPARepository;
 import be.cegeka.android.alarms.infrastructure.Repository;
 import java.util.Collection;
-import java.util.Collections;
 
 
 
@@ -17,7 +16,7 @@ public class Service
 
     public Service()
     {
-        repository = new JPARepository();
+        repository = JPARepository.getInstance();
     }
     
     
@@ -122,4 +121,32 @@ public class Service
     {
         return repository.getUserById(id);
     }
+    
+    public void closeDatabase()
+    {
+        repository.closeDatabase();
+    }
+    
+    public boolean authenticate(User user, String paswoord){
+        return repository.authenticateUser(user, paswoord);
+    }
+    
+    public User upgradeUser(User user) throws DatabaseException
+    {
+        return repository.upgradeUser(user);
+    }
+    
+    public User downgradeUser(User user) throws DatabaseException 
+    {
+        return repository.downgradeUser(user);
+    }
+    
+    public void addAlarmUserRelation(Alarm alarm, User user) throws DatabaseException {
+        repository.addUserAlarmRelation(user, alarm);
+    }
+    
+    public void removeAlarmUserRelation(Alarm alarm, User user) throws DatabaseException {
+        repository.removeUserAlarmRelation(user, alarm);
+    }
+    
 }

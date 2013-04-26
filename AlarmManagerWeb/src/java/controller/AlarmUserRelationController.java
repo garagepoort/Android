@@ -136,7 +136,7 @@ public class AlarmUserRelationController {
         Integer aID = ServletRequestUtils.getIntParameter(request, "aID");
         UserTO userTO = organizer.getUserById(uID);
         AlarmTO alarmTO = organizer.getAlarm(aID);
-        organizer.addAlarmToUser(alarmTO, userTO);
+        organizer.addUserAlarmRelation(alarmTO, userTO);
         Map<String, Integer> ids = new HashMap<String, Integer>();
         ids.put("uID", uID);
         ids.put("aID", aID);
@@ -148,7 +148,7 @@ public class AlarmUserRelationController {
         Integer aID = ServletRequestUtils.getIntParameter(request, "aID");
         UserTO userTO = organizer.getUserById(uID);
         AlarmTO alarmTO = organizer.getAlarm(aID);
-        
+        organizer.removeUserAlarmRelation(alarmTO, userTO);
         Map<String, Integer> ids = new HashMap<String, Integer>();
         ids.put("uID", uID);
         ids.put("aID", aID);

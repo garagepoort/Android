@@ -78,3 +78,23 @@ function numbersonly(myfield, e, dec){
         return false;
 }
 
+function repeatedChecked(){
+    if(document.getElementById("repeated").checked){
+        enableRepeatedFields();
+    }
+    else {
+        disableRepeatedFields();
+    }
+}
+
+function disableRepeatedFields(){
+    document.getElementById("repeatunit").disabled=true;
+    document.getElementById("repeatQuantity").disabled=true;
+    document.getElementById("endDate").disabled=true;
+}
+
+function enableRepeatedFields(){
+    document.getElementById("repeatunit").disabled=false;
+    document.getElementById("repeatQuantity").disabled=false;
+    document.getElementById("endDate").disabled=false;
+}

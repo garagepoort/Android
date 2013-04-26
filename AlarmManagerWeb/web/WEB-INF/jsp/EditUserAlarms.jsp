@@ -20,7 +20,7 @@
             <table class="table">
                 <tr>
                     <td>ID: </td>
-                    <td>${user.id}</td>
+                    <td>${user.userid}</td>
                 </tr>
                 <tr>
                     <td>Naam: </td>
@@ -78,7 +78,7 @@
                         <td>${a.repeated}</td>
                         <c:choose>
                             <c:when test="${a.repeated == true}">
-                                <td>${a.repeatunit}</td>
+                                <td>${a.repeatUnitName}</td>
                                 <td>${a.repeatQuantity}</td>
                                 <td>${a.endRepeatDateTimeString}</td>
                             </c:when>
@@ -88,7 +88,7 @@
                                 <td>N/A</td>
                             </c:otherwise>
                         </c:choose>
-                        <td><a href="addAlarmToUserAction.htm?uID=${user.id}&aID=${a.id}"><i class="icon-plus-sign"></i></a></td>
+                        <td><a href="addAlarmToUserAction.htm?uID=${user.userid}&aID=${a.id}"><i class="icon-plus-sign"></i></a></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -125,7 +125,7 @@
                         <td>${a.repeated}</td>
                         <c:choose>
                             <c:when test="${a.repeated == true}">
-                                <td>${a.repeatunit}</td>
+                                <td>${a.repeatUnitName}</td>
                                 <td>${a.repeatQuantity}</td>
                                 <td>${a.endRepeatDateTimeString}</td>
                             </c:when>
@@ -135,7 +135,7 @@
                                 <td>N/A</td>
                             </c:otherwise>
                         </c:choose>
-                        <td><a href="removeAlarmFromUser.htm?uID=${user.id}&aID=${a.id}"><i class="icon-minus-sign"></i></a></td>
+                        <td><a href="removeAlarmFromUser.htm?uID=${user.userid}&aID=${a.id}"><i class="icon-minus-sign"></i></a></td>
                     </tr>
                 </c:forEach>
             </table>

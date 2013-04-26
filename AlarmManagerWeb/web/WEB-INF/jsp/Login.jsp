@@ -35,11 +35,11 @@
                 <table style="width: 315px; margin: 0 auto;">
                     <tr>
                         <td><label>Username:</label></td>
-                        <td style="text-align: right"><form:input path="name" /></td>
+                        <td style="text-align: right"><form:input path="email" /></td>
                     </tr>
                     <tr>
                         <td><label>Password:</label></td>
-                        <td style="text-align: right"><form:password  path="pass" /></td>
+                        <td style="text-align: right"><form:password  path="paswoord" /></td>
                     </tr>
                     <tr>
                         <td></td>
