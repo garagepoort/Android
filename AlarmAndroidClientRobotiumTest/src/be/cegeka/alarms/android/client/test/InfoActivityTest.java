@@ -1,34 +1,15 @@
 package be.cegeka.alarms.android.client.test;
 
-<<<<<<< HEAD
-import org.easymock.EasyMock;
-=======
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
->>>>>>> cbb3f0f58334054c42ee6787580c5f95a615591e
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
-import be.cegeka.alarms.android.client.activities.InfoActivity;
-import be.cegeka.alarms.android.client.activities.LoginActivity;
-import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
-import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
-<<<<<<< HEAD
-=======
-import be.cegeka.alarms.android.client.infrastructure.LoginController;
->>>>>>> cbb3f0f58334054c42ee6787580c5f95a615591e
-
 import com.jayway.android.robotium.solo.Solo;
 
 
 public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActivity> {
 
 	private Solo solo; 
-<<<<<<< HEAD
 	private InternetChecker internetChecker;
-=======
-	private InternetChecker internetCheckerMock;
 	private LoginController loginController;
->>>>>>> cbb3f0f58334054c42ee6787580c5f95a615591e
 	
 	public InfoActivityTest() {
 		super(InfoActivity.class);
@@ -37,16 +18,13 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
-<<<<<<< HEAD
 		internetChecker = EasyMock.createMock(InternetChecker.class);
-//		getActivity().setInternetChecker(internetChecker);
-=======
+		getActivity().setInternetChecker(internetChecker);
 		
 		internetCheckerMock = mock(InternetChecker.class);
 		loginController = mock(LoginController.class);
 		getActivity().setInternetChecker(internetCheckerMock);
 		getActivity().setLoginController(loginController);
->>>>>>> cbb3f0f58334054c42ee6787580c5f95a615591e
 	}
 
 	public void testCheckNoInternetDialog() {
