@@ -11,15 +11,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
+import be.cegeka.alarms.android.client.infrastructure.LoginController;
 
 public class InfoActivity extends Activity {
 
-	private boolean loggedIn = false;
 	private Button forceSyncButton;
 	private Button loginButton;
 	private TextView loginText;
 	private InternetChecker internetChecker;
-
+	private LoginController loginController;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,9 +32,10 @@ public class InfoActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		internetChecker = new InternetChecker();
+		loginController = new LoginController();
 		setTitle("Info");
 		inittializeViews();
-		if (loggedIn) {
+		if (loginController.isUserLoggedIn(this)) {
 			loginText.setText(getString(R.string.logged_in_information));
 			loginButton.setText(getString(R.string.button_log_out));
 			forceSyncButton.setVisibility(View.VISIBLE);
@@ -57,7 +60,7 @@ public class InfoActivity extends Activity {
 
 	// BUTTONS
 	public void logIn(View view) {
-		if (!loggedIn) {
+		if (!loginController.isUserLoggedIn(this)) {
 			if (internetChecker.isNetworkAvailable(this)) {
 				Intent intent = new Intent(InfoActivity.this, LoginActivity.class);
 				startActivity(intent);
@@ -65,7 +68,7 @@ public class InfoActivity extends Activity {
 				buildAndShowErrorDialog();
 			}
 		} else {
-			loggedIn = false;
+			loginController.logOutUser(this);
 
 		}
 	}
@@ -96,6 +99,15 @@ public class InfoActivity extends Activity {
 	 */
 	public void setInternetChecker(InternetChecker internetChecker) {
 		this.internetChecker = internetChecker;
+	}
+	
+	/**
+	 * ONLY FOR TESTING.
+	 * 
+	 * @param controller
+	 */
+	public void setLoginController(LoginController controller){
+		this.loginController=controller;
 	}
 
 }

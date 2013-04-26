@@ -8,6 +8,7 @@ import be.cegeka.alarms.android.client.activities.InfoActivity;
 import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
+import be.cegeka.alarms.android.client.infrastructure.LoginController;
 
 import com.jayway.android.robotium.solo.Solo;
 
@@ -16,6 +17,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 
 	private Solo solo; 
 	private InternetChecker internetCheckerMock;
+	private LoginController loginController;
 	
 	public InfoActivityTest() {
 		super(InfoActivity.class);
@@ -25,9 +27,10 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
 		
-		
 		internetCheckerMock = mock(InternetChecker.class);
+		loginController = mock(LoginController.class);
 		getActivity().setInternetChecker(internetCheckerMock);
+		getActivity().setLoginController(loginController);
 	}
 
 	public void testCheckNoInternetDialog() {
@@ -49,6 +52,11 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 		solo.clickOnButton("Sign in or register");
 		solo.waitForActivity(Activity.class);
 		solo.assertCurrentActivity("", InfoActivity.class);
+	}
+	
+	public void testGivenLoggedIn_ThenShowSyncButton(){
+		when(loginController.isUserLoggedIn(getActivity())).thenReturn(true);
+		assertTrue(solo.searchButton("Sync Now"));
 	}
 
 	public void testShowAlarms() {
