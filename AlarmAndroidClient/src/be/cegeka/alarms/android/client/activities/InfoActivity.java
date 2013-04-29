@@ -1,5 +1,8 @@
 package be.cegeka.alarms.android.client.activities;
 
+import java.util.ArrayList;
+
+import synchronisation.RemoteAlarmController;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,6 +15,11 @@ import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
+import futureimplementation.Future;
+import futureimplementation.FutureCallable;
+import futureimplementation.FutureService;
 
 public class InfoActivity extends Activity {
 
@@ -76,6 +84,19 @@ public class InfoActivity extends Activity {
 	public void showAlarms(View view) {
 		Intent intent = new Intent(InfoActivity.this, SavedAlarmsActivity.class);
 		startActivity(intent);
+	}
+	
+	public void syncAlarms(View view){
+		@SuppressWarnings("unchecked")
+		Future<ArrayList<AlarmTO>> future = RemoteAlarmController.getAllAlarms(new UserTO());
+		FutureService.whenResolved(future, new FutureCallable() {
+
+			@Override
+			public void apply(Object result) {
+				// TODO Auto-generated method stub
+			}
+			
+		});
 	}
 
 	public void buildAndShowErrorDialog() {

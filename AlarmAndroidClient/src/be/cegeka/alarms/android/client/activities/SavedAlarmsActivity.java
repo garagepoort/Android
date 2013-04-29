@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import be.cegeka.alarms.android.client.R;
-
 public class SavedAlarmsActivity extends Activity {
 
 	@Override
