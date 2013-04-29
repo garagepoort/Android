@@ -18,12 +18,8 @@ public class Service
 
     public Service()
     {
-<<<<<<< HEAD
         repository = JPARepository.getInstance();
-=======
-        repository = new JPARepository();
         gcmCommunication = new GCMCommunication(this);
->>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
     }
     
     
@@ -128,7 +124,6 @@ public class Service
     {
         return repository.getUserById(id);
     }
-<<<<<<< HEAD
     
     public void closeDatabase()
     {
@@ -149,34 +144,15 @@ public class Service
         return repository.downgradeUser(user);
     }
     
-    public void addAlarmUserRelation(Alarm alarm, User user) throws DatabaseException {
+    public void addAlarmUserRelation(Alarm alarm, User user) throws DatabaseException, BusinessException {
         repository.addUserAlarmRelation(user, alarm);
-    }
-    
-    public void removeAlarmUserRelation(Alarm alarm, User user) throws DatabaseException {
-        repository.removeUserAlarmRelation(user, alarm);
-    }
-    
-=======
-
-
-    void addAlarmToUser(Alarm alarm, User user) throws DatabaseException, BusinessException
-    {
-        user.addAlarm(alarm);
-
-        updateUser(user);
-        
         gcmCommunication.notifyUserOfChange(user);
     }
-
-
-    void addUserToAlarm(User user, Alarm alarm) throws DatabaseException
-    {
-        alarm.addUser(user);
-
-        updateAlarm(alarm);
-    }
     
+    public void removeAlarmUserRelation(Alarm alarm, User user) throws DatabaseException, BusinessException {
+        repository.removeUserAlarmRelation(user, alarm);
+        gcmCommunication.notifyUserOfChange(user);
+    }
     
     /**
      * ONLY FOR TESTING.
@@ -186,5 +162,4 @@ public class Service
     {
         this.gcmCommunication = gcmCommunication;
     }
->>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
 }
