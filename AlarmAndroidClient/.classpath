@@ -1,24 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-<<<<<<< HEAD
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-=======
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-<<<<<<< HEAD
-	<classpathentry kind="lib" path="C:/Users/davidm/Documents/GitHub/Android/AlarmAndroidClient/libs/AlarmManagerTransferObjects.jar"/>
-=======
-<<<<<<< HEAD
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
-=======
-	<classpathentry exported="true" kind="lib" path="libs/AlarmManagerTransferObjects.jar"/>
->>>>>>> cbb3f0f58334054c42ee6787580c5f95a615591e
->>>>>>> b9b8e2fd3d15929e8f3477ae642579b8542ea84d
->>>>>>> dda69dd9201bde6137777ccd17b0b22ef50bf9ad
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
