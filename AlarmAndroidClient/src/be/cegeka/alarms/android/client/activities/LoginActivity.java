@@ -1,10 +1,11 @@
 package be.cegeka.alarms.android.client.activities;
 
+import synchronisation.RemoteAlarmController;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -16,20 +17,19 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import futureimplementation.Future;
+import futureimplementation.FutureCallable;
+import futureimplementation.FutureService;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[]{
-			"foo@example.com:hello", "bar@example.com:world"};
-
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -38,7 +38,6 @@ public class LoginActivity extends Activity {
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
-	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
 	private String mEmail;
@@ -50,6 +49,7 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,19 @@ public class LoginActivity extends Activity {
 				attemptLogin();
 			}
 		});
+
+		findViewById(R.id.cancel_button).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goToInfoActivity();
+			}
+
+		});
+	}
+
+	private void goToInfoActivity() {
+		Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
+		startActivity(intent);
 	}
 
 	/**
@@ -131,9 +144,6 @@ public class LoginActivity extends Activity {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
-		if (mAuthTask != null) {
-			return;
-		}
 
 		// Reset errors.
 		mEmailView.setError(null);
@@ -177,8 +187,21 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			mAuthTask = new UserLoginTask();
-			mAuthTask.execute((Void) null);
+			Future<UserTO> future = RemoteAlarmController.loginUser(mEmail, mPassword);
+			FutureService.whenResolved(future, new FutureCallable<UserTO>() {
+
+				@Override
+				public void apply(UserTO result) {
+					LoginController loginController = new LoginController(LoginActivity.this);
+					loginController.logInUser(result);
+					Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
+					goToInfoActivity();
+				}
+
+			});
+//			mAuthTask = new UserLoginTask();
+//			mAuthTask.execute((Void) null);
+
 		}
 	}
 
@@ -224,51 +247,6 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
+	
 
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				finish();
-			} else {
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
-		}
-	}
 }

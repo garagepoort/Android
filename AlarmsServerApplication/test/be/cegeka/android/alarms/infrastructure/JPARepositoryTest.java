@@ -223,7 +223,7 @@ public class JPARepositoryTest {
         User newUser = jpaRepository.updateUser(testUser);
         assertTrue(newUser.getNaam().equals(testUser.getNaam()));
         assertEquals(3, newUser.getAlarms().size());
-        List<Alarm> alarms = testUser.getAlarms();
+        List<Alarm> alarms = new ArrayList<>(testUser.getAlarms());
         for(Alarm a : alarms){
             jpaRepository.deleteAlarm(a);
         }

@@ -3,37 +3,57 @@ package be.cegeka.alarms.android.client.infrastructure;
 import java.io.IOException;
 
 import android.content.Context;
-import be.cegeka.android.alarms.transferobjects.UserTO;
+import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 
-public class LoginController {
-	
+
+public class LoginController
+{
+
 	private UserPersistController persistController;
-	
-	
-	public LoginController(){
-		persistController = new UserPersistController();
+	private Context context;
+
+
+	public LoginController(Context context)
+	{
+		this.context = context;
+		persistController = new UserPersistController(context);
 	}
-	public UserTO getLoggedInUser(Context ctx){
-		return persistController.loadUser(ctx);
+
+
+	public UserTO getLoggedInUser()
+	{
+		return persistController.loadUser();
 	}
-	
-	public boolean isUserLoggedIn(Context context){
-		UserTO u = getLoggedInUser(context);
-		return u != null; 
+
+
+	public boolean isUserLoggedIn()
+	{
+		UserTO u = getLoggedInUser();
+		return u != null;
 	}
-	
-	public void logOutUser(Context ctx){
-		try {
-			persistController.deleteUser(ctx);
-		} catch (IOException e) {
+
+
+	public void logOutUser()
+	{
+		try
+		{
+			persistController.deleteUser();
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
-	
-	public void logInUser(Context ctx, UserTO u){
-		try {
-			persistController.saveUser(ctx, u);
-		} catch (IOException e) {
+
+
+	public void logInUser(UserTO u)
+	{
+		try
+		{
+			persistController.saveUser(u);
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

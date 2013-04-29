@@ -8,6 +8,8 @@ import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Facade {
 
@@ -190,56 +192,17 @@ public class Facade {
         return transferObjectMapper.convertAlarmToAlarmTO(service.getAlarm(id));
     }
 
-<<<<<<< HEAD
     public void addUserAlarmRelation(AlarmTO alarmTO, UserTO userTO) throws BusinessException {
         if (alarmTO == null || userTO == null) {
-=======
-
-    public void addUserToAlarm(UserTO userTO, AlarmTO alarmTO) throws BusinessException
-    {
-        if (alarmTO == null || userTO == null)
-        {
-            throw new BusinessException(NULL_ERROR_MESSAGE);
-        }
-
-        User user = service.getUser(userTO.getEmail());
-        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
-        
-        try
-        {
-            service.addUserToAlarm(user, alarm);
-        }
-        catch (DatabaseException ex)
-        {
-            throw new BusinessException(ex);
-        }
-    }
-
-
-    public void addAlarmToUser(AlarmTO alarmTO, UserTO userTO) throws BusinessException
-    {
-        if (alarmTO == null || userTO == null)
-        {
->>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
 
         Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
         User user = service.getUser(userTO.getEmail());
-<<<<<<< HEAD
 
         try {
             service.addAlarmUserRelation(alarm, user);
         } catch (DatabaseException ex) {
-=======
-        
-        try
-        {
-            service.addAlarmToUser(alarm, user);
-        }
-        catch (DatabaseException ex)
-        {
->>>>>>> 66d8fc6029d53439cd0dcbd70f90c624b9324531
             throw new BusinessException(ex);
         }
     }

@@ -15,7 +15,7 @@
     <string name="error_field_required">This field is required</string>
 
     <!-- BUTTONS -->
-    <string name="cancelButton">Cancel Alarms</string>
+    <string name="cancelButton">Cancel</string>
     <string name="title_activity_saved_alarms">Saved Alarms</string>
 
 </resources>
