@@ -32,8 +32,8 @@ public class ServiceTest
     public void whenAlarmIsAddedToUser_ThenGCMCommunicationIsNotified() throws DatabaseException, BusinessException
     {
         User user = new User();
-        
-        service.addAlarmToUser(new Alarm(), user);
+        user.setEmail("blur@blur.com");
+        service.addAlarmUserRelation(new Alarm(), user);
         
         verify(gcmCommunication).notifyUserOfChange(user);
     }
