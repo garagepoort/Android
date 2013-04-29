@@ -2,13 +2,19 @@ package be.cegeka.alarms.android.client.test;
 
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
+import be.cegeka.alarms.android.client.activities.InfoActivity;
+import be.cegeka.alarms.android.client.activities.LoginActivity;
+import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
+import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
+import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import com.jayway.android.robotium.solo.Solo;
+import static org.mockito.Mockito.*;
 
 
 public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActivity> {
 
 	private Solo solo; 
-	private InternetChecker internetChecker;
+	private InternetChecker internetCheckerMock;
 	private LoginController loginController;
 	
 	public InfoActivityTest() {
@@ -18,8 +24,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
-		internetChecker = EasyMock.createMock(InternetChecker.class);
-		getActivity().setInternetChecker(internetChecker);
+		getActivity().setInternetChecker(internetCheckerMock);
 		
 		internetCheckerMock = mock(InternetChecker.class);
 		loginController = mock(LoginController.class);
@@ -49,7 +54,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 	}
 	
 	public void testGivenLoggedIn_ThenShowSyncButton(){
-		when(loginController.isUserLoggedIn(getActivity())).thenReturn(true);
+//		when(loginController.isUserLoggedIn(getActivity())).thenReturn(true);
 		assertTrue(solo.searchButton("Sync Now"));
 	}
 
