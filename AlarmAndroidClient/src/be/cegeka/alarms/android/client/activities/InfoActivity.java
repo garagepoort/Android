@@ -26,7 +26,6 @@ import futureimplementation.FutureService;
 
 public class InfoActivity extends Activity
 {
-
 	private Button forceSyncButton;
 	private Button loginButton;
 	private TextView loginText;
@@ -84,47 +83,35 @@ public class InfoActivity extends Activity
 	}
 
 
-	
-	
-
-
 	private class LogInListener implements OnClickListener
 	{
 		@Override
 		public void onClick(View v)
 		{
-			if (!loginController.isUserLoggedIn())
+			if (internetChecker.isNetworkAvailable(InfoActivity.this))
 			{
-				if (internetChecker.isNetworkAvailable(InfoActivity.this))
-				{
-					Intent intent = new Intent(InfoActivity.this, LoginActivity.class);
-					startActivity(intent);
-				}
-				else
-				{
-					buildAndShowErrorDialog();
-				}
+				Intent intent = new Intent(InfoActivity.this, LoginActivity.class);
+				startActivity(intent);
 			}
 			else
 			{
-				loginController.logOutUser();
-
+				buildAndShowErrorDialog();
 			}
 		}
 	}
-	
-	
+
+
 	private class LogOutListener implements OnClickListener
 	{
 		@Override
 		public void onClick(View v)
 		{
-			
+			loginController.logOutUser();
+			InfoActivity.this.recreate();
 		}
 	}
 
 
-	// BUTTONS
 	public void showAlarms(View view)
 	{
 		Intent intent = new Intent(InfoActivity.this, SavedAlarmsActivity.class);

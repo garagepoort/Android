@@ -37,7 +37,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 	protected void tearDown()
 	{
 		LoginController loginController = new LoginController(getActivity());
-		if(loginController.isUserLoggedIn())
+		if (loginController.isUserLoggedIn())
 		{
 			loginController.logOutUser();
 		}
@@ -95,6 +95,23 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 		assertTrue(solo.searchText("This password is incorrect"));
 		solo.assertCurrentActivity(null, LoginActivity.class);
 	}
-	
-	
+
+
+	public void test_givenLoggedIn_whenLogOutPressed_thenInfoActivityIsUpdated()
+	{
+		when(remoteDBConnectionInterface.login(anyString(), anyString())).thenReturn(userTO);
+
+		solo.enterText(0, "david.s.maes@gmail.com");
+		solo.enterText(1, "password");
+		solo.clickOnButton("Sign in");
+
+		solo.assertCurrentActivity(null, InfoActivity.class);
+		assertTrue(solo.searchText("Login succesfull"));
+		assertTrue(solo.searchText("naam achternaam"));
+		
+		solo.clickOnButton("Log Out");
+		solo.assertCurrentActivity(null, InfoActivity.class);
+		assertTrue(solo.searchText("Log In"));
+		assertTrue(solo.searchText("You are currently not logged in."));
+	}
 }

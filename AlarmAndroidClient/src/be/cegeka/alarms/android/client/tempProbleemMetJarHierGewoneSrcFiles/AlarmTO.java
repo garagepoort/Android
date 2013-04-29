@@ -1,6 +1,8 @@
 package be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 
@@ -104,5 +106,16 @@ public class AlarmTO implements Serializable
         
         return true;
     }
+
+
+
+	@Override
+	public String toString()
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(dateInMillis);
+		return "AlarmTO [title= " + title + ", info= " + info + ", date= " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()) + "]";
+	}
+    
     
 }
