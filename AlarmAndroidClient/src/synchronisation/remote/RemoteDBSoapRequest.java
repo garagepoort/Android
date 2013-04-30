@@ -24,7 +24,7 @@ import futureimplementation.Future;
 public class RemoteDBSoapRequest extends Observable {
 	// Method names.
 	public static final String LOGIN = "login";
-	public static final String GET_ALARMS_FROM_USER = "getAlarmsFromUser";
+	public static final String GET_ALARMS_FROM_USER = "getAllAlarmsFromUser";
 	public static final String REGISTER_SENDERID = "registerSenderID";
 	public static final String UNREGISTER_SENDERID = "unRegisterSenderID";
 
@@ -77,7 +77,6 @@ public class RemoteDBSoapRequest extends Observable {
 				}
 				if (METHOD_NAME.equals(GET_ALARMS_FROM_USER)) {
 					String naam = uri[1];
-					String paswoord = uri[2];
 					response = soapGetAlarmsFromUserResponse(naam, paswoord);
 				}
 				if (METHOD_NAME.equals(REGISTER_SENDERID)) {

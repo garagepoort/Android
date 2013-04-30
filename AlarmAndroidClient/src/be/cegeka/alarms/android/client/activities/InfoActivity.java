@@ -120,7 +120,7 @@ public class InfoActivity extends Activity
 	
 	public void syncAlarms(View view){
 		@SuppressWarnings("unchecked")
-		Future<ArrayList<AlarmTO>> future = RemoteAlarmController.getAllAlarms(new UserTO());
+		Future<ArrayList<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new UserTO());
 		FutureService.whenResolved(future, new FutureCallable() {
 
 			@Override

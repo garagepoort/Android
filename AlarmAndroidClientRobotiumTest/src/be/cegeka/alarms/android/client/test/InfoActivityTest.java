@@ -1,5 +1,7 @@
 package be.cegeka.alarms.android.client.test;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
@@ -7,8 +9,8 @@ import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+
 import com.jayway.android.robotium.solo.Solo;
-import static org.mockito.Mockito.*;
 
 
 public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActivity> {
@@ -21,6 +23,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 		super(InfoActivity.class);
 	}
 	
+
 	protected void setUp() throws Exception {
 		super.setUp();
 		solo = new Solo(getInstrumentation(), getActivity());
@@ -63,4 +66,10 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 		solo.waitForActivity(SavedAlarmsActivity.class);
 		assertTrue(solo.searchText("Saved Alarms"));
 	}
+	
+	
+	public void tearDown(){
+		solo.finishOpenedActivities();
+	}
+	
 }

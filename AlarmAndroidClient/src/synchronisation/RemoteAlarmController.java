@@ -10,18 +10,14 @@ import futureimplementation.Future;
 
 public class RemoteAlarmController {
 
-	public static Future getAllAlarms(UserTO userto) {
+	public Future<ArrayList<AlarmTO>> getAllAlarms(UserTO userto) {
 		Future<ArrayList<AlarmTO>> future = new Future<ArrayList<AlarmTO>>();
 		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future,null);
 		dbSoapRequest.execute(RemoteDBSoapRequest.GET_ALARMS_FROM_USER, userto.getEmail());
 		return future;
 	}
-	
-	public void logUserIn() {
 
-	}
-
-	public static Future<UserTO> loginUser(String mEmail, String mPassword) {
+	public Future<UserTO> loginUser(String mEmail, String mPassword) {
 		Future<UserTO> future = new Future<UserTO>();
 		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(null, future);
 		dbSoapRequest.execute(RemoteDBSoapRequest.LOGIN, mEmail, mPassword);

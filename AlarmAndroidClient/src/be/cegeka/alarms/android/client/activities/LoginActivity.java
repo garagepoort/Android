@@ -49,15 +49,15 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-
+	private RemoteAlarmController remoteAlarmController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
-
+		
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -187,20 +187,22 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			Future<UserTO> future = RemoteAlarmController.loginUser(mEmail, mPassword);
+			Future<UserTO> future = remoteAlarmController.loginUser(mEmail, mPassword);
 			FutureService.whenResolved(future, new FutureCallable<UserTO>() {
 
 				@Override
 				public void apply(UserTO result) {
-					LoginController loginController = new LoginController(LoginActivity.this);
-					loginController.logInUser(result);
-					Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
-					goToInfoActivity();
+					if(result !=null){
+						LoginController loginController = new LoginController(LoginActivity.this);
+						loginController.logInUser(result);
+						Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
+						goToInfoActivity();
+					}
 				}
 
 			});
-//			mAuthTask = new UserLoginTask();
-//			mAuthTask.execute((Void) null);
+			// mAuthTask = new UserLoginTask();
+			// mAuthTask.execute((Void) null);
 
 		}
 	}
@@ -219,26 +221,26 @@ public class LoginActivity extends Activity {
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show
 					? 1
-					: 0).setListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					mLoginStatusView.setVisibility(show
-							? View.VISIBLE
-							: View.GONE);
-				}
-			});
+							: 0).setListener(new AnimatorListenerAdapter() {
+								@Override
+								public void onAnimationEnd(Animator animation) {
+									mLoginStatusView.setVisibility(show
+											? View.VISIBLE
+													: View.GONE);
+								}
+							});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show
 					? 0
-					: 1).setListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					mLoginFormView.setVisibility(show
-							? View.GONE
-							: View.VISIBLE);
-				}
-			});
+							: 1).setListener(new AnimatorListenerAdapter() {
+								@Override
+								public void onAnimationEnd(Animator animation) {
+									mLoginFormView.setVisibility(show
+											? View.GONE
+													: View.VISIBLE);
+								}
+							});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
@@ -247,6 +249,12 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	
+	/**
+	 * ONLY FOR TESTING
+	 */
+	public void setRemoteAlarmController(
+			RemoteAlarmController remoteAlarmController) {
+		this.remoteAlarmController = remoteAlarmController;
+	}
 
 }
