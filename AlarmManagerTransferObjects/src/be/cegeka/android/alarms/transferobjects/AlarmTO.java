@@ -12,7 +12,10 @@ public class AlarmTO implements Serializable
     private String info;
     private long dateInMillis;
 
-
+    public AlarmTO(){
+        
+    }
+    
     public AlarmTO(Integer alarmID, String title, String info, long dateInMillis)
     {
         setAlarmID(alarmID);

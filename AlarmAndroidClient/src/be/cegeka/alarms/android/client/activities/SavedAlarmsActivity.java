@@ -40,6 +40,8 @@ public class SavedAlarmsActivity extends Activity {
 
 		localAlarmRepository = new LocalAlarmRepository(this);
 		showAlarms();
+		
+		
 	}
 
 	public void showAlarms() {
@@ -60,6 +62,7 @@ public class SavedAlarmsActivity extends Activity {
 			listView.setOnItemClickListener(new AlarmListItemClickListener());
 		}
 	}
+	
 
 	private class AlarmListItemClickListener implements OnItemClickListener {
 		@Override

@@ -3,6 +3,7 @@ package be.cegeka.android.alarms.infrastructure;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.RepeatedAlarm;
 import be.cegeka.android.alarms.domain.entities.User;
+import be.cegeka.android.alarms.exceptions.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.sound.midi.Soundbank;
 
 public class JPARepository implements Repository {
 
@@ -50,19 +50,31 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public Collection<User> getUsersForAlarm(Alarm alarm) {
+    public Collection<User> getUsersForAlarm(Alarm alarm) throws RepositoryException {
         alarm = getAlarm(alarm.getAlarmid());
+        if (alarm == null) {
+            throw new RepositoryException("Alarm does not exist.");
+        }
+        if (alarm.getUsers() == null) {
+            return new ArrayList<>();
+        }
         return alarm.getUsers();
     }
 
     @Override
-    public Collection<Alarm> getAlarmsForUser(User user) {
+    public Collection<Alarm> getAlarmsForUser(User user) throws RepositoryException {
         user = getUser(user.getEmail());
+        if (user == null) {
+            throw new RepositoryException("User does not exists");
+        }
+        if (user.getAlarms() == null) {
+            return new ArrayList<>();
+        }
         return user.getAlarms();
     }
 
     @Override
-    public User addUser(User user) throws DatabaseException {
+    public User addUser(User user) throws RepositoryException {
         beginTransaction();
         // This is called because the constructor doesn't use the setPaswoord
         // method and you need to call that method because it generates the salt en hashes the password.
@@ -74,14 +86,8 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public Alarm addAlarm(Alarm alarm) throws DatabaseException {
+    public Alarm addAlarm(Alarm alarm) throws RepositoryException {
         beginTransaction();
-        if(alarm instanceof RepeatedAlarm){
-            System.out.println("het is een repeated alarm");
-        }
-        else {
-            System.out.println("het is geen repeated alarm");
-        }
         entityManager.persist(alarm);
         entityManager.flush();
         commitTransaction();
@@ -90,21 +96,21 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void addUsers(Collection<User> users) throws DatabaseException {
+    public void addUsers(Collection<User> users) throws RepositoryException {
         for (User u : users) {
             addUser(u);
         }
     }
 
     @Override
-    public void addAlarms(Collection<Alarm> alarms) throws DatabaseException {
+    public void addAlarms(Collection<Alarm> alarms) throws RepositoryException {
         for (Alarm a : alarms) {
             addAlarm(a);
         }
     }
 
     @Override
-    public User updateUser(User user) throws DatabaseException {
+    public User updateUser(User user) throws RepositoryException {
         beginTransaction();
         user = entityManager.merge(user);
         commitTransaction();
@@ -112,7 +118,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public Alarm updateAlarm(Alarm alarm) throws DatabaseException {
+    public Alarm updateAlarm(Alarm alarm) throws RepositoryException {
         beginTransaction();
         alarm = entityManager.merge(alarm);
         commitTransaction();
@@ -120,7 +126,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void deleteUser(User user) throws DatabaseException {
+    public void deleteUser(User user) throws RepositoryException {
         beginTransaction();
         user = getUserById(user.getUserid());
         entityManager.refresh(user);
@@ -129,7 +135,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void deleteAlarm(Alarm alarm) throws DatabaseException {
+    public void deleteAlarm(Alarm alarm) throws RepositoryException {
         beginTransaction();
         alarm = getAlarm(alarm.getAlarmid());
         entityManager.refresh(alarm);
@@ -138,14 +144,14 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void deleteUsers(Collection<User> users) throws DatabaseException {
+    public void deleteUsers(Collection<User> users) throws RepositoryException {
         for (User u : users) {
             deleteUser(u);
         }
     }
 
     @Override
-    public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException {
+    public void deleteAlarms(Collection<Alarm> alarms) throws RepositoryException {
         for (Alarm a : alarms) {
             deleteAlarm(a);
         }
@@ -184,7 +190,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public User upgradeUser(User user) throws DatabaseException {
+    public User upgradeUser(User user) throws RepositoryException {
         beginTransaction();
         user = entityManager.merge(user);
         user.setAdmin(Boolean.TRUE);
@@ -194,7 +200,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public User downgradeUser(User user) throws DatabaseException {
+    public User downgradeUser(User user) throws RepositoryException {
         beginTransaction();
         user = entityManager.merge(user);
         user.setAdmin(Boolean.FALSE);
@@ -204,7 +210,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void addUserAlarmRelation(User user, Alarm alarm) throws DatabaseException {
+    public void addUserAlarmRelation(User user, Alarm alarm) throws RepositoryException {
         beginTransaction();
         user.addAlarm(alarm);
         alarm.addUser(user);
@@ -214,7 +220,7 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void removeUserAlarmRelation(User user, Alarm alarm) throws DatabaseException {
+    public void removeUserAlarmRelation(User user, Alarm alarm) throws RepositoryException {
         beginTransaction();
         user.removeAlarm(alarm);
         alarm.removeUser(user);
@@ -224,14 +230,30 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public User refreshUser(User user) throws DatabaseException {
+    public User refreshUser(User user) throws RepositoryException {
         entityManager.refresh(user);
         return user;
     }
 
     @Override
-    public Alarm refreshAlarm(Alarm alarm) throws DatabaseException {
+    public Alarm refreshAlarm(Alarm alarm) throws RepositoryException {
         entityManager.refresh(alarm);
         return alarm;
+    }
+
+    @Override
+    public void registerUser(String email, String GCMID) throws RepositoryException {
+        if(email == null){
+            throw new RepositoryException("E-mail can't be null.");
+        }
+        if(GCMID == null){
+            throw new RepositoryException("Google Cloud Messaging ID can't be null!");
+        }
+        User user = getUser(email);
+        if(user == null){
+            throw new RepositoryException("User doesn't exist.");
+        }
+        user.setGCMid(GCMID);
+        updateUser(user);
     }
 }

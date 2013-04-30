@@ -369,4 +369,19 @@ public class FacadeTest
         facade.deleteAlarms(alarmTOs);
         verify(serviceMock).deleteAlarms(alarms);
     }
+    
+//    @Test
+//    public void testRegisterGCMID(){
+//        String email = "email";
+//        String GCMID = "uiofezuirzeuiohzreuigruioghui6+5564687245er456te(53g13e5g3e4gerg35er";
+//        facade.registerUser(email, GCMID);
+//    }
+//    
+//    @Test(expected = BusinessException.class)
+//    public void testRegisterGCMIDUserNonExisting(){
+//        String email = "nonExistingUser";
+//        String GCMID = "uiofezuirzeuiohzreuigruioghui6+5564687245er456te(53g13e5g3e4gerg35er";
+//        doThrow(BusinessException.class).when(serviceMock).registerUser(email, GCMID);
+//        facade.registerUser(email, GCMID);
+//    }
 }

@@ -13,9 +13,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 import futureimplementation.Future;
@@ -120,12 +122,13 @@ public class InfoActivity extends Activity
 	
 	public void syncAlarms(View view){
 		@SuppressWarnings("unchecked")
-		Future<ArrayList<AlarmTO>> future = RemoteAlarmController.getAllAlarms(new UserTO());
-		FutureService.whenResolved(future, new FutureCallable() {
+		Future<ArrayList<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
+		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void apply(Object result) {
-				// TODO Auto-generated method stub
+			public void apply(ArrayList<AlarmTO> result) {
+				new LocalAlarmRepository(InfoActivity.this).replaceAll(result);
+				Toast.makeText(InfoActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
 			}
 			
 		});

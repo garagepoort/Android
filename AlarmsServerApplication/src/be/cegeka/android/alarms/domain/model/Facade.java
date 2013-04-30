@@ -3,13 +3,12 @@ package be.cegeka.android.alarms.domain.model;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
+import be.cegeka.android.alarms.exceptions.RepositoryException;
 import be.cegeka.android.alarms.infrastructure.DatabaseException;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Facade {
 
@@ -78,20 +77,14 @@ public class Facade {
     }
 
     public UserTO addUser(UserTO user) throws BusinessException {
-        try {
-            return transferObjectMapper.convertUserToUserTO(service.addUser(transferObjectMapper.convertUserTOToUser(user)));
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        return transferObjectMapper.convertUserToUserTO(service.addUser(transferObjectMapper.convertUserTOToUser(user)));
     }
 
     public AlarmTO addAlarm(AlarmTO alarm) throws BusinessException {
-        try {
-            Alarm createdAlarm = service.addAlarm(transferObjectMapper.convertAlarmTOToAlarm(alarm));
-            return convertToDomain(createdAlarm);
-        } catch (DatabaseException e) {
-            throw new BusinessException(e);
-        }
+
+        Alarm createdAlarm = service.addAlarm(transferObjectMapper.convertAlarmTOToAlarm(alarm));
+        return convertToDomain(createdAlarm);
+
     }
 
     public void addUsers(Collection<UserTO> userTOs) throws BusinessException {
@@ -100,11 +93,9 @@ public class Facade {
             User user = transferObjectMapper.convertUserTOToUser(userTO);
             users.add(user);
         }
-        try {
-            service.addUsers(users);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+
+        service.addUsers(users);
+
     }
 
     public void addAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException {
@@ -113,20 +104,12 @@ public class Facade {
             Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
             alarms.add(alarm);
         }
-        try {
-            service.addAlarms(alarms);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.addAlarms(alarms);
     }
 
     public UserTO updateUser(UserTO userTO) throws BusinessException {
         User user = transferObjectMapper.convertUserTOToUser(userTO);
-        try {
-            user = service.updateUser(user);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        user = service.updateUser(user);
         userTO = transferObjectMapper.convertUserToUserTO(user);
 
         return userTO;
@@ -134,11 +117,7 @@ public class Facade {
 
     public AlarmTO updateAlarm(AlarmTO alarmTO) throws BusinessException {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
-        try {
-            alarm = service.updateAlarm(alarm);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        alarm = service.updateAlarm(alarm);
         alarmTO = transferObjectMapper.convertAlarmToAlarmTO(alarm);
 
         return alarmTO;
@@ -146,20 +125,12 @@ public class Facade {
 
     public void deleteUser(UserTO userTO) throws BusinessException {
         User user = transferObjectMapper.convertUserTOToUser(userTO);
-        try {
-            service.deleteUser(user);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.deleteUser(user);
     }
 
     public void deleteAlarm(AlarmTO alarmTO) throws BusinessException {
         Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
-        try {
-            service.deleteAlarm(alarm);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.deleteAlarm(alarm);
     }
 
     public void deleteUsers(Collection<UserTO> userTOs) throws BusinessException {
@@ -168,11 +139,7 @@ public class Facade {
             User user = transferObjectMapper.convertUserTOToUser(userTO);
             users.add(user);
         }
-        try {
-            service.deleteUsers(users);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.deleteUsers(users);
     }
 
     public void deleteAlarms(Collection<AlarmTO> alarmTOs) throws BusinessException {
@@ -181,11 +148,7 @@ public class Facade {
             Alarm alarm = transferObjectMapper.convertAlarmTOToAlarm(alarmTO);
             alarms.add(alarm);
         }
-        try {
-            service.deleteAlarms(alarms);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.deleteAlarms(alarms);
     }
 
     public AlarmTO getAlarm(Integer id) throws BusinessException {
@@ -200,11 +163,7 @@ public class Facade {
         Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
         User user = service.getUser(userTO.getEmail());
 
-        try {
-            service.addAlarmUserRelation(alarm, user);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        service.addAlarmUserRelation(alarm, user);
     }
 
     public UserTO getUserById(int id) throws BusinessException {
@@ -226,13 +185,9 @@ public class Facade {
         if (alarmTO == null || userTO == null) {
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
-        try {
-            Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
-            User user = service.getUser(userTO.getEmail());
-            service.removeAlarmUserRelation(alarm, user);
-        } catch (DatabaseException ex) {
-            throw new BusinessException(ex);
-        }
+        Alarm alarm = service.getAlarm(alarmTO.getAlarmID());
+        User user = service.getUser(userTO.getEmail());
+        service.removeAlarmUserRelation(alarm, user);
     }
 
     public void closeDatabase() {
@@ -248,6 +203,8 @@ public class Facade {
         User user = service.getUser(userTO.getEmail());
         return transferObjectMapper.convertUserToUserTO(service.downgradeUser(user));
     }
+    
+    
 
     /**
      * ONLY FOR TESTING.
@@ -267,8 +224,20 @@ public class Facade {
         this.transferObjectMapper = transferObjectMapper;
     }
 
-    public boolean authenticateUser(UserTO userTO, String paswoord) {
+    public boolean authenticateUser(UserTO userTO, String paswoord) throws BusinessException {
+        if (userTO == null) {
+            return false;
+        }
         User user = service.getUserById(userTO.getUserid());
+        if (user == null) {
+            return false;
+        }
         return service.authenticate(user, paswoord);
     }
+
+    public void registerUser(String email, String GCMID) throws BusinessException {
+        service.registerUser(email,GCMID);
+    }
+
+   
 }

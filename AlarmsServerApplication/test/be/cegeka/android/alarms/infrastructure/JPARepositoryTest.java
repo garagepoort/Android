@@ -7,6 +7,7 @@ package be.cegeka.android.alarms.infrastructure;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.RepeatedAlarm;
 import be.cegeka.android.alarms.domain.entities.User;
+import be.cegeka.android.alarms.exceptions.RepositoryException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -33,7 +34,7 @@ public class JPARepositoryTest {
      *
      */
     @Before
-    public void setUp() throws DatabaseException {
+    public void setUp() throws DatabaseException, RepositoryException {
         jpaRepository = JPARepository.getInstance();
         testUser = new User("testuserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
         testAlarm = new Alarm("testalarm", "testalarm info", 150000);
@@ -50,7 +51,7 @@ public class JPARepositoryTest {
     }
 
     @After
-    public void tearDown() throws DatabaseException {
+    public void tearDown() throws DatabaseException, RepositoryException {
 //            if (instance.entityManager.getTransaction().isActive()) {
 //                   instance.entityManager.getTransaction().commit();
         if (jpaRepository.getAlarm(testRepeatedAlarm.getAlarmid()) != null) {
@@ -136,7 +137,7 @@ public class JPARepositoryTest {
      * Test of getUsersForAlarm method, of class JPARepository.
      */
     @Test
-    public void testGetUsersForAlarm() {
+    public void testGetUsersForAlarm() throws RepositoryException {
         Collection result = jpaRepository.getUsersForAlarm(testAlarm);
         assertTrue(new ArrayList<User>(result).contains(testUser));
     }
@@ -145,7 +146,7 @@ public class JPARepositoryTest {
      * Test of getAlarmsForUser method, of class JPARepository.
      */
     @Test
-    public void testGetAlarmsForUser() {
+    public void testGetAlarmsForUser() throws RepositoryException {
         Collection result = jpaRepository.getAlarmsForUser(testUser);
         assertTrue(new ArrayList<Alarm>(result).contains(testAlarm));
     }
@@ -224,7 +225,7 @@ public class JPARepositoryTest {
         assertTrue(newUser.getNaam().equals(testUser.getNaam()));
         assertEquals(3, newUser.getAlarms().size());
         List<Alarm> alarms = new ArrayList<>(testUser.getAlarms());
-        for(Alarm a : alarms){
+        for (Alarm a : alarms) {
             jpaRepository.deleteAlarm(a);
         }
         jpaRepository.deleteUser(testUser);
@@ -293,14 +294,9 @@ public class JPARepositoryTest {
     }
 
     @Test
-    public void whenUserDeleted_ThenDoNotDeleteAlarm() {
-        try {
-            jpaRepository.deleteUser(testUser);
-            assertTrue(jpaRepository.getAllAlarms().contains(testAlarm));
-        } catch (DatabaseException ex) {
-            Logger.getLogger(JPARepositoryTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public void whenUserDeleted_ThenDoNotDeleteAlarm() throws RepositoryException {
+        jpaRepository.deleteUser(testUser);
+        assertTrue(jpaRepository.getAllAlarms().contains(testAlarm));
     }
 
     /**
@@ -330,13 +326,13 @@ public class JPARepositoryTest {
     }
 
     @Test
-    public void whenAlarmDeleted_ThenDoNotDeleteUser() throws DatabaseException {
+    public void whenAlarmDeleted_ThenDoNotDeleteUser() throws DatabaseException, RepositoryException {
         jpaRepository.deleteAlarm(testAlarm);
         assertTrue(jpaRepository.getAllUsers().contains(testUser));
     }
 
     @Test
-    public void testUpgradeUser() throws DatabaseException {
+    public void testUpgradeUser() throws DatabaseException, RepositoryException {
         testUser.setAdmin(false);
         jpaRepository.updateUser(testUser);
         jpaRepository.upgradeUser(testUser);
@@ -344,7 +340,7 @@ public class JPARepositoryTest {
     }
 
     @Test
-    public void testDowngradeUser() throws DatabaseException {
+    public void testDowngradeUser() throws DatabaseException, RepositoryException {
         testUser.setAdmin(Boolean.TRUE);
         jpaRepository.updateUser(testUser);
         jpaRepository.downgradeUser(testUser);
@@ -352,7 +348,7 @@ public class JPARepositoryTest {
     }
 
     @Test
-    public void testAddAlarmUserRelation() throws DatabaseException {
+    public void testAddAlarmUserRelation() throws DatabaseException, RepositoryException {
         Alarm alarm = new Alarm("blar", "blar", 152333);
         User user = new User("derp", "derp", "pass", "derp@derp.com", Boolean.TRUE);
         jpaRepository.addAlarm(alarm);
@@ -366,7 +362,7 @@ public class JPARepositoryTest {
     }
 
     @Test
-    public void testRemoveUserAlarmRelation() throws DatabaseException {
+    public void testRemoveUserAlarmRelation() throws DatabaseException, RepositoryException {
         Alarm alarm = new Alarm("blar", "blar", 152333);
         User user = new User("derp", "derp", "pass", "derp@derp.com", Boolean.TRUE);
         jpaRepository.addAlarm(alarm);
@@ -378,5 +374,20 @@ public class JPARepositoryTest {
         assertFalse(jpaRepository.getUser("derp@derp.com").getAlarms().contains(alarm));
         jpaRepository.deleteAlarm(alarm);
         jpaRepository.deleteUser(user);
+    }
+    
+    @Test(expected = RepositoryException.class)
+    public void testRegisterUserRepositoryExceptionThrownWhenUserDoesntExist() throws RepositoryException{
+        jpaRepository.registerUser("onbestaandegebruiker", "123456123");
+    }
+    
+    @Test
+    public void testRegisterUser() throws RepositoryException{
+        User user = new User("derp", "derp", "pass", "derp@derp.com", Boolean.TRUE);
+        user = jpaRepository.addUser(user);
+        jpaRepository.registerUser("derp@derp.com", "123456123");
+        User userResult = jpaRepository.refreshUser(user);
+        assertEquals("123456123", userResult.getGCMid());
+        jpaRepository.deleteUser(userResult);
     }
 }
