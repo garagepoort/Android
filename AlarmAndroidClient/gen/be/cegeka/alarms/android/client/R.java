@@ -24,13 +24,14 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int AlarmenListView=0x7f08000d;
+        public static final int AlarmenListView=0x7f08000e;
         public static final int ForceSyncButton=0x7f080004;
         public static final int LogInButton=0x7f080003;
         public static final int LogInTextView=0x7f080001;
+        public static final int SavedAlarmsContainer=0x7f08000d;
         public static final int ToonAlarmenButton=0x7f080002;
-        public static final int action_forgot_password=0x7f08000f;
-        public static final int action_settings=0x7f08000e;
+        public static final int action_forgot_password=0x7f080010;
+        public static final int action_settings=0x7f08000f;
         public static final int cancel_button=0x7f08000b;
         public static final int email=0x7f080008;
         public static final int linearLayout1=0x7f080000;

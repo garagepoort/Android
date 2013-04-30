@@ -9,6 +9,10 @@ public class RepeatedAlarmTO extends AlarmTO
     private int repeatUnit;
     private Integer repeatQuantity;
     private long repeatEnddate;
+    
+    public RepeatedAlarmTO(AlarmTO alarm){
+    	super(alarm.getAlarmID(), alarm.getTitle(), alarm.getInfo(), alarm.getDateInMillis());
+    }
 
     public RepeatedAlarmTO(int repeatUnit, Integer repeatQuantity, long repeatEnddate, Integer alarmID, String title, String info, long dateInMillis)
     {
@@ -24,8 +28,18 @@ public class RepeatedAlarmTO extends AlarmTO
     {
         return repeatUnit;
     }
+    
+    
 
-    public Integer getRepeatQuantity()
+    public void setRepeatUnit(int repeatUnit) {
+		this.repeatUnit = repeatUnit;
+	}
+
+	public void setRepeatQuantity(Integer repeatQuantity) {
+		this.repeatQuantity = repeatQuantity;
+	}
+
+	public Integer getRepeatQuantity()
     {
         return repeatQuantity;
     }

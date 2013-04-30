@@ -10,7 +10,7 @@ class AlarmSQLHelper extends SQLiteOpenHelper {
 	// Table info strings
 	public static final String TABLE_ALARMS = "alarms";
 	// Column names
-	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_ID = "alarmID";
 	public static final String COLUMN_TITLE = "title";
 	public static final String COLUMN_DESCR = "description";
 	public static final String COLUMN_DATE = "eventDate";
