@@ -1,5 +1,10 @@
 package be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import android.annotation.SuppressLint;
+
 
 
 
@@ -89,5 +94,14 @@ public class RepeatedAlarmTO extends AlarmTO
         }
         return true;
     }
+    
+    @SuppressLint("SimpleDateFormat")
+	@Override
+	public String toString()
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(getDateInMillis());
+		return "RepeatedAlarmTO [title= " + getTitle() + ", info= " + getInfo() + ", date= " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()) + "repeatUnit= "+ getRepeatUnit() + " repeatQuantity= " + getRepeatQuantity() +"]";
+	}
     
 }

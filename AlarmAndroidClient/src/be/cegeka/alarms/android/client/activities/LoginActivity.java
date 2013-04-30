@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.gcm.GCMRegister;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 import futureimplementation.Future;
@@ -57,7 +58,7 @@ public class LoginActivity extends Activity {
 		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
-		
+
 		// Set up the login form.
 		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
 		mEmailView = (EditText) findViewById(R.id.email);
@@ -187,24 +188,14 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			Future<UserTO> future = remoteAlarmController.loginUser(mEmail, mPassword);
-			FutureService.whenResolved(future, new FutureCallable<UserTO>() {
-
-				@Override
-				public void apply(UserTO result) {
-					if(result !=null){
-						LoginController loginController = new LoginController(LoginActivity.this);
-						loginController.logInUser(result);
-						Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
-						goToInfoActivity();
-					}
-				}
-
-			});
-			// mAuthTask = new UserLoginTask();
-			// mAuthTask.execute((Void) null);
+			tryToLoginOnServer();
 
 		}
+	}
+
+	private void tryToLoginOnServer() {
+		Future<UserTO> future = remoteAlarmController.loginUser(mEmail, mPassword);
+		FutureService.whenResolved(future, new FutureCallableLogin());
 	}
 
 	/**
@@ -221,32 +212,48 @@ public class LoginActivity extends Activity {
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show
 					? 1
-							: 0).setListener(new AnimatorListenerAdapter() {
-								@Override
-								public void onAnimationEnd(Animator animation) {
-									mLoginStatusView.setVisibility(show
-											? View.VISIBLE
-													: View.GONE);
-								}
-							});
+					: 0).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginStatusView.setVisibility(show
+							? View.VISIBLE
+							: View.GONE);
+				}
+			});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show
 					? 0
-							: 1).setListener(new AnimatorListenerAdapter() {
-								@Override
-								public void onAnimationEnd(Animator animation) {
-									mLoginFormView.setVisibility(show
-											? View.GONE
-													: View.VISIBLE);
-								}
-							});
+					: 1).setListener(new AnimatorListenerAdapter() {
+				@Override
+				public void onAnimationEnd(Animator animation) {
+					mLoginFormView.setVisibility(show
+							? View.GONE
+							: View.VISIBLE);
+				}
+			});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	private class FutureCallableLogin implements FutureCallable<UserTO> {
+
+		@Override
+		public void apply(UserTO result) {
+			if (result != null) {
+				new GCMRegister().registerWithGCMServer(LoginActivity.this);
+				LoginController loginController = new LoginController(LoginActivity.this);
+				loginController.logInUser(result);
+				Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
+				goToInfoActivity();
+
+			}
+		}
+
 	}
 
 	/**
