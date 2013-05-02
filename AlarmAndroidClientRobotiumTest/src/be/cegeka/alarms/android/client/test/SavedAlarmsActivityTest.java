@@ -2,15 +2,12 @@ package be.cegeka.alarms.android.client.test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import com.jayway.android.robotium.solo.Solo;
 
 

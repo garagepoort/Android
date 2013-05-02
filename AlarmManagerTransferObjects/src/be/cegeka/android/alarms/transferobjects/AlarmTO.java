@@ -1,7 +1,6 @@
 package be.cegeka.android.alarms.transferobjects;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 
 
@@ -93,11 +92,11 @@ public class AlarmTO implements Serializable
             return false;
         }
         final AlarmTO other = (AlarmTO) obj;
-        if (!Objects.equals(this.title, other.title))
+        if(!this.title.equals(other.title))
         {
             return false;
         }
-        if (!Objects.equals(this.info, other.info))
+        if (!this.info.equals(other.info))
         {
             return false;
         }

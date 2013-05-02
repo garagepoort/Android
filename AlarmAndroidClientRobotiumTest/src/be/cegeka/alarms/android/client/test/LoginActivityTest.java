@@ -3,19 +3,15 @@ package be.cegeka.alarms.android.client.test;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.mockito.Mockito;
-
 import synchronisation.RemoteAlarmController;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
 import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.gcm.GCMRegister;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
-
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import com.jayway.android.robotium.solo.Solo;
-
 import futureimplementation.Future;
 
 public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginActivity> {

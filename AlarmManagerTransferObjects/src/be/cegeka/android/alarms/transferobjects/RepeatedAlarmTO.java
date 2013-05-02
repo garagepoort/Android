@@ -1,7 +1,6 @@
 package be.cegeka.android.alarms.transferobjects;
 
 import java.util.List;
-import java.util.Objects;
 
 public class RepeatedAlarmTO extends AlarmTO {
 
@@ -65,10 +64,10 @@ public class RepeatedAlarmTO extends AlarmTO {
             return false;
         }
         final RepeatedAlarmTO other = (RepeatedAlarmTO) obj;
-        if (!Objects.equals(this.getTitle(), other.getTitle())) {
+        if (!this.getTitle().equals(other.getTitle())) {
             return false;
         }
-        if (!Objects.equals(this.getInfo(), other.getInfo())) {
+        if (!this.getInfo().equals(other.getInfo())) {
             return false;
         }
         if (this.getDateInMillis() != other.getDateInMillis()) {
@@ -77,7 +76,7 @@ public class RepeatedAlarmTO extends AlarmTO {
         if (this.repeatUnit != other.repeatUnit) {
             return false;
         }
-        if (!Objects.equals(this.repeatQuantity, other.repeatQuantity)) {
+        if (!this.repeatQuantity.equals(other.repeatQuantity)) {
             return false;
         }
         if (this.repeatEnddate != other.repeatEnddate) {

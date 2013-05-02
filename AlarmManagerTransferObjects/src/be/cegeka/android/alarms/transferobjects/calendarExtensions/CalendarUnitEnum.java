@@ -21,7 +21,7 @@ public enum CalendarUnitEnum {
     MONTH(2, "Month"),
     YEAR(1, "Year");
     
-    private static final Map<Integer, CalendarUnitEnum> lookup = new HashMap<>(CalendarUnitEnum.values().length, 1.0f);
+    private static final Map<Integer, CalendarUnitEnum> lookup = new HashMap<Integer, CalendarUnitEnum>(CalendarUnitEnum.values().length, 1.0f);
 
     static {
         for (CalendarUnitEnum c : CalendarUnitEnum.values()) {
