@@ -9,6 +9,8 @@ import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Facade {
 
@@ -235,8 +237,12 @@ public class Facade {
         return service.authenticate(user, paswoord);
     }
 
-    public void registerUser(String email, String GCMID) throws BusinessException {
-        service.registerUser(email,GCMID);
+    public boolean registerUser(String email, String GCMID) throws BusinessException {
+        try {
+            return service.registerUser(email,GCMID);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
    

@@ -42,5 +42,5 @@ public interface Repository
     public boolean authenticateUser(User user, String paswoord) throws RepositoryException;
     public void closeDatabase();
 
-    public void registerUser(String email, String GCMID) throws RepositoryException;
+    public boolean registerUser(String email, String GCMID) throws RepositoryException;
 }

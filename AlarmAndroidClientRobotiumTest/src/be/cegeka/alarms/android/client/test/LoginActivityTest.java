@@ -1,27 +1,22 @@
 package be.cegeka.alarms.android.client.test;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import static org.mockito.Mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-=======
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
->>>>>>> 0090d49e13d544d8cd64bb660b8172c30f96a0a3
 import synchronisation.RemoteAlarmController;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
 import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
-<<<<<<< HEAD
 import be.cegeka.alarms.android.client.sync.remoteSync.RemoteDBConnectionInterface;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.*;
-=======
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 
->>>>>>> 0090d49e13d544d8cd64bb660b8172c30f96a0a3
 import com.jayway.android.robotium.solo.Solo;
 
 import futureimplementation.Future;
@@ -33,7 +28,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 	{
 		super(LoginActivity.class);
 	}
-<<<<<<< HEAD
+//<<<<<<< HEAD
 //
 //	private Solo solo;
 //	private RemoteAlarmController remoteAlarmController;
@@ -129,7 +124,7 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 //		assertTrue(solo.searchText("Log In"));
 //		assertTrue(solo.searchText("You are currently not logged in."));
 //	}
-=======
+//=======
 
 	private Solo solo;
 	private RemoteAlarmController remoteAlarmControllerMock;
@@ -210,5 +205,5 @@ public class LoginActivityTest extends ActivityInstrumentationTestCase2<LoginAct
 		assertTrue(solo.searchText("Log In"));
 		assertTrue(solo.searchText("You are currently not logged in."));
 	}
->>>>>>> 0090d49e13d544d8cd64bb660b8172c30f96a0a3
+//>>>>>>> 0090d49e13d544d8cd64bb660b8172c30f96a0a3
 }

@@ -2,6 +2,8 @@ package be.cegeka.alarms.android.client.utilities;
 
 import java.util.Calendar;
 
+import be.cegeka.alarms.android.client.exception.TechnicalException;
+import be.cegeka.alarms.android.client.exception.UtilityException;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.RepeatedAlarmTO;
 
@@ -13,8 +15,12 @@ public class AlarmUtilities {
 		return calendar.before(Calendar.getInstance());
 	}
 
-	public RepeatedAlarmTO futurizeRepeatedAlarmEventDate(RepeatedAlarmTO rAlarm) {
-
+	public RepeatedAlarmTO futurizeRepeatedAlarmEventDate(RepeatedAlarmTO rAlarm) throws UtilityException {
+		
+		if(rAlarm == null){
+			throw new UtilityException("The alarm can't be null");
+		}
+		
 		Calendar endDate = Calendar.getInstance();
 		Calendar eventDate = Calendar.getInstance();
 
@@ -26,7 +32,7 @@ public class AlarmUtilities {
 				eventDate.add(rAlarm.getRepeatUnit(), rAlarm.getRepeatQuantity());
 				rAlarm.setDateInMillis(eventDate.getTimeInMillis());
 			}
-			if (eventDate.before(endDate) && eventDate.before(Calendar.getInstance())) {
+			if (eventDate.before(endDate) && eventDate.after(Calendar.getInstance())) {
 				return rAlarm;
 			}
 		}

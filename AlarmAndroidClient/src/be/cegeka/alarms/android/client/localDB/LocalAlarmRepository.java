@@ -1,10 +1,6 @@
 package be.cegeka.alarms.android.client.localDB;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import android.content.Context;
 import be.cegeka.alarms.android.client.exception.DatabaseException;
@@ -57,13 +53,13 @@ public class LocalAlarmRepository {
 		alarmDataSource.storeAlarmTOs(alarms);
 	}
 
-	public void deleteAlarm(AlarmTO alarm) {
+	public void deleteAlarm(AlarmTO alarm) throws DatabaseException {
 		alarmDataSource.open();
 		alarmDataSource.deleteAlarmTO(alarm);
 		alarmDataSource.close();
 	}
 
-	public RepeatedAlarmTO updateRepeatedAlarm(RepeatedAlarmTO rAlarm) {
+	public RepeatedAlarmTO updateRepeatedAlarm(RepeatedAlarmTO rAlarm) throws DatabaseException {
 		
 		alarmDataSource.open();
 		alarmDataSource.tryFuturizationOfRepeatedAlarmTO(rAlarm);
