@@ -1,2 +1,5 @@
-/gen
-/bin
+build/
+dist/
+bin/
+target/
+.metadata/
