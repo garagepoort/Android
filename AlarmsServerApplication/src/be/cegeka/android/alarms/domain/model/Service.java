@@ -3,163 +3,200 @@ package be.cegeka.android.alarms.domain.model;
 import be.cegeka.android.alarms.domain.entities.Alarm;
 import be.cegeka.android.alarms.domain.entities.User;
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
-import be.cegeka.android.alarms.infrastructure.DatabaseException;
+import be.cegeka.android.alarms.exceptions.RepositoryException;
 import be.cegeka.android.alarms.infrastructure.JPARepository;
 import be.cegeka.android.alarms.infrastructure.Repository;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+public class Service {
 
-
-public class Service
-{
     private Repository repository;
     private GCMCommunication gcmCommunication;
-    
 
-    public Service()
-    {
+    public Service() {
         repository = JPARepository.getInstance();
         gcmCommunication = new GCMCommunication(this);
     }
-    
-    
-    
-    public User getUser(String emailadres)
-    {
+
+    public User getUser(String emailadres) {
         return repository.getUser(emailadres);
     }
 
-
-    public Alarm getAlarm(Integer id)
-    {
+    public Alarm getAlarm(Integer id) {
         return repository.getAlarm(id);
     }
 
-
-    public Collection<User> getAllUsers()
-    {
+    public Collection<User> getAllUsers() {
         return repository.getAllUsers();
     }
 
-
-    public Collection<Alarm> getAllAlarms()
-    {
+    public Collection<Alarm> getAllAlarms() {
         return repository.getAllAlarms();
     }
 
-
-    public Collection<User> getUsersForAlarm(Alarm alarm)
-    {
-        return repository.getUsersForAlarm(alarm);
+    public Collection<User> getUsersForAlarm(Alarm alarm) throws BusinessException {
+        try {
+            return repository.getUsersForAlarm(alarm);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public Collection<Alarm> getAlarmsForUser(User user)
-    {
-        return repository.getAlarmsForUser(user);
+    public Collection<Alarm> getAlarmsForUser(User user) throws BusinessException {
+        try {
+            return repository.getAlarmsForUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public User addUser(User user) throws DatabaseException
-    {
-        return repository.addUser(user);
+    public User addUser(User user) throws BusinessException {
+        try {
+            return repository.addUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public Alarm addAlarm(Alarm alarm) throws DatabaseException
-    {
-        return repository.addAlarm(alarm);
+    public Alarm addAlarm(Alarm alarm) throws BusinessException {
+        try {
+            return repository.addAlarm(alarm);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void addUsers(Collection<User> users) throws DatabaseException
-    {
-        repository.addUsers(users);
+    public void addUsers(Collection<User> users) throws BusinessException {
+        try {
+            repository.addUsers(users);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void addAlarms(Collection<Alarm> alarms) throws DatabaseException
-    {
-        repository.addAlarms(alarms);
+    public void addAlarms(Collection<Alarm> alarms) throws BusinessException {
+        try {
+            repository.addAlarms(alarms);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public User updateUser(User user) throws DatabaseException
-    {
-        return repository.updateUser(user);
+    public User updateUser(User user) throws BusinessException {
+        try {
+            return repository.updateUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public Alarm updateAlarm(Alarm alarm) throws DatabaseException
-    {
-        return repository.updateAlarm(alarm);
+    public Alarm updateAlarm(Alarm alarm) throws BusinessException {
+        try {
+            return repository.updateAlarm(alarm);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void deleteUser(User user) throws DatabaseException
-    {
-        repository.deleteUser(user);
+    public void deleteUser(User user) throws BusinessException {
+        try {
+            repository.deleteUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void deleteAlarm(Alarm alarm) throws DatabaseException
-    {
-        repository.deleteAlarm(alarm);
+    public void deleteAlarm(Alarm alarm) throws BusinessException {
+        try {
+            repository.deleteAlarm(alarm);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void deleteUsers(Collection<User> users) throws DatabaseException
-    {
-        repository.deleteUsers(users);
+    public void deleteUsers(Collection<User> users) throws BusinessException {
+        try {
+            repository.deleteUsers(users);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-
-    public void deleteAlarms(Collection<Alarm> alarms) throws DatabaseException
-    {
-        repository.deleteAlarms(alarms);
+    public void deleteAlarms(Collection<Alarm> alarms) throws BusinessException {
+        try {
+            repository.deleteAlarms(alarms);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
 
-    
-    public User getUserById(int id)
-    {
+    public User getUserById(int id) {
         return repository.getUserById(id);
     }
-    
-    public void closeDatabase()
-    {
+
+    public void closeDatabase() {
         repository.closeDatabase();
     }
-    
-    public boolean authenticate(User user, String paswoord){
-        return repository.authenticateUser(user, paswoord);
+
+    public boolean authenticate(User user, String paswoord) throws BusinessException {
+        try {
+            return repository.authenticateUser(user, paswoord);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
-    
-    public User upgradeUser(User user) throws DatabaseException
-    {
-        return repository.upgradeUser(user);
+
+    public User upgradeUser(User user) throws BusinessException {
+        try {
+            return repository.upgradeUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
-    
-    public User downgradeUser(User user) throws DatabaseException 
-    {
-        return repository.downgradeUser(user);
+
+    public User downgradeUser(User user) throws BusinessException {
+        try {
+            return repository.downgradeUser(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
-    
-    public void addAlarmUserRelation(Alarm alarm, User user) throws DatabaseException, BusinessException {
-        repository.addUserAlarmRelation(user, alarm);
-        gcmCommunication.notifyUserOfChange(user);
+
+    public void addAlarmUserRelation(Alarm alarm, User user) throws BusinessException {
+        try {
+            repository.addUserAlarmRelation(user, alarm);
+            gcmCommunication.notifyUserOfChange(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
-    
-    public void removeAlarmUserRelation(Alarm alarm, User user) throws DatabaseException, BusinessException {
-        repository.removeUserAlarmRelation(user, alarm);
-        gcmCommunication.notifyUserOfChange(user);
+
+    public void removeAlarmUserRelation(Alarm alarm, User user) throws BusinessException {
+        try {
+            repository.removeUserAlarmRelation(user, alarm);
+            gcmCommunication.notifyUserOfChange(user);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
     }
-    
+
+    public void registerUser(String email, String GCMID) throws BusinessException {
+        try {
+            repository.registerUser(email, GCMID);
+        } catch (RepositoryException ex) {
+            throw new BusinessException(ex);
+        }
+    }
     /**
      * ONLY FOR TESTING.
-     * @param gcmCommunication 
+     *
+     * @param gcmCommunication
      */
-    void setGCMCommunication(GCMCommunication gcmCommunication)
-    {
+    void setGCMCommunication(GCMCommunication gcmCommunication) {
         this.gcmCommunication = gcmCommunication;
     }
+
+    
 }

@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry exported="true" kind="lib" path="libs/ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry kind="lib" path="libs/gcm.jar"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+=======
+	<classpathentry exported="true" kind="lib" path="libs/gcm.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/ivarv/Documents/Git/Android/AlarmManagerTransferObjects/dist/AlarmManagerTransferObjects.jar"/>
+>>>>>>> d98222fd412cf6417571175642912cad06609e50
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

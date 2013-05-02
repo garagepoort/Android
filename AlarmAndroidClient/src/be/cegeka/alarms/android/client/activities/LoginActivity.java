@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.gcm.GCMRegister;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 import futureimplementation.Future;
@@ -49,12 +50,12 @@ public class LoginActivity extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
-
+	private RemoteAlarmController remoteAlarmController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
 
@@ -187,22 +188,14 @@ public class LoginActivity extends Activity {
 			// perform the user login attempt.
 			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
-			Future<UserTO> future = RemoteAlarmController.loginUser(mEmail, mPassword);
-			FutureService.whenResolved(future, new FutureCallable<UserTO>() {
-
-				@Override
-				public void apply(UserTO result) {
-					LoginController loginController = new LoginController(LoginActivity.this);
-					loginController.logInUser(result);
-					Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
-					goToInfoActivity();
-				}
-
-			});
-//			mAuthTask = new UserLoginTask();
-//			mAuthTask.execute((Void) null);
+			tryToLoginOnServer();
 
 		}
+	}
+
+	private void tryToLoginOnServer() {
+		Future<UserTO> future = remoteAlarmController.loginUser(mEmail, mPassword);
+		FutureService.whenResolved(future, new FutureCallableLogin());
 	}
 
 	/**
@@ -247,6 +240,28 @@ public class LoginActivity extends Activity {
 		}
 	}
 
-	
+	private class FutureCallableLogin implements FutureCallable<UserTO> {
+
+		@Override
+		public void apply(UserTO result) {
+			if (result != null) {
+				new GCMRegister().registerWithGCMServer(LoginActivity.this);
+				LoginController loginController = new LoginController(LoginActivity.this);
+				loginController.logInUser(result);
+				Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
+				goToInfoActivity();
+
+			}
+		}
+
+	}
+
+	/**
+	 * ONLY FOR TESTING
+	 */
+	public void setRemoteAlarmController(
+			RemoteAlarmController remoteAlarmController) {
+		this.remoteAlarmController = remoteAlarmController;
+	}
 
 }

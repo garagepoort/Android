@@ -1,5 +1,10 @@
 package be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import android.annotation.SuppressLint;
+
 
 
 
@@ -9,6 +14,10 @@ public class RepeatedAlarmTO extends AlarmTO
     private int repeatUnit;
     private Integer repeatQuantity;
     private long repeatEnddate;
+    
+    public RepeatedAlarmTO(AlarmTO alarm){
+    	super(alarm.getAlarmID(), alarm.getTitle(), alarm.getInfo(), alarm.getDateInMillis());
+    }
 
     public RepeatedAlarmTO(int repeatUnit, Integer repeatQuantity, long repeatEnddate, Integer alarmID, String title, String info, long dateInMillis)
     {
@@ -24,8 +33,18 @@ public class RepeatedAlarmTO extends AlarmTO
     {
         return repeatUnit;
     }
+    
+    
 
-    public Integer getRepeatQuantity()
+    public void setRepeatUnit(int repeatUnit) {
+		this.repeatUnit = repeatUnit;
+	}
+
+	public void setRepeatQuantity(Integer repeatQuantity) {
+		this.repeatQuantity = repeatQuantity;
+	}
+
+	public Integer getRepeatQuantity()
     {
         return repeatQuantity;
     }
@@ -89,5 +108,14 @@ public class RepeatedAlarmTO extends AlarmTO
         }
         return true;
     }
+    
+    @SuppressLint("SimpleDateFormat")
+	@Override
+	public String toString()
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(getDateInMillis());
+		return "RepeatedAlarmTO [title= " + getTitle() + ", info= " + getInfo() + ", date= " + new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime()) + "repeatUnit= "+ getRepeatUnit() + " repeatQuantity= " + getRepeatQuantity() +"]";
+	}
     
 }

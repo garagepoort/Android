@@ -24,8 +24,8 @@ import futureimplementation.Future;
 public class RemoteDBSoapRequest extends Observable {
 	// Method names.
 	public static final String LOGIN = "login";
-	public static final String GET_ALARMS_FROM_USER = "getAlarmsFromUser";
-	public static final String REGISTER_SENDERID = "registerSenderID";
+	public static final String GET_ALARMS_FROM_USER = "getAllAlarmsFromUser";
+	public static final String REGISTER_SENDERID = "registerUser";
 	public static final String UNREGISTER_SENDERID = "unRegisterSenderID";
 
 	// METHOD NAME
@@ -37,30 +37,17 @@ public class RemoteDBSoapRequest extends Observable {
 	// URL OF WSDL FILE
 	private static final String URL = "http://172.29.162.135:8080/AlarmManagerWeb/AlarmManagerWebservice";
 
-	// private UserTO user;
-	// private ArrayList<AlarmTO> alarms = new ArrayList<AlarmTO>();
+	private Future future;
 
-	private Future<ArrayList<AlarmTO>> futureAlarms;
-	private Future<UserTO> futureUser;
-
-	public RemoteDBSoapRequest(Future<ArrayList<AlarmTO>> future, Future<UserTO> futureUser) {
-		futureAlarms = future;
-		this.futureUser=futureUser;
+	public RemoteDBSoapRequest(Future future) {
+		this.future = future;
 	}
-	
-
-	// public RemoteDBSoapRequest(Future<UserTO> future){
-	// futureUser = future;
-	// }
 
 	public void execute(String... uri) {
 		new InnerRequestTask().execute(uri);
 	}
 
-	private class InnerRequestTask
-			extends
-				AsyncTask<String, String, SoapObject> {
-
+	private class InnerRequestTask extends AsyncTask<String, String, SoapObject> {
 
 		@Override
 		protected SoapObject doInBackground(String... uri) {
@@ -77,8 +64,7 @@ public class RemoteDBSoapRequest extends Observable {
 				}
 				if (METHOD_NAME.equals(GET_ALARMS_FROM_USER)) {
 					String naam = uri[1];
-					String paswoord = uri[2];
-					response = soapGetAlarmsFromUserResponse(naam, paswoord);
+					response = soapGetAlarmsFromUserResponse(naam);
 				}
 				if (METHOD_NAME.equals(REGISTER_SENDERID)) {
 					String email = uri[1];
@@ -99,23 +85,24 @@ public class RemoteDBSoapRequest extends Observable {
 
 		@Override
 		protected void onPostExecute(SoapObject result) {
-			if (result != null) {
+			//TODO register senderid moet een response terugggeven
+//			if (result != null) {
 				if (METHOD_NAME.equals(LOGIN)) {
-					futureUser.setValue(getUser(result));
+					future.setValue(getUser(result));
 				} else if (METHOD_NAME.equals(GET_ALARMS_FROM_USER)) {
-					futureAlarms.setValue(getAlarms(result));
+					future.setValue(getAlarms(result));
 				} else if (METHOD_NAME.equals(REGISTER_SENDERID)) {
-					// TODO HANDLE RESULT
+					future.setValue(true);
 				}
-			}
+//			}
 
 			super.onPostExecute(result);
 		}
 
 		private SoapObject soapSendSenderID(String email, String senderID) throws IOException, XmlPullParserException {
 			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-			request.addProperty("emailadres", email);
-			request.addProperty("senderID", senderID);
+			request.addProperty("email", email);
+			request.addProperty("gcmId", senderID);
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			SoapObject response = null;
@@ -161,11 +148,11 @@ public class RemoteDBSoapRequest extends Observable {
 		private UserTO getUser(SoapObject response) {
 			System.out.println("GETUSERTO");
 			String achternaam = response.getPropertySafelyAsString("achternaam").toString();
-			String email = response.getPropertySafelyAsString("emailadres").toString();
+			String email = response.getPropertySafelyAsString("email").toString();
 			int id = Integer.parseInt(response.getPropertySafelyAsString("userid").toString());
 			String naam = response.getPropertySafelyAsString("naam").toString();
 			boolean admin = Boolean.getBoolean(response.getPropertySafelyAsString("admin").toString());
-			System.out.println(achternaam);
+			System.out.println(email);
 			return new UserTO(id, naam, achternaam, email, admin);
 
 		}
@@ -182,11 +169,9 @@ public class RemoteDBSoapRequest extends Observable {
 		 * @throws IOException
 		 * @throws XmlPullParserException
 		 */
-		private SoapObject soapGetAlarmsFromUserResponse(String username,
-				String paswoord) throws IOException, XmlPullParserException, SocketTimeoutException {
+		private SoapObject soapGetAlarmsFromUserResponse(String username) throws IOException, XmlPullParserException, SocketTimeoutException {
 			SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-			request.addProperty("emailadres", username);
-			request.addProperty("paswoord", paswoord);
+			request.addProperty("username", username);
 			SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 			envelope.setOutputSoapObject(request);
 			SoapObject response = null;
@@ -211,15 +196,16 @@ public class RemoteDBSoapRequest extends Observable {
 			for (int i = 0; i < response.getPropertyCount(); i++) {
 				SoapObject o = (SoapObject) response.getProperty(i);
 				String info = o.getProperty("info").toString();
-				int id = Integer.parseInt(o.getPropertySafelyAsString("id").toString());
+				int id = Integer.parseInt(o.getPropertySafelyAsString("alarmID").toString());
 				String titel = o.getPropertySafelyAsString("title").toString();
+				long date = Long.parseLong(o.getPropertySafelyAsString("dateInMillis").toString());
 
-				int repeatUnit = Integer.parseInt(o.getPropertySafelyAsString("repeatUnit", -1).toString());
-				int repeatQuantity = Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity").toString());
-				long date = Long.parseLong(o.getPropertySafelyAsString("date").toString());
-				long endDate = Long.parseLong(o.getPropertySafelyAsString("repeatEndDate").toString());
+				int repeatUnit = Integer.parseInt(o.getPropertySafelyAsString("repeatUnit",0).toString());
+				int repeatQuantity = Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity",0).toString());
+				long endDate = Long.parseLong(o.getPropertySafelyAsString("repeatEnddate",0).toString());
+
 				AlarmTO a = null;
-				if (repeatUnit == -1) {
+				if (repeatUnit == 0) {
 					a = new AlarmTO(id, titel, info, date);
 					alarms.add(a);
 				} else {
@@ -229,14 +215,11 @@ public class RemoteDBSoapRequest extends Observable {
 			}
 			return alarms;
 		}
-		
-		
-		private String getSoapAction(){
+
+		private String getSoapAction() {
 			return "\"" + NAMESPACE + METHOD_NAME + "\"";
 		}
 
 	}
 
-	
-	
 }

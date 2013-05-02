@@ -20,7 +20,7 @@ import javax.persistence.PreRemove;
 
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Alarm implements Serializable
 {
     @Id

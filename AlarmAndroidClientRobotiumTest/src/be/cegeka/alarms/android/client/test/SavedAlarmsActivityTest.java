@@ -29,9 +29,16 @@ public class SavedAlarmsActivityTest extends ActivityInstrumentationTestCase2<Sa
 		localAlarmRepository = mock(LocalAlarmRepository.class);
 		getActivity().setLocalAlarmRepository(localAlarmRepository);
 	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		getActivity().finish();
+		solo.finishOpenedActivities();
+		//super.tearDown();
+	}
 
 
-	public void test_givenLocalAlarmsRepositoryReturnsListOfAlarmTOs_thenTheyAreDisplayed()
+	public void test_agivenLocalAlarmsRepositoryReturnsListOfAlarmTOs_thenTheyAreDisplayed()
 	{
 		List<AlarmTO> alarmsList = new ArrayList<AlarmTO>();
 		AlarmTO alarmTO_1 = new AlarmTO(66, "title_1", "info_1", 4658752);
@@ -39,7 +46,7 @@ public class SavedAlarmsActivityTest extends ActivityInstrumentationTestCase2<Sa
 		alarmsList.add(alarmTO_1);
 		alarmsList.add(alarmTO_2);
 
-		when(localAlarmRepository.getLocalAlarms(getActivity())).thenReturn(alarmsList);
+		when(localAlarmRepository.getLocalAlarms()).thenReturn(alarmsList);
 		getActivity().runOnUiThread(new Runnable()
 		{
 			@Override
@@ -49,5 +56,22 @@ public class SavedAlarmsActivityTest extends ActivityInstrumentationTestCase2<Sa
 			}
 		});
 		assertTrue(solo.searchText("title_1"));
+		assertTrue(solo.searchText("title_2"));
+		assertTrue(solo.searchText("info_1"));
+		assertTrue(solo.searchText("info_2"));
+	}
+	
+	public void test_givenLocalAlarmsRepositoryReturnsEmptyList_thenMessageNoAlarmsShown(){
+		
+		when(localAlarmRepository.getLocalAlarms()).thenReturn(new ArrayList<AlarmTO>());
+		getActivity().runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				SavedAlarmsActivityTest.this.getActivity().showAlarms();
+			}
+		});
+		assertTrue(solo.searchText("Currently, you have no alarms."));
 	}
 }

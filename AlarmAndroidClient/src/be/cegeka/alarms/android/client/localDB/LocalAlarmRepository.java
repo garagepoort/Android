@@ -3,99 +3,72 @@ package be.cegeka.alarms.android.client.localDB;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import android.content.Context;
 import be.cegeka.alarms.android.client.exception.DatabaseException;
 import be.cegeka.alarms.android.client.exception.TechnicalException;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.*;
 
-public class LocalAlarmRepository
-{
+public class LocalAlarmRepository {
 
-	public List<AlarmTO> getLocalAlarms(Context context)
-	{
-		LocalAlarmDatabase alarmsDataSource = new LocalAlarmDatabase(context);
-		alarmsDataSource.open();
-		List<AlarmTO> alarms = new ArrayList<AlarmTO>();
-		try
-		{
-			alarms = alarmsDataSource.getAllAlarmTOs();
-		} catch (DatabaseException e)
-		{
+	private LocalAlarmDatabase alarmDataSource;
+
+	public LocalAlarmRepository(Context context) {
+		alarmDataSource = new LocalAlarmDatabase(context);
+	}
+
+	public List<AlarmTO> getLocalAlarms() {
+
+		alarmDataSource.open();
+		
+		try {
+			return alarmDataSource.getAllAlarmTOs();
+		}
+		catch (DatabaseException e) {
 			throw new TechnicalException(e);
-		} finally
-		{
-			alarmsDataSource.close();
 		}
-		return alarms;
+		finally {
+			alarmDataSource.close();
+		}
 	}
 
-	public void replaceAll(Context context, List<AlarmTO> alarms)
-	{
-		LocalAlarmDatabase alarmsDataSource = new LocalAlarmDatabase(context);
-		alarmsDataSource.open();
-		try
-		{
-			removeAllFromLocal(alarmsDataSource);
-			insertAllNew(alarmsDataSource, alarms);
-			alarmsDataSource.setTransactionSuccesfull();
-		} catch (DatabaseException exception)
-		{
+	public void replaceAll(List<AlarmTO> alarms) {
+		
+		alarmDataSource.open();
+		try {
+			removeAllFromLocal();
+			insertAllNew(alarms);
+		}
+		catch (DatabaseException exception) {
 			throw new TechnicalException(exception);
-		} finally
-		{
-			alarmsDataSource.close();
+		}
+		finally {
+			alarmDataSource.close();
 		}
 	}
 
-	private void removeAllFromLocal(LocalAlarmDatabase alarmsDataSource)
-	{
-		alarmsDataSource.removeAll();
+	private void removeAllFromLocal() {
+		alarmDataSource.removeAll();
 	}
 
-	private void insertAllNew(LocalAlarmDatabase alarmsDataSource,
-			List<AlarmTO> alarms) throws DatabaseException
-	{
-		alarmsDataSource.storeAlarmTOs(alarms);
+	private void insertAllNew(List<AlarmTO> alarms) throws DatabaseException {
+		alarmDataSource.storeAlarmTOs(alarms);
 	}
 
-	public void deleteAlarm(Context context, AlarmTO alarm)
-	{
-		LocalAlarmDatabase alarmDS = new LocalAlarmDatabase(context);
-		alarmDS.open();
-		alarmDS.deleteAlarmTO(alarm);
-		alarmDS.close();
+	public void deleteAlarm(AlarmTO alarm) {
+		alarmDataSource.open();
+		alarmDataSource.deleteAlarmTO(alarm);
+		alarmDataSource.close();
 	}
 
-	public RepeatedAlarmTO updateRepeatedAlarm(Context context,
-			RepeatedAlarmTO repAlarm)
-	{
-		try
-		{
-			int unit = repAlarm.getRepeatUnit();
-			int repeatQuantity = repAlarm.getRepeatQuantity();
-			Calendar calRepeat = Calendar.getInstance();
-			calRepeat.setTimeInMillis(repAlarm.getRepeatEnddate());
-			if (calRepeat.after(Calendar.getInstance()))
-			{
-				Calendar newCal = Calendar.getInstance(); 
-				newCal.setTimeInMillis(repAlarm.getDateInMillis());
-				newCal.add(unit, repeatQuantity);
-				if (newCal.before(calRepeat))
-				{
-					repAlarm.setDateInMillis(newCal.getTimeInMillis());
-					LocalAlarmDatabase alarmDS = new LocalAlarmDatabase(context);
-					alarmDS.open();
-					RepeatedAlarmTO newAlarm = alarmDS.updateRepeatedAlarmTO(repAlarm);
-					alarmDS.close();
-
-					return newAlarm;
-				}
-			}
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		return null;
+	public RepeatedAlarmTO updateRepeatedAlarm(RepeatedAlarmTO rAlarm) {
+		
+		alarmDataSource.open();
+		alarmDataSource.tryFuturizationOfRepeatedAlarmTO(rAlarm);
+		rAlarm = (RepeatedAlarmTO) alarmDataSource.getAlarmTOById(rAlarm.getAlarmID());
+		alarmDataSource.close();
+		return rAlarm;
 	}
 }

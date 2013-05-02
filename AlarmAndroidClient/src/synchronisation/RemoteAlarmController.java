@@ -10,21 +10,25 @@ import futureimplementation.Future;
 
 public class RemoteAlarmController {
 
-	public static Future getAllAlarms(UserTO userto) {
+	public Future<ArrayList<AlarmTO>> getAllAlarms(UserTO userto) {
+		System.out.println(userto.getEmail());
 		Future<ArrayList<AlarmTO>> future = new Future<ArrayList<AlarmTO>>();
-		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future,null);
+		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future);
 		dbSoapRequest.execute(RemoteDBSoapRequest.GET_ALARMS_FROM_USER, userto.getEmail());
 		return future;
 	}
-	
-	public void logUserIn() {
 
-	}
-
-	public static Future<UserTO> loginUser(String mEmail, String mPassword) {
+	public Future<UserTO> loginUser(String mEmail, String mPassword) {
 		Future<UserTO> future = new Future<UserTO>();
-		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(null, future);
+		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future);
 		dbSoapRequest.execute(RemoteDBSoapRequest.LOGIN, mEmail, mPassword);
+		return future;
+	}
+	
+	public Future<Boolean> registerUser(String user, String gcmID){
+		Future<Boolean> future = new Future<Boolean>();
+		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future);
+		dbSoapRequest.execute(RemoteDBSoapRequest.REGISTER_SENDERID, user, gcmID);
 		return future;
 	}
 }
