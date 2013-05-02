@@ -2,12 +2,15 @@ package be.cegeka.alarms.android.client.test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
+
 import com.jayway.android.robotium.solo.Solo;
 
 
@@ -40,12 +43,13 @@ public class SavedAlarmsActivityTest extends ActivityInstrumentationTestCase2<Sa
 
 	public void test_agivenLocalAlarmsRepositoryReturnsListOfAlarmTOs_thenTheyAreDisplayed()
 	{
+		//remove call to showAlarms in the onstart method of SavedAlarmsActivity to make this test work.
 		List<AlarmTO> alarmsList = new ArrayList<AlarmTO>();
 		AlarmTO alarmTO_1 = new AlarmTO(66, "title_1", "info_1", 4658752);
 		AlarmTO alarmTO_2 = new AlarmTO(47, "title_2", "info_2", 2357896);
 		alarmsList.add(alarmTO_1);
 		alarmsList.add(alarmTO_2);
-
+		
 		when(localAlarmRepository.getLocalAlarms()).thenReturn(alarmsList);
 		getActivity().runOnUiThread(new Runnable()
 		{

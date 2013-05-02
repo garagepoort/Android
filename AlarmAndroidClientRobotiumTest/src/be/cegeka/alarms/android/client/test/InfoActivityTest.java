@@ -2,7 +2,6 @@ package be.cegeka.alarms.android.client.test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
 import be.cegeka.alarms.android.client.activities.LoginActivity;
@@ -49,11 +48,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 
 		solo.clickOnButton("Log In");
 		solo.waitForActivity(LoginActivity.class, 2000);
-		solo.enterText(0, "david.s.maes@gmail.com");
-		solo.enterText(1, "password");
-		solo.clickOnButton("Sign in or register");
-		solo.waitForActivity(Activity.class);
-		solo.assertCurrentActivity("", InfoActivity.class);
+		solo.assertCurrentActivity("", LoginActivity.class);
 	}
 	
 	public void testGivenLoggedIn_ThenShowSyncButton(){
