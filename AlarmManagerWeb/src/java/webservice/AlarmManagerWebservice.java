@@ -65,7 +65,16 @@ public class AlarmManagerWebservice {
      * Web service operation
      */
     @WebMethod(operationName = "registerUser")
-    public void registerUser(@WebParam(name = "email") String email, @WebParam(name = "gcmId") String gcmId) throws BusinessException {
-        facade.registerUser(email, gcmId);
+    public boolean registerUser(@WebParam(name = "email") String email, @WebParam(name = "gcmId") String gcmId) throws BusinessException {
+        return facade.registerUser(email, gcmId);
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "authenticate")
+    public Boolean authenticate(@WebParam(name = "username") String username, @WebParam(name = "password") String password) throws BusinessException {
+        UserTO user = facade.getUser(username);
+        return facade.authenticateUser(user, password);
     }
 }
