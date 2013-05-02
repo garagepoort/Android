@@ -58,7 +58,7 @@ public final class R {
         public static final int action_sign_in_register=0x7f050005;
         public static final int action_sign_in_short=0x7f050006;
         public static final int app_name=0x7f050000;
-        public static final int button_error_message_accept=0x7f050016;
+        public static final int button_error_message_accept=0x7f050017;
         public static final int button_log_in=0x7f050012;
         public static final int button_log_out=0x7f050013;
         public static final int button_show_alarms=0x7f050011;
@@ -71,6 +71,7 @@ public final class R {
         public static final int error_invalid_email=0x7f050009;
         public static final int error_invalid_password=0x7f05000a;
         public static final int error_message_no_internet=0x7f050015;
+        public static final int error_message_not_logged_in=0x7f050016;
         public static final int logged_in_information=0x7f050010;
         public static final int login_progress_signing_in=0x7f050008;
         public static final int not_logged_in=0x7f05000f;

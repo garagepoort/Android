@@ -1,7 +1,7 @@
 package be.cegeka.alarms.android.client;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import synchronisation.RemoteAlarmController;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +10,7 @@ import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
-
 import com.google.android.gcm.GCMBaseIntentService;
-
 import futureimplementation.Future;
 import futureimplementation.FutureCallable;
 import futureimplementation.FutureService;
@@ -30,7 +28,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	@Override
 	protected void onMessage(final Context context, Intent arg1) {
-		Future<ArrayList<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
+		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
 		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override

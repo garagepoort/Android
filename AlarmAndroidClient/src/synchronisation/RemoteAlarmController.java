@@ -1,7 +1,6 @@
 package synchronisation;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import synchronisation.remote.RemoteDBSoapRequest;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
@@ -10,9 +9,9 @@ import futureimplementation.Future;
 
 public class RemoteAlarmController {
 
-	public Future<ArrayList<AlarmTO>> getAllAlarms(UserTO userto) {
+	public Future<List<AlarmTO>> getAllAlarms(UserTO userto) {
 		System.out.println(userto.getEmail());
-		Future<ArrayList<AlarmTO>> future = new Future<ArrayList<AlarmTO>>();
+		Future<List<AlarmTO>> future = new Future<List<AlarmTO>>();
 		RemoteDBSoapRequest dbSoapRequest = new RemoteDBSoapRequest(future);
 		dbSoapRequest.execute(RemoteDBSoapRequest.GET_ALARMS_FROM_USER, userto.getEmail());
 		return future;

@@ -1,7 +1,7 @@
 package be.cegeka.alarms.android.client.activities;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import synchronisation.RemoteAlarmController;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -97,7 +97,7 @@ public class InfoActivity extends Activity
 			}
 			else
 			{
-				buildAndShowErrorDialog();
+				buildAndShowErrorDialog(getString(R.string.error_message_no_internet));
 			}
 		}
 	}
@@ -116,13 +116,20 @@ public class InfoActivity extends Activity
 
 	public void showAlarms(View view)
 	{
+		if(loginController.isUserLoggedIn())
+		{
 		Intent intent = new Intent(InfoActivity.this, SavedAlarmsActivity.class);
 		startActivity(intent);
+		}
+		else
+		{
+			buildAndShowErrorDialog(getString(R.string.error_message_not_logged_in));
+		}
 	}
 	
 	public void syncAlarms(View view){
 		@SuppressWarnings("unchecked")
-		Future<ArrayList<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
+		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
 		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
@@ -135,7 +142,7 @@ public class InfoActivity extends Activity
 	}
 
 
-	public void buildAndShowErrorDialog()
+	public void buildAndShowErrorDialog(final String errorMessage)
 	{
 		runOnUiThread(new Runnable()
 		{
@@ -143,10 +150,11 @@ public class InfoActivity extends Activity
 			public void run()
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivity.this);
-				builder.setMessage(getString(R.string.error_message_no_internet)).setPositiveButton(getString(R.string.button_error_message_accept), new DialogInterface.OnClickListener()
+				builder.setMessage(errorMessage).setPositiveButton(getString(R.string.button_error_message_accept), new DialogInterface.OnClickListener()
 				{
 					public void onClick(DialogInterface dialog, int id)
 					{
+						dialog.dismiss();
 					}
 				});
 				builder.create().show();
