@@ -40,8 +40,13 @@ public class RemoteDBSoapRequest extends Observable
 	// TARGETNAMESPACE IN WSDL
 	private static final String NAMESPACE = "http://webservice/";
 	// URL OF WSDL FILE
+<<<<<<< HEAD
 	private static final String URL = WRONG_URL;// "http://172.29.163.254:8080/AlarmManagerWeb/AlarmManagerWebservice";
+=======
+	private static final String URL = "http://172.29.163.254:8080//AlarmManagerWeb/AlarmManagerWebservice";
+>>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 
+	@SuppressWarnings("rawtypes")
 	private Future future;
 
 
@@ -105,7 +110,11 @@ public class RemoteDBSoapRequest extends Observable
 			return response;
 		}
 
+<<<<<<< HEAD
 
+=======
+		@SuppressWarnings("unchecked")
+>>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 		@Override
 		protected void onPostExecute(SoapObject result)
 		{

@@ -57,11 +57,16 @@ public class LoginActivity extends Activity
 	private TextView mLoginStatusMessageView;
 	private RemoteAlarmController remoteAlarmController;
 
+<<<<<<< HEAD
+=======
+	private GCMRegister gcmRegister;
+>>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+		gcmRegister = new GCMRegister();
 		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
@@ -291,16 +296,23 @@ public class LoginActivity extends Activity
 	{
 
 		@Override
+<<<<<<< HEAD
 		public void apply(UserTO result)
 		{
 			if (result != null)
 			{
 				new GCMRegister().registerWithGCMServer(LoginActivity.this);
+=======
+		public void apply(UserTO result) {
+			if (result != null) {
+				gcmRegister.registerWithGCMServer(LoginActivity.this);
+>>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 				LoginController loginController = new LoginController(LoginActivity.this);
 				loginController.logInUser(result);
 				Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
 				goToInfoActivity();
 
+<<<<<<< HEAD
 				Future<List<AlarmTO>> future = remoteAlarmController.getAllAlarms(result);
 				FutureService.whenResolved(future, new FutureCallable<List<AlarmTO>>()
 				{
@@ -309,6 +321,15 @@ public class LoginActivity extends Activity
 					{
 						new LocalAlarmRepository(LoginActivity.this).replaceAll(result);
 						Toast.makeText(LoginActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
+=======
+			} else {
+				LoginActivity.this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						showProgress(false);
+						Toast.makeText(LoginActivity.this, "This password is incorrect", Toast.LENGTH_LONG).show();
+>>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 					}
 				});
 			}
@@ -324,6 +345,13 @@ public class LoginActivity extends Activity
 			RemoteAlarmController remoteAlarmController)
 	{
 		this.remoteAlarmController = remoteAlarmController;
+	}
+
+	/**
+	 * ONLY FOR TESTING
+	 */
+	public void setGcmRegister(GCMRegister gcmRegister) {
+		this.gcmRegister = gcmRegister;
 	}
 
 }
