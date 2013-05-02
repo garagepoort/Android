@@ -37,11 +37,8 @@ public class SavedAlarmsActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
 		localAlarmRepository = new LocalAlarmRepository(this);
 		showAlarms();
-		
-		
 	}
 
 	public void showAlarms() {

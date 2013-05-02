@@ -52,9 +52,12 @@ public class LoginActivity extends Activity {
 	private TextView mLoginStatusMessageView;
 	private RemoteAlarmController remoteAlarmController;
 
+	private GCMRegister gcmRegister;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		gcmRegister = new GCMRegister();
 		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
@@ -245,12 +248,21 @@ public class LoginActivity extends Activity {
 		@Override
 		public void apply(UserTO result) {
 			if (result != null) {
-				new GCMRegister().registerWithGCMServer(LoginActivity.this);
+				gcmRegister.registerWithGCMServer(LoginActivity.this);
 				LoginController loginController = new LoginController(LoginActivity.this);
 				loginController.logInUser(result);
 				Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
 				goToInfoActivity();
 
+			} else {
+				LoginActivity.this.runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						showProgress(false);
+						Toast.makeText(LoginActivity.this, "This password is incorrect", Toast.LENGTH_LONG).show();
+					}
+				});
 			}
 		}
 
@@ -262,6 +274,13 @@ public class LoginActivity extends Activity {
 	public void setRemoteAlarmController(
 			RemoteAlarmController remoteAlarmController) {
 		this.remoteAlarmController = remoteAlarmController;
+	}
+
+	/**
+	 * ONLY FOR TESTING
+	 */
+	public void setGcmRegister(GCMRegister gcmRegister) {
+		this.gcmRegister = gcmRegister;
 	}
 
 }

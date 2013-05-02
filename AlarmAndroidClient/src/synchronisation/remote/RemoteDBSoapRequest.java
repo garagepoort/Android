@@ -35,8 +35,9 @@ public class RemoteDBSoapRequest extends Observable {
 	// TARGETNAMESPACE IN WSDL
 	private static final String NAMESPACE = "http://webservice/";
 	// URL OF WSDL FILE
-	private static final String URL = "http://172.29.162.135:8080/AlarmManagerWeb/AlarmManagerWebservice";
+	private static final String URL = "http://172.29.163.254:8080//AlarmManagerWeb/AlarmManagerWebservice";
 
+	@SuppressWarnings("rawtypes")
 	private Future future;
 
 	public RemoteDBSoapRequest(Future future) {
@@ -83,6 +84,7 @@ public class RemoteDBSoapRequest extends Observable {
 			return response;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void onPostExecute(SoapObject result) {
 			//TODO register senderid moet een response terugggeven

@@ -1,3 +1,5 @@
-AlarmServerApplication/nbproject/private
-AlarmServerApplication/build
-AlarmServerApplication/dist
+build/
+dist/
+bin/
+target/
+.metadata/
