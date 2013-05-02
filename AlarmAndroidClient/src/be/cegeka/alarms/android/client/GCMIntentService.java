@@ -8,12 +8,13 @@ import android.content.Intent;
 import android.widget.Toast;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import com.google.android.gcm.GCMBaseIntentService;
 import futureimplementation.Future;
 import futureimplementation.FutureCallable;
 import futureimplementation.FutureService;
+import futureimplementation.ResultCode;
 
 public class GCMIntentService extends GCMBaseIntentService {
 	
@@ -32,11 +33,11 @@ public class GCMIntentService extends GCMBaseIntentService {
 		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void apply(ArrayList<AlarmTO> result) {
+			public void apply(ArrayList<AlarmTO> result, ResultCode resultCode)
+			{
 				new LocalAlarmRepository(context).replaceAll(result);
 				Toast.makeText(context, result.toString(), Toast.LENGTH_SHORT).show();
 			}
-			
 		});
 	}
 
@@ -48,7 +49,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 		FutureService.whenResolved(future, new FutureCallable<Boolean>() {
 
 			@Override
-			public void apply(Boolean result) {
+			public void apply(Boolean result, ResultCode code) {
 				Toast.makeText(arg0, "REGISTERD SENDERID", Toast.LENGTH_SHORT).show();
 				System.out.println("REGISTERED WITH WEBSERVICE!!!");
 			}

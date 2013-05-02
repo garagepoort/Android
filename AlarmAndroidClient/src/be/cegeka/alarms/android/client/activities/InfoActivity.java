@@ -18,11 +18,12 @@ import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import futureimplementation.Future;
 import futureimplementation.FutureCallable;
 import futureimplementation.FutureService;
+import futureimplementation.ResultCode;
 
 
 
@@ -97,7 +98,7 @@ public class InfoActivity extends Activity
 			}
 			else
 			{
-				buildAndShowErrorDialog(getString(R.string.error_message_no_internet));
+				DialogCreator.buildAndShowErrorDialog(getString(R.string.error_message_no_internet), InfoActivity.this);
 			}
 		}
 	}
@@ -123,17 +124,17 @@ public class InfoActivity extends Activity
 		}
 		else
 		{
-			buildAndShowErrorDialog(getString(R.string.error_message_not_logged_in));
+			DialogCreator.buildAndShowErrorDialog(getString(R.string.error_message_not_logged_in), this);
 		}
 	}
 	
 	public void syncAlarms(View view){
-		@SuppressWarnings("unchecked")
 		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
 		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void apply(ArrayList<AlarmTO> result) {
+			public void apply(ArrayList<AlarmTO> result, ResultCode resultCode)
+			{
 				new LocalAlarmRepository(InfoActivity.this).replaceAll(result);
 				Toast.makeText(InfoActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
 			}
@@ -142,25 +143,7 @@ public class InfoActivity extends Activity
 	}
 
 
-	public void buildAndShowErrorDialog(final String errorMessage)
-	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivity.this);
-				builder.setMessage(errorMessage).setPositiveButton(getString(R.string.button_error_message_accept), new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id)
-					{
-						dialog.dismiss();
-					}
-				});
-				builder.create().show();
-			}
-		});
-	}
+	
 
 
 	/**

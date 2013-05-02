@@ -3,8 +3,8 @@ package be.cegeka.alarms.android.client.sync.remoteSync;
 import java.util.ArrayList;
 import java.util.Observer;
 import be.cegeka.alarms.android.client.exception.WebserviceException;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 public interface RemoteDBConnectionInterface {
 	
