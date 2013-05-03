@@ -1,0 +1,89 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    tools:context=".MainActivity" >
+
+    <EditText
+        android:id="@+id/nameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:hint="Username"
+        android:paddingTop="15dp"
+        android:text="testhank" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/Numberfield"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nameField"
+        android:layout_below="@+id/nameField"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:hint="password"
+        android:inputType="textPassword"
+        android:text="password" />
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Numberfield"
+        android:layout_alignRight="@+id/title"
+        android:layout_below="@+id/Numberfield"
+        android:onClick="login"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/loginButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="10dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/callButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/loginButton"
+        android:layout_alignRight="@+id/setContactsButton"
+        android:layout_below="@+id/loginButton"
+        android:layout_marginTop="48dp"
+        android:enabled="false"
+        android:onClick="call"
+        android:text="Call" />
+
+    <Button
+        android:id="@+id/setContactsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/loginButton"
+        android:layout_alignRight="@+id/loginButton"
+        android:layout_below="@+id/loginButton"
+        android:onClick="startSetContactsActivity"
+        android:text="Set Contacts" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/callButton"
+        android:layout_below="@+id/callButton"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+</RelativeLayout>
