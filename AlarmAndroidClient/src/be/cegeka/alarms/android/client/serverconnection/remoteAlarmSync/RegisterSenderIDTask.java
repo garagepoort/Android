@@ -1,4 +1,4 @@
-package synchronisation.remote;
+package be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync;
 
 import java.io.IOException;
 import org.ksoap2.SoapEnvelope;
@@ -7,23 +7,17 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 import android.os.AsyncTask;
-import futureimplementation.Future;
-import futureimplementation.ResultCode;
 
 
-public class RegisterSenderIDTask extends AsyncTask<String, String, SoapPrimitive>
+public class RegisterSenderIDTask extends FutureTask
 {
 
-	private Future<Boolean> future;
 	private boolean timedOut;
-
-
-	public RegisterSenderIDTask(Future<Boolean> future)
-	{
-		this.future = future;
-	}
-
 
 	@Override
 	protected SoapPrimitive doInBackground(String... uri)
@@ -50,20 +44,20 @@ public class RegisterSenderIDTask extends AsyncTask<String, String, SoapPrimitiv
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onPostExecute(SoapPrimitive result)
+	protected void onPostExecute(Object result)
 	{
 
 		if (timedOut)
 		{
-			future.setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
 		}
 		else if (result != null && getResponse(result))
 		{
-			future.setValue(getResponse(result), ResultCode.SUCCESS);
+			getFuture().setValue(getResponse(result), ResultCode.SUCCESS);
 		}
 		else
 		{
-			future.setValue(null, ResultCode.GCM_REGISTRATION_FAILED);
+			getFuture().setValue(null, ResultCode.GCM_REGISTRATION_FAILED);
 		}
 
 		super.onPostExecute(result);
@@ -86,7 +80,7 @@ public class RegisterSenderIDTask extends AsyncTask<String, String, SoapPrimitiv
 	}
 
 
-	private boolean getResponse(SoapPrimitive response)
+	private boolean getResponse(Object response)
 	{
 		return Boolean.parseBoolean(response.toString());
 	}

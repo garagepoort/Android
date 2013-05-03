@@ -8,7 +8,7 @@ import be.cegeka.alarms.android.client.R;
 public class DialogCreator
 {
 
-	public static void buildAndShowErrorDialog(final String errorMessage, final Activity activity)
+	public static void buildAndShowDialog(final String title, final String errorMessage, final Activity activity)
 	{
 		activity.runOnUiThread(new Runnable()
 		{
@@ -16,6 +16,7 @@ public class DialogCreator
 			public void run()
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setTitle(title);
 				builder.setMessage(errorMessage).setPositiveButton(activity.getString(R.string.button_error_message_accept), new DialogInterface.OnClickListener()
 				{
 					public void onClick(DialogInterface dialog, int id)

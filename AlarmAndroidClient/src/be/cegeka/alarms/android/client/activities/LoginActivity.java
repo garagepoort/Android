@@ -1,6 +1,5 @@
 package be.cegeka.alarms.android.client.activities;
 
-import synchronisation.RemoteAlarmController;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -18,10 +17,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.futureimplementation.futurecallables.FutureCallableLogin;
+import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.UserTO;
-import futureimplementation.Future;
-import futureimplementation.FutureService;
-import futureimplementation.futurecallables.FutureCallableLogin;
 
 
 /**

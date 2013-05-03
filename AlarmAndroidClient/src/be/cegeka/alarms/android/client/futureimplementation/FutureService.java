@@ -1,4 +1,4 @@
-package futureimplementation;
+package be.cegeka.alarms.android.client.futureimplementation;
 
 import java.util.HashMap;
 

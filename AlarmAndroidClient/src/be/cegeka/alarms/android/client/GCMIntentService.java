@@ -2,64 +2,97 @@ package be.cegeka.alarms.android.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import synchronisation.RemoteAlarmController;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
+import be.cegeka.alarms.android.client.futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.localAlarmSync.LocalToAndroidAlarmSyncer;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
+import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 import com.google.android.gcm.GCMBaseIntentService;
-import futureimplementation.Future;
-import futureimplementation.FutureCallable;
-import futureimplementation.FutureService;
-import futureimplementation.ResultCode;
 
-public class GCMIntentService extends GCMBaseIntentService {
-	
-	public GCMIntentService() {
+
+public class GCMIntentService extends GCMBaseIntentService
+{
+
+	public GCMIntentService()
+	{
 		super("362183860979");
 	}
 
+
 	@Override
-	protected void onError(Context arg0, String arg1) {
+	protected void onError(Context arg0, String arg1)
+	{
 		System.out.println("ERROR: " + arg1);
 	}
 
+
 	@Override
-	protected void onMessage(final Context context, Intent arg1) {
+	protected void onMessage(final Context context, Intent arg1)
+	{
+		new LocalToAndroidAlarmSyncer(context).unscheduleAllAlarms();
+		
 		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
-		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
+		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>()
+		{
 
 			@Override
-			public void apply(ArrayList<AlarmTO> result, ResultCode resultCode)
+			public void onSucces(ArrayList<AlarmTO> result, ResultCode resultCode)
 			{
 				new LocalAlarmRepository(context).replaceAll(result);
+				new LocalToAndroidAlarmSyncer(context).scheduleAllAlarms();
 				Toast.makeText(context, result.toString(), Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onError(Exception e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
 
+
 	@Override
-	protected void onRegistered(final Context arg0, String arg1) {
+	protected void onRegistered(final Context arg0, String arg1)
+	{
 		System.out.println("REGISTERED WITH GCM!!!!");
 		UserTO user = new LoginController(arg0).getLoggedInUser();
 		Future<Boolean> future = new RemoteAlarmController().registerUser(user.getEmail(), arg1);
-		FutureService.whenResolved(future, new FutureCallable<Boolean>() {
+		FutureService.whenResolved(future, new FutureCallable<Boolean>()
+		{
 
 			@Override
-			public void apply(Boolean result, ResultCode code) {
+			public void onSucces(Boolean result, ResultCode code)
+			{
 				Toast.makeText(arg0, "REGISTERD SENDERID", Toast.LENGTH_SHORT).show();
 				System.out.println("REGISTERED WITH WEBSERVICE!!!");
+			}
+
+			@Override
+			public void onError(Exception e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
 
+
 	@Override
-	protected void onUnregistered(Context arg0, String arg1) {
-//		RemoteDBConnectionInterface remoteDBConnection = new RemoteDBWebConnection();
-//		remoteDBConnection.unRegisterSenderID(arg1);
-		
+	protected void onUnregistered(Context arg0, String arg1)
+	{
+		// RemoteDBConnectionInterface remoteDBConnection = new
+		// RemoteDBWebConnection();
+		// remoteDBConnection.unRegisterSenderID(arg1);
+
 	}
 }

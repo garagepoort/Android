@@ -1,4 +1,4 @@
-package synchronisation.remote;
+package be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -10,23 +10,17 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
-import futureimplementation.Future;
-import futureimplementation.ResultCode;
 
 
-public class GetAlarmsTask extends AsyncTask<String, String, SoapObject>
+public class GetAlarmsTask extends FutureTask
 {
-	private Future<List<AlarmTO>> future;
 	private boolean timedOut;
-
-
-	public GetAlarmsTask(Future<List<AlarmTO>> future)
-	{
-		this.future = future;
-	}
-
 
 	@Override
 	protected SoapObject doInBackground(String... uri)
@@ -51,17 +45,17 @@ public class GetAlarmsTask extends AsyncTask<String, String, SoapObject>
 
 
 	@Override
-	protected void onPostExecute(SoapObject result)
+	protected void onPostExecute(Object result)
 	{
 
 		if (timedOut || result == null)
 		{
-			future.setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
 		}
 		else
 		{
 
-			future.setValue(getAlarms(result), ResultCode.SUCCESS);
+			getFuture().setValue(getAlarms((SoapObject)result), ResultCode.SUCCESS);
 		}
 		super.onPostExecute(result);
 	}

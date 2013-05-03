@@ -1,4 +1,4 @@
-package synchronisation.remote;
+package be.cegeka.alarms.android.client.serverconnection.login;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -8,25 +8,19 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
+import be.cegeka.alarms.android.client.futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 import be.cegeka.android.alarms.transferobjects.UserTO;
-import futureimplementation.Future;
-import futureimplementation.FutureCallable;
-import futureimplementation.FutureService;
-import futureimplementation.ResultCode;
 
 
-public class LoginUserTask extends AsyncTask<String, String, SoapObject>
+public class LoginUserTask extends FutureTask
 {
 
-	private Future<UserTO> future;
 	private boolean timedOut;
-
-
-	public LoginUserTask(Future<UserTO> future)
-	{
-		this.future = future;
-	}
-
 
 	@Override
 	protected SoapObject doInBackground(String... uri)
@@ -52,22 +46,22 @@ public class LoginUserTask extends AsyncTask<String, String, SoapObject>
 
 
 	@Override
-	protected void onPostExecute(SoapObject result)
+	protected void onPostExecute(Object result)
 	{
-		
-		if (timedOut || result == null)
+		SoapObject soapObject = (SoapObject) result;
+		if (timedOut || soapObject == null)
 		{
-			future.setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
 		}
-		else if (getUser(result) == null)
+		else if (getUser(soapObject) == null)
 		{
-			future.setValue(null, ResultCode.WRONG_USER_CREDENTIALS);
+			getFuture().setValue(null, ResultCode.WRONG_USER_CREDENTIALS);
 		}
-		else if (getUser(result) != null)
+		else if (getUser(soapObject) != null)
 		{
-			future.setValue(getUser(result), ResultCode.SUCCESS);
+			getFuture().setValue(getUser(soapObject), ResultCode.SUCCESS);
 		}
-		super.onPostExecute(result);
+		super.onPostExecute(soapObject);
 	}
 
 

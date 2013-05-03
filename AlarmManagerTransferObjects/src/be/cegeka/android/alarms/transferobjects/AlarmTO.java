@@ -1,7 +1,9 @@
 package be.cegeka.android.alarms.transferobjects;
 
 import java.io.Serializable;
-
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class AlarmTO implements Serializable
@@ -11,10 +13,12 @@ public class AlarmTO implements Serializable
     private String info;
     private long dateInMillis;
 
-    public AlarmTO(){
-        
+
+    public AlarmTO()
+    {
     }
-    
+
+
     public AlarmTO(Integer alarmID, String title, String info, long dateInMillis)
     {
         setAlarmID(alarmID);
@@ -22,8 +26,7 @@ public class AlarmTO implements Serializable
         setInfo(info);
         setDateInMillis(dateInMillis);
     }
-    
-    
+
 
     public Integer getAlarmID()
     {
@@ -72,11 +75,31 @@ public class AlarmTO implements Serializable
         this.dateInMillis = dateInMillis;
     }
 
+
     @Override
     public int hashCode()
     {
         int hash = 3;
         return hash;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        return title + "\n" + dateFormat.format(calendar.getTime());
+    }
+
+
+    public String toDetailedString()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(dateInMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        return title + "\n" + info + "\n" + dateFormat.format(calendar.getTime());
     }
 
 
@@ -92,7 +115,7 @@ public class AlarmTO implements Serializable
             return false;
         }
         final AlarmTO other = (AlarmTO) obj;
-        if(!this.title.equals(other.title))
+        if (!this.title.equals(other.title))
         {
             return false;
         }
@@ -104,8 +127,9 @@ public class AlarmTO implements Serializable
         {
             return false;
         }
-        
+
         return true;
     }
-    
 }
+
+

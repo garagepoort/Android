@@ -1,8 +1,8 @@
 package be.cegeka.alarms.android.client.activities;
 
+import static be.cegeka.alarms.android.client.futureimplementation.FutureService.whenResolved;
 import java.util.ArrayList;
 import java.util.List;
-import synchronisation.RemoteAlarmController;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,15 +15,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
+import be.cegeka.alarms.android.client.futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.localAlarmSync.AlarmToAndroidSchedulerSyncer;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
+import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
-import futureimplementation.Future;
-import futureimplementation.FutureCallable;
-import futureimplementation.FutureService;
-import futureimplementation.ResultCode;
 
 
 
@@ -98,7 +100,7 @@ public class InfoActivity extends Activity
 			}
 			else
 			{
-				DialogCreator.buildAndShowErrorDialog(getString(R.string.error_message_no_internet), InfoActivity.this);
+				DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_no_internet), InfoActivity.this);
 			}
 		}
 	}
@@ -124,27 +126,30 @@ public class InfoActivity extends Activity
 		}
 		else
 		{
-			DialogCreator.buildAndShowErrorDialog(getString(R.string.error_message_not_logged_in), this);
+			DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_not_logged_in), this);
 		}
 	}
 	
 	public void syncAlarms(View view){
 		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
-		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
+		whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void apply(ArrayList<AlarmTO> result, ResultCode resultCode)
+			public void onSucces(ArrayList<AlarmTO> result, ResultCode resultCode)
 			{
 				new LocalAlarmRepository(InfoActivity.this).replaceAll(result);
 				Toast.makeText(InfoActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
 			}
+
+			@Override
+			public void onError(Exception e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
 			
 		});
 	}
-
-
-	
-
 
 	/**
 	 * ONLY FOR TESTING.

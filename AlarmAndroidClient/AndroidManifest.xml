@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <permission
         android:name="be.cegeka.alarms.android.client.permission.C2D_MESSAGE"
@@ -62,6 +64,15 @@
             android:label="@string/title_activity_saved_alarms"
             android:parentActivityName="be.cegeka.alarms.android.client.activities.InfoActivity" >
         </activity>
+        <activity
+            android:name="be.cegeka.alarms.android.client.activities.AlarmReceiverActivity"
+            android:clearTaskOnLaunch="true"
+            android:label="temp"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+      <receiver android:name="be.cegeka.alarms.android.client.activities.AlarmReceiver">
+      </receiver>
     </application>
 
 </manifest>

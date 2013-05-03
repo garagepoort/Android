@@ -36,11 +36,10 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 
 	public void testCheckNoInternetDialog() {
 		when(internetCheckerMock.isNetworkAvailable(getActivity())).thenReturn(false);
-
 		solo.clickOnButton("Log In");
 		solo.waitForDialogToOpen(2000);
+				
 		assertTrue(solo.searchText("No internet connection. Try again later"));
-		solo.clickOnButton("Ok");
 	}
 
 	public void testCheckLoginActivity() {

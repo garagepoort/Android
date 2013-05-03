@@ -1,4 +1,4 @@
-package futureimplementation;
+package be.cegeka.alarms.android.client.futureimplementation;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class Future<T>{
 	
 	private void notifyFutures(ResultCode code){
 		for(FutureCallable f : futureCallables){
-			f.apply(getValue(), code);
+			f.onSucces(getValue(), code);
 		}
 	}
 	

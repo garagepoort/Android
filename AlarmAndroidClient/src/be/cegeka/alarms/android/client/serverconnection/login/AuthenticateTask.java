@@ -1,4 +1,4 @@
-package synchronisation.remote;
+package be.cegeka.alarms.android.client.serverconnection.login;
 
 import java.io.IOException;
 import org.ksoap2.SoapEnvelope;
@@ -7,21 +7,19 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-import android.os.AsyncTask;
-import futureimplementation.Future;
-import futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 
 
-public class AuthenticateTask extends AsyncTask<String, String, SoapPrimitive>
+public class AuthenticateTask extends FutureTask
 {
 
-	private Future<Boolean> future;
 	private boolean timedOut;
 
 
-	public AuthenticateTask(Future<Boolean> future)
+	public AuthenticateTask()
 	{
-		this.future = future;
 	}
 
 
@@ -50,20 +48,20 @@ public class AuthenticateTask extends AsyncTask<String, String, SoapPrimitive>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onPostExecute(SoapPrimitive result)
+	protected void onPostExecute(Object result)
 	{
 
 		if (timedOut)
 		{
-			future.setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
 		}
 		else if (result != null && getResponse(result))
 		{
-			future.setValue(getResponse(result), ResultCode.SUCCESS);
+			getFuture().setValue(getResponse(result), ResultCode.SUCCESS);
 		}
 		else
 		{
-			future.setValue(null, ResultCode.WRONG_USER_CREDENTIALS);
+			getFuture().setValue(null, ResultCode.WRONG_USER_CREDENTIALS);
 		}
 
 		super.onPostExecute(result);
@@ -86,8 +84,9 @@ public class AuthenticateTask extends AsyncTask<String, String, SoapPrimitive>
 	}
 
 
-	private boolean getResponse(SoapPrimitive response)
+	private boolean getResponse(Object response)
 	{
 		return Boolean.parseBoolean(response.toString());
 	}
+
 }
