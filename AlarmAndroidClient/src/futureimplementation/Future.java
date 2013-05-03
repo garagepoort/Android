@@ -8,18 +8,18 @@ public class Future<T>{
 	private T value;
 	private ArrayList<FutureCallable> futureCallables = new ArrayList<FutureCallable>();
 	
-	public void setValue(T value){
+	public void setValue(T value, ResultCode code){
 		this.value = value;
-		notifyFutures();
+		notifyFutures(code);
 	}
 	
 	public T getValue(){
 		return value;
 	}
 	
-	private void notifyFutures(){
+	private void notifyFutures(ResultCode code){
 		for(FutureCallable f : futureCallables){
-			f.apply(getValue());
+			f.apply(getValue(), code);
 		}
 	}
 	

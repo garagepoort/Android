@@ -13,10 +13,12 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.mockito.Mockito;
+<<<<<<< HEAD
+=======
 
 >>>>>>> 09d3187688d7b44d54792436369b2419663b4f4e
+>>>>>>> 6fe7d35ce9bc8068a3ec9951943d0e9ffebf5353
 import synchronisation.RemoteAlarmController;
 import android.test.ActivityInstrumentationTestCase2;
 import be.cegeka.alarms.android.client.activities.InfoActivity;
@@ -24,14 +26,17 @@ import be.cegeka.alarms.android.client.activities.LoginActivity;
 import be.cegeka.alarms.android.client.gcm.GCMRegister;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 <<<<<<< HEAD
+import be.cegeka.android.alarms.transferobjects.UserTO;
+=======
+<<<<<<< HEAD
 import be.cegeka.alarms.android.client.sync.remoteSync.RemoteDBConnectionInterface;
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.*;
 =======
 >>>>>>> 09d3187688d7b44d54792436369b2419663b4f4e
 import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
 
+>>>>>>> 6fe7d35ce9bc8068a3ec9951943d0e9ffebf5353
 import com.jayway.android.robotium.solo.Solo;
-
 import futureimplementation.Future;
 
 <<<<<<< HEAD

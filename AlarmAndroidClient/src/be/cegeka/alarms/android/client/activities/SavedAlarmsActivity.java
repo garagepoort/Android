@@ -1,7 +1,6 @@
 package be.cegeka.alarms.android.client.activities;
 
 import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
 public class SavedAlarmsActivity extends Activity {
 

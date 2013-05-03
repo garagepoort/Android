@@ -1,6 +1,5 @@
 package be.cegeka.alarms.android.client.activities;
 
-import java.util.List;
 import synchronisation.RemoteAlarmController;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,16 +17,11 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
-import be.cegeka.alarms.android.client.gcm.GCMRegister;
-import be.cegeka.alarms.android.client.infrastructure.LoginController;
-import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 import futureimplementation.Future;
-import futureimplementation.FutureCallable;
 import futureimplementation.FutureService;
+import futureimplementation.futurecallables.FutureCallableLogin;
 
 
 /**
@@ -46,38 +40,33 @@ public class LoginActivity extends Activity
 	 */
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
-	private String mPassword;
+	private String email;
+	private String password;
 
 	// UI references.
-	private EditText mEmailView;
-	private EditText mPasswordView;
-	private View mLoginFormView;
-	private View mLoginStatusView;
-	private TextView mLoginStatusMessageView;
+	private EditText emailView;
+	private EditText passwordView;
+	private View loginFormView;
+	private View loginStatusView;
+	private TextView loginStatusMessageView;
 	private RemoteAlarmController remoteAlarmController;
 
-<<<<<<< HEAD
-=======
-	private GCMRegister gcmRegister;
->>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		gcmRegister = new GCMRegister();
 		remoteAlarmController = new RemoteAlarmController();
 		setContentView(R.layout.activity_login);
 		setupActionBar();
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		email = getIntent().getStringExtra(EXTRA_EMAIL);
+		emailView = (EditText) findViewById(R.id.email);
+		emailView.setText(email);
 
-		mPasswordView = (EditText) findViewById(R.id.password);
-		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener()
+		passwordView = (EditText) findViewById(R.id.password);
+		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener()
 		{
 			@Override
 			public boolean onEditorAction(TextView textView, int id,
@@ -92,9 +81,9 @@ public class LoginActivity extends Activity
 			}
 		});
 
-		mLoginFormView = findViewById(R.id.login_form);
-		mLoginStatusView = findViewById(R.id.login_status);
-		mLoginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
+		loginFormView = findViewById(R.id.login_form);
+		loginStatusView = findViewById(R.id.login_status);
+		loginStatusMessageView = (TextView) findViewById(R.id.login_status_message);
 
 		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener()
 		{
@@ -110,17 +99,10 @@ public class LoginActivity extends Activity
 			@Override
 			public void onClick(View v)
 			{
-				goToInfoActivity();
+				startActivity(new Intent(getApplicationContext(), InfoActivity.class));
 			}
 
 		});
-	}
-
-
-	private void goToInfoActivity()
-	{
-		Intent intent = new Intent(getApplicationContext(), InfoActivity.class);
-		startActivity(intent);
 	}
 
 
@@ -178,41 +160,41 @@ public class LoginActivity extends Activity
 	{
 
 		// Reset errors.
-		mEmailView.setError(null);
-		mPasswordView.setError(null);
+		emailView.setError(null);
+		passwordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
-		mPassword = mPasswordView.getText().toString();
+		email = emailView.getText().toString();
+		password = passwordView.getText().toString();
 
 		boolean cancel = false;
 		View focusView = null;
 
 		// Check for a valid password.
-		if (TextUtils.isEmpty(mPassword))
+		if (TextUtils.isEmpty(password))
 		{
-			mPasswordView.setError(getString(R.string.error_field_required));
-			focusView = mPasswordView;
+			passwordView.setError(getString(R.string.error_field_required));
+			focusView = passwordView;
 			cancel = true;
 		}
-		else if (mPassword.length() < 4)
+		else if (password.length() < 4)
 		{
-			mPasswordView.setError(getString(R.string.error_invalid_password));
-			focusView = mPasswordView;
+			passwordView.setError(getString(R.string.error_invalid_password));
+			focusView = passwordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail))
+		if (TextUtils.isEmpty(email))
 		{
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
+			emailView.setError(getString(R.string.error_field_required));
+			focusView = emailView;
 			cancel = true;
 		}
-		else if (!mEmail.contains("@"))
+		else if (!email.contains("@"))
 		{
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
+			emailView.setError(getString(R.string.error_invalid_email));
+			focusView = emailView;
 			cancel = true;
 		}
 
@@ -223,10 +205,10 @@ public class LoginActivity extends Activity
 			focusView.requestFocus();
 		}
 		else
-		{
+		{                                                                                            
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
-			mLoginStatusMessageView.setText(R.string.login_progress_signing_in);
+			loginStatusMessageView.setText(R.string.login_progress_signing_in);
 			showProgress(true);
 			tryToLoginOnServer();
 
@@ -236,8 +218,8 @@ public class LoginActivity extends Activity
 
 	private void tryToLoginOnServer()
 	{
-		Future<UserTO> future = remoteAlarmController.loginUser(mEmail, mPassword);
-		FutureService.whenResolved(future, new FutureCallableLogin());
+		Future<UserTO> future = remoteAlarmController.loginUser(email, password);
+		FutureService.whenResolved(future, new FutureCallableLogin(this));
 	}
 
 
@@ -245,7 +227,7 @@ public class LoginActivity extends Activity
 	 * Shows the progress UI and hides the login form.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	private void showProgress(final boolean show)
+	public void showProgress(final boolean show)
 	{
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs to fade-in
@@ -254,29 +236,29 @@ public class LoginActivity extends Activity
 		{
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-			mLoginStatusView.setVisibility(View.VISIBLE);
-			mLoginStatusView.animate().setDuration(shortAnimTime).alpha(show
+			loginStatusView.setVisibility(View.VISIBLE);
+			loginStatusView.animate().setDuration(shortAnimTime).alpha(show
 					? 1
 					: 0).setListener(new AnimatorListenerAdapter()
 			{
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					mLoginStatusView.setVisibility(show
+					loginStatusView.setVisibility(show
 							? View.VISIBLE
 							: View.GONE);
 				}
 			});
 
-			mLoginFormView.setVisibility(View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show
+			loginFormView.setVisibility(View.VISIBLE);
+			loginFormView.animate().setDuration(shortAnimTime).alpha(show
 					? 0
 					: 1).setListener(new AnimatorListenerAdapter()
 			{
 				@Override
 				public void onAnimationEnd(Animator animation)
 				{
-					mLoginFormView.setVisibility(show
+					loginFormView.setVisibility(show
 							? View.GONE
 							: View.VISIBLE);
 				}
@@ -286,55 +268,9 @@ public class LoginActivity extends Activity
 		{
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
-			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+			loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
-	}
-
-
-	private class FutureCallableLogin implements FutureCallable<UserTO>
-	{
-
-		@Override
-<<<<<<< HEAD
-		public void apply(UserTO result)
-		{
-			if (result != null)
-			{
-				new GCMRegister().registerWithGCMServer(LoginActivity.this);
-=======
-		public void apply(UserTO result) {
-			if (result != null) {
-				gcmRegister.registerWithGCMServer(LoginActivity.this);
->>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
-				LoginController loginController = new LoginController(LoginActivity.this);
-				loginController.logInUser(result);
-				Toast.makeText(LoginActivity.this, "Login succesfull", Toast.LENGTH_LONG).show();
-				goToInfoActivity();
-
-<<<<<<< HEAD
-				Future<List<AlarmTO>> future = remoteAlarmController.getAllAlarms(result);
-				FutureService.whenResolved(future, new FutureCallable<List<AlarmTO>>()
-				{
-					@Override
-					public void apply(List<AlarmTO> result)
-					{
-						new LocalAlarmRepository(LoginActivity.this).replaceAll(result);
-						Toast.makeText(LoginActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
-=======
-			} else {
-				LoginActivity.this.runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						showProgress(false);
-						Toast.makeText(LoginActivity.this, "This password is incorrect", Toast.LENGTH_LONG).show();
->>>>>>> f204879f01e7737d11edec98843e5e8fecb6f9f1
-					}
-				});
-			}
-		}
-
 	}
 
 
@@ -345,13 +281,6 @@ public class LoginActivity extends Activity
 			RemoteAlarmController remoteAlarmController)
 	{
 		this.remoteAlarmController = remoteAlarmController;
-	}
-
-	/**
-	 * ONLY FOR TESTING
-	 */
-	public void setGcmRegister(GCMRegister gcmRegister) {
-		this.gcmRegister = gcmRegister;
 	}
 
 }
