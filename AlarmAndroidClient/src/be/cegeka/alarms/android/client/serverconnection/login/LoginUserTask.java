@@ -8,12 +8,14 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
+import be.cegeka.alarms.android.client.exception.TechnicalException;
 import be.cegeka.alarms.android.client.futureimplementation.Future;
 import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
 import be.cegeka.alarms.android.client.futureimplementation.FutureService;
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
 import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
 import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
+import be.cegeka.android.alarms.transferobjects.ServerResult;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
@@ -21,6 +23,7 @@ public class LoginUserTask extends FutureTask
 {
 
 	private boolean timedOut;
+
 
 	@Override
 	protected SoapObject doInBackground(String... uri)
@@ -102,13 +105,21 @@ public class LoginUserTask extends FutureTask
 	 */
 	private UserTO getUser(SoapObject response)
 	{
-		String achternaam = response.getPropertySafelyAsString("achternaam").toString();
-		String email = response.getPropertySafelyAsString("email").toString();
-		int id = Integer.parseInt(response.getPropertySafelyAsString("userid").toString());
-		String naam = response.getPropertySafelyAsString("naam").toString();
-		boolean admin = Boolean.getBoolean(response.getPropertySafelyAsString("admin").toString());
-		System.out.println(email);
-		return new UserTO(id, naam, achternaam, email, admin);
-
+		ServerResult result = ServerResult.valueOf(response.getPropertySafelyAsString("error"));
+		if (result == ServerResult.SUCCESS)
+		{
+			SoapObject userto = (SoapObject) response.getProperty("userTO");
+			String achternaam = userto.getPropertySafelyAsString("achternaam").toString();
+			String email = userto.getPropertySafelyAsString("email").toString();
+			int id = Integer.parseInt(userto.getPropertySafelyAsString("userid").toString());
+			String naam = userto.getPropertySafelyAsString("naam").toString();
+			boolean admin = Boolean.getBoolean(userto.getPropertySafelyAsString("admin").toString());
+			System.out.println(email);
+			return new UserTO(id, naam, achternaam, email, admin);
+		}
+		else
+		{
+			throw new TechnicalException(result.toString());
+		}
 	}
 }

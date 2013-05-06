@@ -15,43 +15,27 @@ import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
-public class RemoteAlarmController {
-	//TODO FIX THIS
+public class RemoteAlarmController
+{
+	// TODO FIX THIS
 	private Future<UserTO> future = new Future<UserTO>();
-	
-	public Future<List<AlarmTO>> getAllAlarms(UserTO userto) {
+
+
+	public Future<List<AlarmTO>> getAllAlarms(UserTO userto)
+	{
 		return new GetAlarmsTask().executeFuture(userto.getEmail());
 	}
 
-	public Future<UserTO> loginUser(final String email, final String password) {
-		boolean succes = false;
-		Future<Boolean> authenticateResult = new AuthenticateTask().executeFuture(email, password);
-		whenResolved(authenticateResult, new FutureCallable<Boolean>()
-		{
-			
-			@Override
-			public void onSucces(Boolean result, ResultCode resultCode)
-			{
-				if(resultCode == ResultCode.SUCCESS){
-					future = new LoginUserTask().executeFuture(email, password);
-					return future;
-				}else{
-					future.setValue(null, resultCode);
-				}
-			}
 
-			@Override
-			public void onError(Exception e)
-			{
-				//TODO error implementatie
-			}
-		});
+	public Future<UserTO> loginUser(final String email, final String password)
+	{
+		return new LoginUserTask().executeFuture(email, password);
 	}
-	
-	public Future<Boolean> registerUser(String user, String gcmID){
+
+
+	public Future<Boolean> registerUser(String user, String gcmID)
+	{
 		return new RegisterSenderIDTask().executeFuture(user, gcmID);
 	}
-	
-	
-	
+
 }

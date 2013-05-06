@@ -1,20 +1,24 @@
 package be.cegeka.android.alarms.transferobjects;
 
+import java.io.Serializable;
 
-public class LoginObject
+
+public class LoginObject implements Serializable
 {
     private UserTO userTO;
-    private String error;
+    private ServerResult error;
 
 
-    public LoginObject(String error)
+    public LoginObject(){}
+    
+    public LoginObject(ServerResult error)
     {
         this.userTO = null;
         this.error = error;
     }
 
 
-    public LoginObject(UserTO userTO, String error)
+    public LoginObject(UserTO userTO, ServerResult error)
     {
         this.userTO = userTO;
         this.error = error;
@@ -27,8 +31,24 @@ public class LoginObject
     }
 
 
-    public String getError()
+    public ServerResult getError()
     {
         return error;
     }
+
+
+    public void setUserTO(UserTO userTO)
+    {
+        this.userTO = userTO;
+    }
+
+
+    public void setError(ServerResult error)
+    {
+        this.error = error;
+    }
+    
+    
 }
+
+
