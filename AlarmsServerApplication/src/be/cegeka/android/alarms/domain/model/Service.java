@@ -182,13 +182,10 @@ public class Service {
         }
     }
 
-    public void registerUser(String email, String GCMID) throws BusinessException {
-        try {
-            repository.registerUser(email, GCMID);
-        } catch (RepositoryException ex) {
-            throw new BusinessException(ex);
-        }
+    public boolean registerUser(String email, String GCMID) throws RepositoryException {
+        return repository.registerUser(email, GCMID);
     }
+
     /**
      * ONLY FOR TESTING.
      *
@@ -197,6 +194,4 @@ public class Service {
     void setGCMCommunication(GCMCommunication gcmCommunication) {
         this.gcmCommunication = gcmCommunication;
     }
-
-    
 }

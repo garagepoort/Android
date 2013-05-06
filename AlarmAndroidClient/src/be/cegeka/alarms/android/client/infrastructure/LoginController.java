@@ -1,9 +1,8 @@
 package be.cegeka.alarms.android.client.infrastructure;
 
 import java.io.IOException;
-
 import android.content.Context;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
 public class LoginController

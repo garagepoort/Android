@@ -1,8 +1,8 @@
 package be.cegeka.alarms.android.client.activities;
 
+import static be.cegeka.alarms.android.client.futureimplementation.FutureService.whenResolved;
 import java.util.ArrayList;
-
-import synchronisation.RemoteAlarmController;
+import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,14 +15,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import be.cegeka.alarms.android.client.R;
+import be.cegeka.alarms.android.client.futureimplementation.Future;
+import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
+import be.cegeka.alarms.android.client.futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.localAlarmSync.AlarmToAndroidSchedulerSyncer;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.AlarmTO;
-import be.cegeka.alarms.android.client.tempProbleemMetJarHierGewoneSrcFiles.UserTO;
-import futureimplementation.Future;
-import futureimplementation.FutureCallable;
-import futureimplementation.FutureService;
+import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
+import be.cegeka.android.alarms.transferobjects.AlarmTO;
+import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
 
@@ -97,7 +100,7 @@ public class InfoActivity extends Activity
 			}
 			else
 			{
-				buildAndShowErrorDialog();
+				DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_no_internet), InfoActivity.this);
 			}
 		}
 	}
@@ -116,44 +119,37 @@ public class InfoActivity extends Activity
 
 	public void showAlarms(View view)
 	{
+		if(loginController.isUserLoggedIn())
+		{
 		Intent intent = new Intent(InfoActivity.this, SavedAlarmsActivity.class);
 		startActivity(intent);
+		}
+		else
+		{
+			DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_not_logged_in), this);
+		}
 	}
 	
 	public void syncAlarms(View view){
-		@SuppressWarnings("unchecked")
-		Future<ArrayList<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
-		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
+		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
+		whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void apply(ArrayList<AlarmTO> result) {
+			public void onSucces(ArrayList<AlarmTO> result, ResultCode resultCode)
+			{
 				new LocalAlarmRepository(InfoActivity.this).replaceAll(result);
 				Toast.makeText(InfoActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onError(Exception e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 			
 		});
 	}
-
-
-	public void buildAndShowErrorDialog()
-	{
-		runOnUiThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				AlertDialog.Builder builder = new AlertDialog.Builder(InfoActivity.this);
-				builder.setMessage(getString(R.string.error_message_no_internet)).setPositiveButton(getString(R.string.button_error_message_accept), new DialogInterface.OnClickListener()
-				{
-					public void onClick(DialogInterface dialog, int id)
-					{
-					}
-				});
-				builder.create().show();
-			}
-		});
-	}
-
 
 	/**
 	 * ONLY FOR TESTING.

@@ -6,9 +6,9 @@
     <class>be.cegeka.android.alarms.domain.entities.RepeatedAlarm</class>
     <class>be.cegeka.android.alarms.domain.entities.User</class>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/AlarmManagerDB"/>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby:AlarmManagerDB;create=true"/>
       <property name="javax.persistence.jdbc.password" value="password"/>
-      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
       <property name="javax.persistence.jdbc.user" value="javadb"/>
       <property name="eclipselink.ddl-generation" value="create-tables"/>
     </properties>

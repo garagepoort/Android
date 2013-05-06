@@ -242,18 +242,19 @@ public class JPARepository implements Repository {
     }
 
     @Override
-    public void registerUser(String email, String GCMID) throws RepositoryException {
+    public boolean registerUser(String email, String GCMID) throws RepositoryException {
         if(email == null){
-            throw new RepositoryException("E-mail can't be null.");
+            return false;
         }
         if(GCMID == null){
-            throw new RepositoryException("Google Cloud Messaging ID can't be null!");
+            return false;
         }
         User user = getUser(email);
         if(user == null){
-            throw new RepositoryException("User doesn't exist.");
+            return false;
         }
         user.setGCMid(GCMID);
         updateUser(user);
+        return true;
     }
 }
