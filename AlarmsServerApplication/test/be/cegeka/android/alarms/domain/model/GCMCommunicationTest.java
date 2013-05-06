@@ -23,7 +23,7 @@ public class GCMCommunicationTest
     @Before
     public void setUp()
     {
-        user = new User(1, "naam", "achternaam", "paswoord", "email", false);
+        user = new User(1, "naam", "achternaam", "paswoord", "email", false,"");
         gcmCommunication = new GCMCommunication(serviceMock);
     }
     

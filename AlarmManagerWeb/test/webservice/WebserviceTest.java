@@ -65,7 +65,7 @@ public class WebserviceTest {
 
     @Test
     public void testLoginIncorrect() throws BusinessException {
-        UserTO user2 = new UserTO(5, "user2", "user2achternaam", "pas2", false);
+        UserTO user2 = new UserTO(5, "user2", "user2achternaam", "pas2", false,"fezefuifhezuifhze");
         Mockito.when(facade.getUser("user2")).thenReturn(user2);
         Mockito.when(facade.authenticateUser(user2, "pas2")).thenReturn(true);
         UserTO userTO2 = service.login("user2", "dza").getUserTO();

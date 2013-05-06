@@ -42,7 +42,7 @@ public class FacadeTest
         userTO = new UserTO(25435, "testUserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
         alarmTO = new AlarmTO(1354, "testAlarmTitle", "testAlarmInfo", 156123);
 
-        user = new User(25435, "testUserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true);
+        user = new User(25435, "testUserNaam", "testAchternaam", "testUserPaswoord", "testUserEmail", true,"");
         alarm = new Alarm(1354, "testAlarmTitle", "testAlarmInfo", 156123);
 
         emailadres = "testUserEmail";
@@ -64,9 +64,9 @@ public class FacadeTest
     public void testGetAllUsers() throws BusinessException
     {
         Collection<User> users = new ArrayList<>();
-        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
-        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
-        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true,"");
+        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true,"");
+        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true,"");
         users.add(user1);
         users.add(user2);
         users.add(user3);
@@ -199,9 +199,9 @@ public class FacadeTest
     public void testAddUsers() throws Exception
     {
         Collection<User> users = new ArrayList<>();
-        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
-        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
-        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true,"");
+        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true,"");
+        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true,"");
         users.add(user1);
         users.add(user2);
         users.add(user3);
@@ -319,9 +319,9 @@ public class FacadeTest
     public void testDeleteUsers() throws Exception
     {
         Collection<User> users = new ArrayList<>();
-        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true);
-        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true);
-        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true);
+        User user1 = new User(1, "testUserNaam1", "testAchternaam1", "testUserPaswoord1", "testUserEmail1", true,"");
+        User user2 = new User(2, "testUserNaam2", "testAchternaam2", "testUserPaswoord2", "testUserEmail2", true,"");
+        User user3 = new User(3, "testUserNaam3", "testAchternaam3", "testUserPaswoord3", "testUserEmail3", true,"");
         users.add(user1);
         users.add(user2);
         users.add(user3);

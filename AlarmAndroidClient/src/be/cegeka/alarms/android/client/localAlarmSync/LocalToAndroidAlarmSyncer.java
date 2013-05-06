@@ -1,6 +1,7 @@
 package be.cegeka.alarms.android.client.localAlarmSync;
 
 import android.content.Context;
+import be.cegeka.alarms.android.client.exception.TechnicalException;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 
 
@@ -17,13 +18,13 @@ public class LocalToAndroidAlarmSyncer
 	}
 
 
-	public void unscheduleAllAlarms()
+	public void unscheduleAllAlarms() throws TechnicalException
 	{
 		AlarmToAndroidSchedulerSyncer.cancelAlarms(context, localAlarmRepository.getLocalAlarms());
 	}
 
 
-	public void scheduleAllAlarms()
+	public void scheduleAllAlarms() throws TechnicalException
 	{
 		AlarmToAndroidSchedulerSyncer.scheduleAlarms(context, localAlarmRepository.getLocalAlarms());
 	}

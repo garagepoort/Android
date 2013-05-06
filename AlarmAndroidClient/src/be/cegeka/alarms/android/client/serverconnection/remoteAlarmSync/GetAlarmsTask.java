@@ -10,6 +10,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
+import be.cegeka.alarms.android.client.exception.TechnicalException;
 import be.cegeka.alarms.android.client.futureimplementation.Future;
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
 import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
@@ -50,12 +51,12 @@ public class GetAlarmsTask extends FutureTask
 
 		if (timedOut || result == null)
 		{
-			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setError(new TechnicalException("Something went wrong"));
 		}
 		else
 		{
 
-			getFuture().setValue(getAlarms((SoapObject)result), ResultCode.SUCCESS);
+			getFuture().setValue(getAlarms((SoapObject)result));
 		}
 		super.onPostExecute(result);
 	}

@@ -40,7 +40,7 @@ public class AlarmReceiverActivity extends Activity
 		
 		System.out.println("AlarmReceiverActivity erin");
 		
-		this.localAlarmRepository = new LocalAlarmRepository(getApplicationContext());
+		this.localAlarmRepository = new LocalAlarmRepository(this);
 		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		checkAlarm();
 		initAndShowViews();

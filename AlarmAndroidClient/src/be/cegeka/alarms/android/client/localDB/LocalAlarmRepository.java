@@ -15,7 +15,7 @@ public class LocalAlarmRepository {
 		alarmDataSource = new LocalAlarmDatabase(context);
 	}
 
-	public List<AlarmTO> getLocalAlarms() {
+	public List<AlarmTO> getLocalAlarms() throws TechnicalException {
 
 		alarmDataSource.open();
 		
@@ -30,7 +30,7 @@ public class LocalAlarmRepository {
 		}
 	}
 
-	public void replaceAll(List<AlarmTO> alarms) {
+	public void replaceAll(List<AlarmTO> alarms) throws TechnicalException {
 		
 		alarmDataSource.open();
 		try {

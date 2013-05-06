@@ -7,6 +7,7 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
+import be.cegeka.alarms.android.client.exception.TechnicalException;
 import be.cegeka.alarms.android.client.futureimplementation.Future;
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
 import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
@@ -49,15 +50,15 @@ public class RegisterSenderIDTask extends FutureTask
 
 		if (timedOut)
 		{
-			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			getFuture().setError(new TechnicalException("There was a problem logging in, please try again later"));
 		}
 		else if (result != null && getResponse(result))
 		{
-			getFuture().setValue(getResponse(result), ResultCode.SUCCESS);
+			getFuture().setValue(getResponse(result));
 		}
 		else
 		{
-			getFuture().setValue(null, ResultCode.GCM_REGISTRATION_FAILED);
+			getFuture().setError(new TechnicalException("Unable to subscribe to the GCM server, alarms will not be automatically updated"));
 		}
 
 		super.onPostExecute(result);

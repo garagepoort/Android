@@ -34,6 +34,7 @@ class UserPersistController
 		editor.putString("email", user.getEmail());
 		editor.putString("paswoord", user.getPaswoord());
 		editor.putBoolean("admin", user.isAdmin());
+		editor.putString("GCMid", user.getGCMid());
 		editor.commit();
 	}
 
@@ -57,7 +58,8 @@ class UserPersistController
 		String email = settings.getString("email", "");
 		String paswoord = settings.getString("paswoord", "");
 		boolean admin = settings.getBoolean("admin", false);
-		UserTO user = new UserTO(id, naam, achternaam, email, admin);
+		String gcmid = settings.getString("GCMid", "");
+		UserTO user = new UserTO(id, naam, achternaam, email, admin, gcmid);
 		user.setPaswoord(paswoord);
 
 		return user;

@@ -9,6 +9,7 @@ public class AlarmUtilities {
 
 	public static boolean isDateInPast(AlarmTO alarmTO) {
 		Calendar calendar = Calendar.getInstance();
+		System.out.println("ALARMTO: " +alarmTO);
 		calendar.setTimeInMillis(alarmTO.getDateInMillis());
 		return calendar.before(Calendar.getInstance());
 	}

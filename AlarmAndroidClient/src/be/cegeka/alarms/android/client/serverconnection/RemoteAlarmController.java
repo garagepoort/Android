@@ -1,13 +1,7 @@
 package be.cegeka.alarms.android.client.serverconnection;
 
-import static be.cegeka.alarms.android.client.futureimplementation.FutureService.whenResolved;
 import java.util.List;
 import be.cegeka.alarms.android.client.futureimplementation.Future;
-import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
-import be.cegeka.alarms.android.client.futureimplementation.FutureService;
-import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
-import be.cegeka.alarms.android.client.futureimplementation.futurecallables.HandleAuthenticateUser;
-import be.cegeka.alarms.android.client.serverconnection.login.AuthenticateTask;
 import be.cegeka.alarms.android.client.serverconnection.login.LoginUserTask;
 import be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync.GetAlarmsTask;
 import be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync.RegisterSenderIDTask;

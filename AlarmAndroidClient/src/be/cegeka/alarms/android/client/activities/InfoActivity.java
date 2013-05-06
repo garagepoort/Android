@@ -135,7 +135,7 @@ public class InfoActivity extends Activity
 		whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>() {
 
 			@Override
-			public void onSucces(ArrayList<AlarmTO> result, ResultCode resultCode)
+			public void onSucces(ArrayList<AlarmTO> result)
 			{
 				new LocalAlarmRepository(InfoActivity.this).replaceAll(result);
 				Toast.makeText(InfoActivity.this, result.toString(), Toast.LENGTH_SHORT).show();

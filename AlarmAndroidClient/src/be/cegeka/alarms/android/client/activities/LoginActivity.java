@@ -20,6 +20,7 @@ import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.futureimplementation.Future;
 import be.cegeka.alarms.android.client.futureimplementation.FutureService;
 import be.cegeka.alarms.android.client.futureimplementation.futurecallables.FutureCallableLogin;
+import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
@@ -205,7 +206,7 @@ public class LoginActivity extends Activity
 			focusView.requestFocus();
 		}
 		else
-		{                                                                                            
+		{
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			loginStatusMessageView.setText(R.string.login_progress_signing_in);
@@ -218,8 +219,16 @@ public class LoginActivity extends Activity
 
 	private void tryToLoginOnServer()
 	{
-		Future<UserTO> future = remoteAlarmController.loginUser(email, password);
-		FutureService.whenResolved(future, new FutureCallableLogin(this));
+		if (new InternetChecker().isNetworkAvailable(this))
+		{
+			Future<UserTO> future = remoteAlarmController.loginUser(email, password);
+			FutureService.whenResolved(future, new FutureCallableLogin(this));
+		}
+		else
+		{
+			DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_no_internet), this);
+			showProgress(false);
+		}
 	}
 
 

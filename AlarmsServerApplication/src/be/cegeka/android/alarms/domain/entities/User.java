@@ -39,13 +39,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(Integer userid, String naam, String achternaam, String paswoord, String email, Boolean admin) {
+    public User(Integer userid, String naam, String achternaam, String paswoord, String email, Boolean admin, String GCMid) {
         this.userid = userid;
         this.naam = naam;
         this.achternaam = achternaam;
         this.paswoord = paswoord;
         this.email = email;
         this.admin = admin;
+        this.GCMid=GCMid;
     }
 
     public User(String naam, String achternaam, String paswoord, String email, Boolean admin) {
@@ -55,6 +56,8 @@ public class User implements Serializable {
         this.email = email;
         this.admin = admin;
     }
+    
+    
 
     public Integer getUserid() {
         return userid;

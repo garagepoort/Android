@@ -36,12 +36,16 @@
             android:name="com.cegeka.alarmmanager.services.SyncService"
             android:enabled="true" >
         </service>
+        <service
+            android:name="com.cegeka.alarmmanager.services.SyncService"
+            android:enabled="true" >
+        </service>
+        
         <service android:name=".GCMIntentService" />
 
         <receiver android:name="com.cegeka.alarmmanager.services.AutoStart" >
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
-
                 <data android:scheme="file" />
             </intent-filter>
         </receiver>

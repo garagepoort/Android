@@ -16,14 +16,14 @@ public class TransferObjectMapper {
         if (u == null) {
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
-        return new UserTO(u.getUserid(), u.getNaam(), u.getAchternaam(), u.getEmail(), u.isAdmin());
+        return new UserTO(u.getUserid(), u.getNaam(), u.getAchternaam(), u.getEmail(), u.isAdmin(), u.getGCMid());
     }
 
     public User convertUserTOToUser(UserTO userTO) throws BusinessException {
         if (userTO == null) {
             throw new BusinessException(NULL_ERROR_MESSAGE);
         }
-        return new User(userTO.getUserid(), userTO.getNaam(), userTO.getAchternaam(), userTO.getPaswoord(), userTO.getEmail(), userTO.isAdmin());
+        return new User(userTO.getUserid(), userTO.getNaam(), userTO.getAchternaam(), userTO.getPaswoord(), userTO.getEmail(), userTO.isAdmin(), userTO.getGCMid());
     }
 
     public Alarm convertAlarmTOToAlarm(AlarmTO alarmTO) throws BusinessException {

@@ -51,20 +51,21 @@ public class LoginUserTask extends FutureTask
 	@Override
 	protected void onPostExecute(Object result)
 	{
-		SoapObject soapObject = (SoapObject) result;
-		if (timedOut || soapObject == null)
+		try
 		{
-			getFuture().setValue(null, ResultCode.SERVER_RELATED_ERROR);
+			SoapObject soapObject = (SoapObject) result;
+			if (timedOut || soapObject == null)
+			{
+				getFuture().setError(new TechnicalException("There was a problem logging in, please try again later"));
+			}else{
+				getFuture().setValue(getUser(soapObject));
+			}
+			super.onPostExecute(soapObject);
 		}
-		else if (getUser(soapObject) == null)
+		catch (TechnicalException e)
 		{
-			getFuture().setValue(null, ResultCode.WRONG_USER_CREDENTIALS);
+			getFuture().setError(e);
 		}
-		else if (getUser(soapObject) != null)
-		{
-			getFuture().setValue(getUser(soapObject), ResultCode.SUCCESS);
-		}
-		super.onPostExecute(soapObject);
 	}
 
 
@@ -103,7 +104,7 @@ public class LoginUserTask extends FutureTask
 	 * 
 	 * @param response
 	 */
-	private UserTO getUser(SoapObject response)
+	private UserTO getUser(SoapObject response) throws TechnicalException
 	{
 		ServerResult result = ServerResult.valueOf(response.getPropertySafelyAsString("error"));
 		if (result == ServerResult.SUCCESS)
@@ -114,8 +115,8 @@ public class LoginUserTask extends FutureTask
 			int id = Integer.parseInt(userto.getPropertySafelyAsString("userid").toString());
 			String naam = userto.getPropertySafelyAsString("naam").toString();
 			boolean admin = Boolean.getBoolean(userto.getPropertySafelyAsString("admin").toString());
-			System.out.println(email);
-			return new UserTO(id, naam, achternaam, email, admin);
+			String gcmID = userto.getPropertySafelyAsString("GCMid");
+			return new UserTO(id, naam, achternaam, email, admin, gcmID);
 		}
 		else
 		{

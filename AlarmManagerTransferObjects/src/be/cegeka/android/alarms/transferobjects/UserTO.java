@@ -11,6 +11,7 @@ public class UserTO implements Serializable
     private String repeatPaswoord;
     private String email;
     private Boolean admin;
+    private String GCMid;
     
     public UserTO(){
         
@@ -39,13 +40,14 @@ public class UserTO implements Serializable
     }
 
 
-    public UserTO(Integer userid, String naam, String achternaam, String email, Boolean admin)
+    public UserTO(Integer userid, String naam, String achternaam, String email, Boolean admin, String gcmID)
     {
         this.userid = userid;
         this.naam = naam;
         this.achternaam = achternaam;
         this.email = email;
         this.admin = admin;
+        this.GCMid=gcmID;
     }
     
     public Integer getUserid()
@@ -135,6 +137,15 @@ public class UserTO implements Serializable
     public void setEmail(String email)
     {
         this.email = email;
+    }
+    
+     public String getGCMid()
+    {
+        return GCMid;
+    }
+
+    public void setGCMid(String GCMid) {
+        this.GCMid = GCMid;
     }
 
     @Override
