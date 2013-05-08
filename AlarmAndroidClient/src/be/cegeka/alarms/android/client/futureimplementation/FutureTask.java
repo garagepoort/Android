@@ -13,7 +13,7 @@ public abstract class FutureTask<T, S> extends AsyncTask<S , Future, T> {
 		future = new Future();
 	}
 
-	public Future executeFuture(S... uri) {
+	public Future executeFuture(S ... uri) {
 		super.execute(uri);
 		return future;
 	}
@@ -34,6 +34,7 @@ public abstract class FutureTask<T, S> extends AsyncTask<S , Future, T> {
 
 	@Override
 	protected void onPostExecute(T result) {
+		
 		if (exception == null) {
 			future.setValue(result);
 			onPostExecuteFuture(result);
