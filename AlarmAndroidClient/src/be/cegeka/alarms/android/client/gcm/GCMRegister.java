@@ -9,6 +9,7 @@ import be.cegeka.alarms.android.client.futureimplementation.FutureService;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.UserTO;
+
 import com.google.android.gcm.GCMRegistrar;
 
 
@@ -27,7 +28,8 @@ public class GCMRegister
 			Toast.makeText(context, "registering with gcm", Toast.LENGTH_LONG).show();
 			GCMRegistrar.register(context, "362183860979");
 		}
-		else if(!regId.equals(userTO.getGCMid()))
+		//TODO This is not ok. We have to force login before regestering.
+		else if(userTO != null && !regId.equals(userTO.getGCMid()))
 		{
 			Future<Boolean> future = new RemoteAlarmController().registerUser(userTO.getEmail(), regId);
 			FutureService.whenResolved(future, new FutureCallable<Boolean>()

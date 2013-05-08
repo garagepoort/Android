@@ -13,6 +13,5 @@ public class ServerUtilities
 	public static final String NAMESPACE = "http://webservice/";
 	// URL OF WSDL FILE
 //	public static final String URL = "http://172.29.163.229:8080/AlarmManagerWeb/AlarmManagerWebservice";
-//	public static final String URL = "http://192.168.0.199:8080/AlarmManagerWeb/AlarmManagerWebservice";
 	public static final String URL = "http://172.29.162.84:8080/AlarmManagerWeb/AlarmManagerWebservice";
 }

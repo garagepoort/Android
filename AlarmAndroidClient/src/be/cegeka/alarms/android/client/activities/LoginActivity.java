@@ -1,5 +1,6 @@
 package be.cegeka.alarms.android.client.activities;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;

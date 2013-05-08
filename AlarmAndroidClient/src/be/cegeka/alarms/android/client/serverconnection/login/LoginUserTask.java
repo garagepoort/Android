@@ -2,32 +2,30 @@ package be.cegeka.alarms.android.client.serverconnection.login;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-import android.os.AsyncTask;
+
 import be.cegeka.alarms.android.client.exception.TechnicalException;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
-import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
-import be.cegeka.alarms.android.client.futureimplementation.FutureService;
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
-import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.futureimplementation.exception.FutureException;
 import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 import be.cegeka.android.alarms.transferobjects.ServerResult;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
 
-public class LoginUserTask extends FutureTask
+public class LoginUserTask extends FutureTask<UserTO, String>
 {
 
-	private boolean timedOut;
 
 
 	@Override
-	protected SoapObject doInBackground(String... uri)
+	protected UserTO doInBackgroundFuture(String... uri) throws FutureException
 	{
+		UserTO userTO = null;
 		SoapObject response = null;
 		try
 		{
@@ -37,35 +35,21 @@ public class LoginUserTask extends FutureTask
 		}
 		catch (IOException e)
 		{
-			timedOut = true;
-			e.printStackTrace();
+			throw new FutureException("Timed out");
 		}
 		catch (XmlPullParserException e)
 		{
-			e.printStackTrace();
+			throw new FutureException("An error has occurred");
 		}
-		return response;
+		userTO = getUser(response);
+		return userTO;
 	}
 
 
 	@Override
-	protected void onPostExecute(Object result)
+	protected void onPostExecuteFuture(UserTO result)
 	{
-		try
-		{
-			SoapObject soapObject = (SoapObject) result;
-			if (timedOut || soapObject == null)
-			{
-				getFuture().setError(new TechnicalException("There was a problem logging in, please try again later"));
-			}else{
-				getFuture().setValue(getUser(soapObject));
-			}
-			super.onPostExecute(soapObject);
-		}
-		catch (TechnicalException e)
-		{
-			getFuture().setError(e);
-		}
+		
 	}
 
 
@@ -106,6 +90,7 @@ public class LoginUserTask extends FutureTask
 	 */
 	private UserTO getUser(SoapObject response) throws TechnicalException
 	{
+		System.out.println(response.getPropertySafelyAsString("error"));
 		ServerResult result = ServerResult.valueOf(response.getPropertySafelyAsString("error"));
 		if (result == ServerResult.SUCCESS)
 		{

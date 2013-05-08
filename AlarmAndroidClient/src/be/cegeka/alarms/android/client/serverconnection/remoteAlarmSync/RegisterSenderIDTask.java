@@ -1,27 +1,26 @@
 package be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync;
 
 import java.io.IOException;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-import be.cegeka.alarms.android.client.exception.TechnicalException;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
+
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
-import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.futureimplementation.exception.FutureException;
 import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
-import android.os.AsyncTask;
 
 
-public class RegisterSenderIDTask extends FutureTask
+public class RegisterSenderIDTask extends FutureTask<Boolean, String>
 {
 
 	private boolean timedOut;
 
 	@Override
-	protected SoapPrimitive doInBackground(String... uri)
+	protected Boolean doInBackgroundFuture(String... uri) throws FutureException
 	{
 		SoapPrimitive response = null;
 		try
@@ -33,35 +32,21 @@ public class RegisterSenderIDTask extends FutureTask
 		catch (IOException e)
 		{
 			timedOut = true;
-			e.printStackTrace();
+			throw new FutureException("Timed out");
 		}
 		catch (XmlPullParserException e)
 		{
-			e.printStackTrace();
+			throw new FutureException("Something went wrong");
 		}
-		return response;
+		return getResponse(response);
 	}
 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void onPostExecute(Object result)
+	protected void onPostExecuteFuture(Boolean result)
 	{
 
-		if (timedOut)
-		{
-			getFuture().setError(new TechnicalException("There was a problem logging in, please try again later"));
-		}
-		else if (result != null && getResponse(result))
-		{
-			getFuture().setValue(getResponse(result));
-		}
-		else
-		{
-			getFuture().setError(new TechnicalException("Unable to subscribe to the GCM server, alarms will not be automatically updated"));
-		}
-
-		super.onPostExecute(result);
 	}
 
 
