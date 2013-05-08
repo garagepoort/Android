@@ -1,6 +1,7 @@
 package be.cegeka.alarms.android.client.serverconnection;
 
 import java.util.List;
+
 import be.cegeka.alarms.android.client.futureimplementation.Future;
 import be.cegeka.alarms.android.client.serverconnection.login.LoginUserTask;
 import be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync.GetAlarmsTask;
@@ -11,9 +12,6 @@ import be.cegeka.android.alarms.transferobjects.UserTO;
 
 public class RemoteAlarmController
 {
-	// TODO FIX THIS
-	private Future<UserTO> future = new Future<UserTO>();
-
 
 	public Future<List<AlarmTO>> getAllAlarms(UserTO userto)
 	{

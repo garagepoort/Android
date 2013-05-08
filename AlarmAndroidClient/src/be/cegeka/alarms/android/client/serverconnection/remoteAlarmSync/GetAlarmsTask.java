@@ -3,28 +3,25 @@ package be.cegeka.alarms.android.client.serverconnection.remoteAlarmSync;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.List;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
-import android.os.AsyncTask;
-import be.cegeka.alarms.android.client.exception.TechnicalException;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
+
 import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
-import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
+import be.cegeka.alarms.android.client.futureimplementation.exception.FutureException;
 import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
 
 
-public class GetAlarmsTask extends FutureTask
+public class GetAlarmsTask extends FutureTask<ArrayList<AlarmTO>, String>
 {
-	private boolean timedOut;
 
 	@Override
-	protected SoapObject doInBackground(String... uri)
+	protected ArrayList<AlarmTO> doInBackgroundFuture(String ... uri) throws FutureException
 	{
 		SoapObject response = null;
 		try
@@ -34,32 +31,36 @@ public class GetAlarmsTask extends FutureTask
 		}
 		catch (IOException e)
 		{
-			timedOut = true;
-			e.printStackTrace();
+			throw new FutureException("Timed out");
 		}
 		catch (XmlPullParserException e)
 		{
 			e.printStackTrace();
 		}
-		return response;
+		return getAlarms(response);
 	}
-
 
 	@Override
-	protected void onPostExecute(Object result)
-	{
-
-		if (timedOut || result == null)
-		{
-			getFuture().setError(new TechnicalException("Something went wrong"));
-		}
-		else
-		{
-
-			getFuture().setValue(getAlarms((SoapObject)result));
-		}
-		super.onPostExecute(result);
+	protected void onPostExecuteFuture(ArrayList<AlarmTO> result) {
+		// TODO Auto-generated method stub
+		
 	}
+	
+//	@Override
+//	protected void onPostExecute(Object result)
+//	{
+//
+//		if (timedOut || result == null)
+//		{
+//			getFuture().setError(new TechnicalException("Something went wrong"));
+//		}
+//		else
+//		{
+//
+//			getFuture().setValue(getAlarms((SoapObject)result));
+//		}
+//		super.onPostExecute(result);
+//	}
 
 
 	private SoapObject soapGetAlarmsFromUserResponse(String username) throws IOException, XmlPullParserException, SocketTimeoutException
@@ -107,4 +108,7 @@ public class GetAlarmsTask extends FutureTask
 		}
 		return alarms;
 	}
+
+
+	
 }

@@ -1,31 +1,8 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/davidm/Desktop/adt-bundle-windows-x86_64-20130219/sdk/platforms/android-17/android.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="http://developer.android.com/reference/"/>
-		</attributes>
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
-		</accessrules>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="C:/Users/davidm/Documents/GitHub/Android/RemoteAlarmManager/libs/ksoap2-android-assembly-3.0.0-jar-with-dependencies.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/davidm/Desktop/adt-bundle-windows-x86_64-20130219/sdk/extras/google/gcm/samples/gcm-demo-client/libs/gcm.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/Users/davidm/Documents/GitHub/Android/RemoteAlarmManager/libs/android-support-v4.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry exported="true" kind="lib" path="libs/AlarmManagerTransferObjects.jar"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="output" path="bin/classes"/>
-</classpath>
->>>>>>> 9d5b7fb3119b87e2f65adbf0b0961064ddd0c000

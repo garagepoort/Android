@@ -61,7 +61,7 @@ public class InfoActivityTest extends ActivityInstrumentationTestCase2<InfoActiv
 		assertTrue(solo.searchText("Saved Alarms"));
 	}
 	
-	
+	// On teardown always finish all the opened activities.
 	public void tearDown(){
 		solo.finishOpenedActivities();
 	}
