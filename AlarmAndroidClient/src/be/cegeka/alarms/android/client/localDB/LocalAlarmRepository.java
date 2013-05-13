@@ -60,11 +60,16 @@ public class LocalAlarmRepository {
 	}
 
 	public RepeatedAlarmTO updateRepeatedAlarm(RepeatedAlarmTO rAlarm) throws DatabaseException {
-		
 		alarmDataSource.open();
 		alarmDataSource.tryFuturizationOfRepeatedAlarmTO(rAlarm);
 		rAlarm = (RepeatedAlarmTO) alarmDataSource.getAlarmTOById(rAlarm.getAlarmID());
 		alarmDataSource.close();
 		return rAlarm;
+	}
+	
+	public void deleteAllAlarms() throws DatabaseException{
+		alarmDataSource.open();
+		alarmDataSource.deleteAlarmTOs(alarmDataSource.getAllAlarmTOs());
+		alarmDataSource.close();
 	}
 }

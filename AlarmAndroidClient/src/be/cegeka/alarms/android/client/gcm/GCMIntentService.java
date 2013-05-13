@@ -106,7 +106,7 @@ public class GCMIntentService extends GCMBaseIntentService
 				Toast.makeText(context, "Succesfully unregistered", Toast.LENGTH_LONG).show();
 			}
 		});
-		new LoginController(context).logOutUser();
+		new LoginController(context).logOutUser(context);
 		
 	}
 }
