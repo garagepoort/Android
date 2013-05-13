@@ -1,7 +1,8 @@
 package be.cegeka.alarms.android.client;
 
-import android.os.Bundle;
+import android.R;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class SpinnerActivity extends Activity {
