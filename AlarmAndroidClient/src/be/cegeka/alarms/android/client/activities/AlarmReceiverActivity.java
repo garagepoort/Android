@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.exception.DatabaseException;
-import be.cegeka.alarms.android.client.localAlarmSync.AlarmToAndroidSchedulerSyncer;
+import be.cegeka.alarms.android.client.localAlarmSync.AlarmToAndroidScheduler;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
@@ -190,7 +190,7 @@ public class AlarmReceiverActivity extends Activity
 		{
 			RepeatedAlarmTO repeatedAlarm = (RepeatedAlarmTO) getAlarm();
 			repeatedAlarm = localAlarmRepository.updateRepeatedAlarm(repeatedAlarm);
-			AlarmToAndroidSchedulerSyncer.scheduleAlarm(this, repeatedAlarm);
+			AlarmToAndroidScheduler.scheduleAlarm(this, repeatedAlarm);
 		}
 		catch (DatabaseException e)
 		{

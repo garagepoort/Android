@@ -1,14 +1,14 @@
 package be.cegeka.alarms.android.client.gcm;
 
+import static be.cegeka.android.flibture.Future.whenResolved;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
-import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
-import be.cegeka.alarms.android.client.futureimplementation.FutureService;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.UserTO;
+import be.cegeka.android.flibture.Future;
+import be.cegeka.android.flibture.FutureCallable;
 
 import com.google.android.gcm.GCMRegistrar;
 
@@ -17,6 +17,7 @@ public class GCMRegister
 {
 
 	private UserTO userTO;
+	
 	public void registerWithGCMServer(final Context context)
 	{
 		userTO = new LoginController(context).getLoggedInUser();
@@ -28,11 +29,11 @@ public class GCMRegister
 			Toast.makeText(context, "registering with gcm", Toast.LENGTH_LONG).show();
 			GCMRegistrar.register(context, "362183860979");
 		}
-		//TODO This is not ok. We have to force login before regestering.
-		else if(userTO != null && !regId.equals(userTO.getGCMid()))
+		//TODO This is not ok. We have to force login before registering.
+		else if(!regId.equals(userTO.getGCMid()))
 		{
 			Future<Boolean> future = new RemoteAlarmController().registerUser(userTO.getEmail(), regId);
-			FutureService.whenResolved(future, new FutureCallable<Boolean>()
+			whenResolved(future, new FutureCallable<Boolean>()
 			{
 
 				@Override
@@ -46,12 +47,15 @@ public class GCMRegister
 				@Override
 				public void onError(Exception e)
 				{
-					// TODO Auto-generated method stub
-
+					e.printStackTrace();
 				}
 			});
 			Toast.makeText(context, "already registered", Toast.LENGTH_LONG).show();
 			Log.v("", "Already registered");
 		}
+	}
+	
+	public void unregister(Context context){
+		GCMRegistrar.unregister(context);
 	}
 }

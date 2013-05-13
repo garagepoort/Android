@@ -30,23 +30,23 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        
-<!--         <receiver android:name="be.cegeka.alarms.android.client.services.AutoStartService" > -->
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
-<!--             </intent-filter> -->
-<!--         </receiver> -->
-        
+
+        <!-- <receiver android:name="be.cegeka.alarms.android.client.services.AutoStartService" > -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+
         <receiver android:name="be.cegeka.alarms.android.client.services.ConnectivityReceiver" >
-            <intent-filter >
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".GCMIntentService" />
+        <service android:name="be.cegeka.alarms.android.client.gcm.GCMIntentService" />
 
         <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:name="be.cegeka.alarms.android.client.gcm.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -90,6 +90,12 @@
 
         <receiver android:name="be.cegeka.alarms.android.client.activities.AlarmReceiver" >
         </receiver>
+
+        <activity
+            android:name="be.cegeka.alarms.android.client.SpinnerActivity"
+            android:noHistory="true"
+            android:label="@string/title_activity_spinner" >
+        </activity>
     </application>
 
 </manifest>

@@ -9,49 +9,21 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
-import be.cegeka.alarms.android.client.futureimplementation.FutureTask;
-import be.cegeka.alarms.android.client.futureimplementation.exception.FutureException;
 import be.cegeka.alarms.android.client.serverconnection.ServerUtilities;
+import be.cegeka.android.flibture.FutureTask;
 
-
-public class RegisterSenderIDTask extends FutureTask<Boolean, String>
-{
-
-	private boolean timedOut;
+public class RegisterSenderIDTask extends FutureTask<Boolean, String> {
 
 	@Override
-	protected Boolean doInBackgroundFuture(String... uri) throws FutureException
-	{
+	protected Boolean doInBackgroundFuture(String... uri) throws Exception {
 		SoapPrimitive response = null;
-		try
-		{
-			String email = uri[0];
-			String senderID = uri[1];
-			response = soapSendSenderID(email, senderID);
-		}
-		catch (IOException e)
-		{
-			timedOut = true;
-			throw new FutureException("Timed out");
-		}
-		catch (XmlPullParserException e)
-		{
-			throw new FutureException("Something went wrong");
-		}
+		String email = uri[0];
+		String senderID = uri[1];
+		response = soapSendSenderID(email, senderID);
 		return getResponse(response);
 	}
 
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void onPostExecuteFuture(Boolean result)
-	{
-
-	}
-
-
-	private SoapPrimitive soapSendSenderID(String email, String senderID) throws IOException, XmlPullParserException
-	{
+	private SoapPrimitive soapSendSenderID(String email, String senderID) throws IOException, XmlPullParserException {
 		SoapObject request = new SoapObject(ServerUtilities.NAMESPACE, ServerUtilities.REGISTER_SENDERID);
 		request.addProperty("email", email);
 		request.addProperty("gcmId", senderID);
@@ -65,9 +37,7 @@ public class RegisterSenderIDTask extends FutureTask<Boolean, String>
 
 	}
 
-
-	private boolean getResponse(Object response)
-	{
+	private boolean getResponse(Object response) {
 		return Boolean.parseBoolean(response.toString());
 	}
 

@@ -2,18 +2,18 @@ package be.cegeka.alarms.android.client.localAlarmSync;
 
 import java.util.Calendar;
 import java.util.List;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import be.cegeka.alarms.android.client.activities.AlarmReceiver;
 import be.cegeka.alarms.android.client.activities.AlarmReceiverActivity;
 import be.cegeka.alarms.android.client.utilities.AlarmUtilities;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
 
-public class AlarmToAndroidSchedulerSyncer
+public class AlarmToAndroidScheduler
 {
 
 	/**

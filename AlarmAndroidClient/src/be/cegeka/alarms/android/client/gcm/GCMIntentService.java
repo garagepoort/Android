@@ -1,21 +1,21 @@
-package be.cegeka.alarms.android.client;
+package be.cegeka.alarms.android.client.gcm;
 
-import java.util.ArrayList;
+import static be.cegeka.android.flibture.Future.whenResolved;
+
 import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-import be.cegeka.alarms.android.client.exception.TechnicalException;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
-import be.cegeka.alarms.android.client.futureimplementation.FutureCallable;
-import be.cegeka.alarms.android.client.futureimplementation.FutureService;
-import be.cegeka.alarms.android.client.futureimplementation.ResultCode;
 import be.cegeka.alarms.android.client.infrastructure.LoginController;
 import be.cegeka.alarms.android.client.localAlarmSync.LocalToAndroidAlarmSyncer;
 import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
 import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.UserTO;
+import be.cegeka.android.flibture.Future;
+import be.cegeka.android.flibture.FutureCallable;
+
 import com.google.android.gcm.GCMBaseIntentService;
 
 
@@ -41,11 +41,11 @@ public class GCMIntentService extends GCMBaseIntentService
 		new LocalToAndroidAlarmSyncer(context).unscheduleAllAlarms();
 
 		Future<List<AlarmTO>> future = new RemoteAlarmController().getAllAlarms(new LoginController(this).getLoggedInUser());
-		FutureService.whenResolved(future, new FutureCallable<ArrayList<AlarmTO>>()
+		whenResolved(future, new FutureCallable<List<AlarmTO>>()
 		{
 
 			@Override
-			public void onSucces(ArrayList<AlarmTO> result)
+			public void onSucces(List<AlarmTO> result)
 			{
 				new LocalAlarmRepository(context).replaceAll(result);
 				new LocalToAndroidAlarmSyncer(context).scheduleAllAlarms();
@@ -69,7 +69,7 @@ public class GCMIntentService extends GCMBaseIntentService
 		System.out.println("REGISTERED WITH GCM!!!!");
 		UserTO user = new LoginController(arg0).getLoggedInUser();
 		Future<Boolean> future = new RemoteAlarmController().registerUser(user.getEmail(), gcmid);
-		FutureService.whenResolved(future, new FutureCallable<Boolean>()
+		whenResolved(future, new FutureCallable<Boolean>()
 		{
 
 			@Override
@@ -83,19 +83,30 @@ public class GCMIntentService extends GCMBaseIntentService
 			@Override
 			public void onError(Exception e)
 			{
-				// TODO Auto-generated method stub
-
+				e.printStackTrace();
 			}
 		});
 	}
 
 
 	@Override
-	protected void onUnregistered(Context arg0, String arg1)
+	protected void onUnregistered(final Context context, String arg1)
 	{
-		// RemoteDBConnectionInterface remoteDBConnection = new
-		// RemoteDBWebConnection();
-		// remoteDBConnection.unRegisterSenderID(arg1);
+		UserTO user = new LoginController(context).getLoggedInUser();
+		Future<Boolean> future = new RemoteAlarmController().unregisterUser(user.getEmail());
+		whenResolved(future, new FutureCallable<Boolean>() {
 
+			@Override
+			public void onError(Exception e) {
+				e.printStackTrace();
+			}
+
+			@Override
+			public void onSucces(Boolean success) {
+				Toast.makeText(context, "Succesfully unregistered", Toast.LENGTH_LONG).show();
+			}
+		});
+		new LoginController(context).logOutUser();
+		
 	}
 }

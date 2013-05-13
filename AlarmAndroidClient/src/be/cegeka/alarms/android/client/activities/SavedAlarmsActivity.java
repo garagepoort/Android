@@ -1,8 +1,8 @@
 package be.cegeka.alarms.android.client.activities;
 
 import java.util.List;
+
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;

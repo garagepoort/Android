@@ -1,6 +1,7 @@
 package be.cegeka.alarms.android.client.activities;
 
 
+import static be.cegeka.android.flibture.Future.whenResolved;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -18,12 +19,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
-import be.cegeka.alarms.android.client.futureimplementation.Future;
-import be.cegeka.alarms.android.client.futureimplementation.FutureService;
-import be.cegeka.alarms.android.client.futureimplementation.futurecallables.FutureCallableLogin;
+import be.cegeka.alarms.android.client.futures.FutureCallableLogin;
 import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.serverconnection.RemoteAlarmController;
 import be.cegeka.android.alarms.transferobjects.UserTO;
+import be.cegeka.android.flibture.Future;
 
 
 /**
@@ -223,7 +223,7 @@ public class LoginActivity extends Activity
 		if (new InternetChecker().isNetworkAvailable(this))
 		{
 			Future<UserTO> future = remoteAlarmController.loginUser(email, password);
-			FutureService.whenResolved(future, new FutureCallableLogin(this));
+			whenResolved(future, new FutureCallableLogin(this));
 		}
 		else
 		{
@@ -244,8 +244,9 @@ public class LoginActivity extends Activity
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
 		{
+			
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
+			
 			loginStatusView.setVisibility(View.VISIBLE);
 			loginStatusView.animate().setDuration(shortAnimTime).alpha(show
 					? 1

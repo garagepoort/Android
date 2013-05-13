@@ -3,7 +3,6 @@ package be.cegeka.alarms.android.client.activities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.Toast;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
@@ -16,7 +15,7 @@ public class AlarmReceiver extends BroadcastReceiver
 	{
 		try
 		{
-			Bundle bundle = intent.getExtras();
+//			Bundle bundle = intent.getExtras();
 			Intent newIntent = new Intent(context, AlarmReceiverActivity.class);
 			newIntent.putExtra("Alarm", new AlarmTO(5, "test titel", "test info", 564654546));
 			newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

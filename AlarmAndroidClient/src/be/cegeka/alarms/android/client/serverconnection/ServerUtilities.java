@@ -6,7 +6,7 @@ public class ServerUtilities
 	public static final String LOGIN = "login";
 	public static final String GET_ALARMS_FROM_USER = "getAllAlarmsFromUser";
 	public static final String REGISTER_SENDERID = "registerUser";
-	public static final String UNREGISTER_SENDERID = "unRegisterSenderID";
+	public static final String UNREGISTER_SENDERID = "unregisterUser";
 	public static final String AUTHENTICATE = "authenticate";
 
 	// TARGETNAMESPACE IN WSDL

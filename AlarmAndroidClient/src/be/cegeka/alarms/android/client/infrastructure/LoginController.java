@@ -1,6 +1,7 @@
 package be.cegeka.alarms.android.client.infrastructure;
 
 import java.io.IOException;
+
 import android.content.Context;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
@@ -9,12 +10,10 @@ public class LoginController
 {
 
 	private UserPersistController persistController;
-	private Context context;
 
 
 	public LoginController(Context context)
 	{
-		this.context = context;
 		persistController = new UserPersistController(context);
 	}
 

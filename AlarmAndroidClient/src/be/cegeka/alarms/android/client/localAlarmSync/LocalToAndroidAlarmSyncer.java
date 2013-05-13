@@ -20,12 +20,12 @@ public class LocalToAndroidAlarmSyncer
 
 	public void unscheduleAllAlarms() throws TechnicalException
 	{
-		AlarmToAndroidSchedulerSyncer.cancelAlarms(context, localAlarmRepository.getLocalAlarms());
+		AlarmToAndroidScheduler.cancelAlarms(context, localAlarmRepository.getLocalAlarms());
 	}
 
 
 	public void scheduleAllAlarms() throws TechnicalException
 	{
-		AlarmToAndroidSchedulerSyncer.scheduleAlarms(context, localAlarmRepository.getLocalAlarms());
+		AlarmToAndroidScheduler.scheduleAlarms(context, localAlarmRepository.getLocalAlarms());
 	}
 }
