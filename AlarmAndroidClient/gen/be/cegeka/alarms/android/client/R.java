@@ -87,6 +87,7 @@ public final class R {
         public static final int hello_world=0x7f050003;
         public static final int logged_in_information=0x7f050012;
         public static final int login_progress_signing_in=0x7f05000a;
+        public static final int logout_progress_signing_out=0x7f05001c;
         public static final int not_logged_in=0x7f050011;
         /**  Strings related to login 
          */

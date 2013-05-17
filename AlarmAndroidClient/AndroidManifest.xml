@@ -37,16 +37,16 @@
         <!-- </intent-filter> -->
         <!-- </receiver> -->
 
-        <receiver android:name="be.cegeka.alarms.android.client.services.ConnectivityReceiver" >
+        <receiver android:name="be.cegeka.alarms.android.client.receiver.ConnectivityReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-        <service android:name="be.cegeka.alarms.android.client.gcm.GCMIntentService" />
+        <service android:name="be.cegeka.alarms.android.client.domain.gcm.GCMIntentService" />
 
         <receiver
-            android:name="be.cegeka.alarms.android.client.gcm.GCMReceiver"
+            android:name="be.cegeka.alarms.android.client.receiver.GCMReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -57,7 +57,7 @@
         </receiver>
 
         <activity
-            android:name="be.cegeka.alarms.android.client.activities.InfoActivity"
+            android:name="be.cegeka.alarms.android.client.view.InfoActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -66,33 +66,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="be.cegeka.alarms.android.client.activities.LoginActivity"
+            android:name="be.cegeka.alarms.android.client.view.LoginActivity"
             android:label="@string/title_activity_login"
             android:noHistory="true"
-            android:parentActivityName="be.cegeka.alarms.android.client.activities.InfoActivity"
+            android:parentActivityName="be.cegeka.alarms.android.client.view.InfoActivity"
             android:windowSoftInputMode="adjustResize|stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.cegeka.alarms.android.client.activities.InfoActivity" />
         </activity>
         <activity
-            android:name="be.cegeka.alarms.android.client.activities.SavedAlarmsActivity"
+            android:name="be.cegeka.alarms.android.client.view.SavedAlarmsActivity"
             android:label="@string/title_activity_saved_alarms"
-            android:parentActivityName="be.cegeka.alarms.android.client.activities.InfoActivity" >
+            android:parentActivityName="be.cegeka.alarms.android.client.view.InfoActivity" >
         </activity>
         <activity
-            android:name="be.cegeka.alarms.android.client.activities.AlarmReceiverActivity"
+            android:name="be.cegeka.alarms.android.client.view.AlarmReceiverActivity"
             android:clearTaskOnLaunch="true"
             android:label="temp"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
 
-        <receiver android:name="be.cegeka.alarms.android.client.activities.AlarmReceiver" >
+        <receiver android:name="be.cegeka.alarms.android.client.receiver.AlarmReceiver" >
         </receiver>
 
         <activity
-            android:name="be.cegeka.alarms.android.client.SpinnerActivity"
+            android:name="be.cegeka.alarms.android.client.view.SpinnerActivity"
             android:noHistory="true"
             android:label="@string/title_activity_spinner" >
         </activity>

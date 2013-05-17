@@ -10,8 +10,9 @@
     <string name="error_message_no_internet">No internet connection. Try again later</string>
     <string name="error_message_not_logged_in">U need to log in before you can view your alarms</string>
     <string name="error_title_general">Problem</string>
-    <string name="button_error_message_accept">Ok</string>
+    <string name="button_error_message_accept">OK</string>
     <string name="dialog_title_alarm">Alarm Info</string>
+    <string name="logout_progress_signing_out">Signing out&#8230;</string>
     
 
 </resources>

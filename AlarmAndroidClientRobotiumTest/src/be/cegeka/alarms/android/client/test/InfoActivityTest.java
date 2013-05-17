@@ -3,11 +3,11 @@ package be.cegeka.alarms.android.client.test;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import android.test.ActivityInstrumentationTestCase2;
-import be.cegeka.alarms.android.client.activities.InfoActivity;
-import be.cegeka.alarms.android.client.activities.LoginActivity;
-import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
-import be.cegeka.alarms.android.client.infrastructure.InternetChecker;
-import be.cegeka.alarms.android.client.infrastructure.LoginController;
+import be.cegeka.alarms.android.client.domain.infrastructure.InternetChecker;
+import be.cegeka.alarms.android.client.domain.login.LoginController;
+import be.cegeka.alarms.android.client.view.InfoActivity;
+import be.cegeka.alarms.android.client.view.LoginActivity;
+import be.cegeka.alarms.android.client.view.SavedAlarmsActivity;
 
 import com.jayway.android.robotium.solo.Solo;
 

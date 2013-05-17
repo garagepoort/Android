@@ -5,8 +5,8 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 import android.test.ActivityInstrumentationTestCase2;
-import be.cegeka.alarms.android.client.activities.SavedAlarmsActivity;
-import be.cegeka.alarms.android.client.localDB.LocalAlarmRepository;
+import be.cegeka.alarms.android.client.domain.controllers.LocalAlarmRepository;
+import be.cegeka.alarms.android.client.view.SavedAlarmsActivity;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import com.jayway.android.robotium.solo.Solo;
 
