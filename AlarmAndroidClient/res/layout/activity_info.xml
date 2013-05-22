@@ -2,11 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".InfoActivity" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -14,16 +17,36 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
 
-        <TextView
-            android:id="@+id/LogInTextView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="This textview shows if a user is logged in or out"
-            android:layout_marginTop="42dp"
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal" >
+
+            <TextView
+                android:id="@+id/LogInTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:layout_weight="1"
+                android:alpha="0.8"
+                android:background="@android:color/background_dark"
+                android:contentDescription="This textview shows if a user is logged in or out"
+                android:padding="10sp"
+                android:text="TextView"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,36 +57,34 @@
                 android:id="@+id/ToonAlarmenButton"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                android:background="@android:drawable/btn_default"
                 android:contentDescription="This button goes to the showAlarmActivity"
+                android:drawableLeft="@drawable/alarms"
                 android:onClick="showAlarms"
                 android:text="@string/button_show_alarms" />
-            
+
             <Button
                 android:id="@+id/LogInButton"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                android:background="@android:drawable/btn_default"
                 android:contentDescription="This button logs a user in or out"
+                android:drawableLeft="@drawable/login"
                 android:text="@string/button_log_in" />
-
-            <Button
-                android:id="@+id/ForceSyncButton"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:contentDescription="This button force synchronization"
-                android:onClick="syncAlarms"
-                android:text="@string/button_sync_now" />
-
         </LinearLayout>
-
     </LinearLayout>
-    
-     <LinearLayout
+
+    <LinearLayout
         android:id="@+id/logout_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
         android:visibility="gone" >
 
         <ProgressBar

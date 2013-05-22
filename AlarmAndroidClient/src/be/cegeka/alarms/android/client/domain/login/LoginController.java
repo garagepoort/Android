@@ -50,7 +50,7 @@ public class LoginController {
 		}
 	}
 
-	public Future<UserTO> logInUser(String email, String password) {
+	public void logInUser(String email, String password) {
 		final Future<UserTO> returnFuture = new Future<UserTO>();
 		Future<UserTO> future = new ServerCalls(context).checkUserCredentials(email, password);
 		Future.whenResolved(future, new FutureCallable<UserTO>() {
@@ -62,22 +62,19 @@ public class LoginController {
 					new GCMRegister().registerWithGCMServer(context);
 					new AlarmSyncer().syncAllAlarms(context);
 					LoginModel.getInstance().setLoggedInUser(result);
-					returnFuture.setValue(result);
-					returnFuture.notifyFutures();
 					
 				} catch (IOException e1) {
+					LoginModel.getInstance().setException(e1);
 					e1.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onError(Exception e) {
-				returnFuture.setError(e);
-				returnFuture.notifyFutures();
+				LoginModel.getInstance().setException(e);
 				e.printStackTrace();
 			}
 		});
-		return returnFuture;
 
 	}
 }

@@ -9,11 +9,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LoginActivity" >
 
-    <ListView
-        android:id="@+id/AlarmenListView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-    </ListView>
+        <ListView
+            android:id="@+id/AlarmenListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </ListView>
+
+        <Button
+            android:id="@+id/ForceSyncButton"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight="0"
+            android:contentDescription="This button forces synchronization"
+            android:drawableLeft="@anim/rotation"
+            android:onClick="syncAlarms"
+            android:text="@string/button_sync_now" >
+        </Button>
+    </LinearLayout>
 
 </RelativeLayout>

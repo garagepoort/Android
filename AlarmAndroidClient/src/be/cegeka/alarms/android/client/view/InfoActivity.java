@@ -1,8 +1,5 @@
 package be.cegeka.alarms.android.client.view;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -19,24 +16,26 @@ import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.domain.infrastructure.InternetChecker;
 import be.cegeka.alarms.android.client.domain.models.LoginModel;
 import be.cegeka.alarms.android.client.presenter.MainPresenter;
+import be.cegeka.alarms.android.client.shouldertap.events.LoginEvent;
+import be.cegeka.android.ShouldrTap.Shoulder;
 import be.cegeka.android.alarms.transferobjects.UserTO;
 
-public class InfoActivity extends Activity implements Observer {
+public class InfoActivity extends Activity {
 	private Button showAlarmsButton;
-	private Button forceSyncButton;
 	private Button loginButton;
 	private TextView loginText;
 	private View spinner;
 	private View infoActivityContent;
 	private InternetChecker internetChecker;
 	private MainPresenter mainPresenter;
-
+	private LogoutShoulder logoutShoulder;
 	@Override
 	protected void onStart() {
 		super.onStart();
+		logoutShoulder = new LogoutShoulder();
 		mainPresenter = new MainPresenter(this);
 		internetChecker = new InternetChecker();
-		LoginModel.getInstance().addObserver(this);
+		LoginModel.getInstance().addShoulder(logoutShoulder);
 
 		inittializeViews();
 		setUpContentView();
@@ -44,14 +43,13 @@ public class InfoActivity extends Activity implements Observer {
 
 	@Override
 	protected void onDestroy() {
-		LoginModel.getInstance().deleteObserver(this);
+		LoginModel.getInstance().removeShoulder(logoutShoulder);
 		super.onDestroy();
 	}
 
 	private void inittializeViews() {
 		setTitle("Info");
 		showAlarmsButton = (Button) findViewById(R.id.ToonAlarmenButton);
-		forceSyncButton = (Button) findViewById(R.id.ForceSyncButton);
 		loginButton = (Button) findViewById(R.id.LogInButton);
 		loginText = (TextView) findViewById(R.id.LogInTextView);
 		spinner = findViewById(R.id.logout_status);
@@ -66,7 +64,6 @@ public class InfoActivity extends Activity implements Observer {
 			loginButton.setText(getString(R.string.button_log_out));
 			loginButton.setOnClickListener(new LogOutListener());
 			showAlarmsButton.setVisibility(View.VISIBLE);
-			forceSyncButton.setVisibility(View.VISIBLE);
 		}
 
 		else {
@@ -74,7 +71,6 @@ public class InfoActivity extends Activity implements Observer {
 			loginButton.setText(getString(R.string.button_log_in));
 			loginButton.setOnClickListener(new LogInListener());
 			showAlarmsButton.setVisibility(View.GONE);
-			forceSyncButton.setVisibility(View.GONE);
 		}
 	}
 
@@ -83,15 +79,21 @@ public class InfoActivity extends Activity implements Observer {
 		startActivity(intent);
 	}
 
-	public void syncAlarms(View view) {
-		mainPresenter.updateAlarms();
-	}
 
-	@Override
-	public void update(Observable arg0, Object loggedInUser) {
-		if (loggedInUser == null) {
-			stopLogoutAnimation();
+	
+	private class LogoutShoulder extends Shoulder<LoginEvent>{
+
+		public LogoutShoulder() {
+			super(LoginEvent.class);
 		}
+
+		@Override
+		public void update(LoginEvent event) {
+			if (event.getData() == null) {
+				stopLogoutAnimation();
+			}
+		}
+		
 	}
 
 	private void startLogoutAnimation() {

@@ -17,8 +17,7 @@ import be.cegeka.android.flibture.FutureTask;
 public class RegisterSenderIDTask extends FutureTask<Boolean, String> {
 
 	private Context context;
-	
-	
+
 	public RegisterSenderIDTask(Context context) {
 		this.context = context;
 	}
@@ -33,14 +32,14 @@ public class RegisterSenderIDTask extends FutureTask<Boolean, String> {
 	}
 
 	private SoapPrimitive soapSendSenderID(String email, String senderID) throws IOException, XmlPullParserException {
-		SoapObject request = new SoapObject(getProperty(context, "NAMESPACE"), getProperty(context, "REGISTER_SENDERID"));
+		SoapObject request = new SoapObject(getProperty(context, "config.properties", "NAMESPACE"), getProperty(context, "config.properties", "REGISTER_SENDERID"));
 		request.addProperty("email", email);
 		request.addProperty("gcmId", senderID);
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.setOutputSoapObject(request);
 		SoapPrimitive response = null;
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "URL"), 10000);
-		ht.call(getProperty(context, "NAMESPACE") + getProperty(context, "REGISTER_SENDERID"), envelope);
+		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties", "URL"), 10000);
+		ht.call(getProperty(context, "config.properties", "NAMESPACE") + getProperty(context, "config.properties", "REGISTER_SENDERID"), envelope);
 		response = (SoapPrimitive) envelope.getResponse();
 		return response;
 

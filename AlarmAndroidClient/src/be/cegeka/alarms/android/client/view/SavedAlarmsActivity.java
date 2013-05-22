@@ -1,8 +1,6 @@
 package be.cegeka.alarms.android.client.view;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,22 +12,30 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.domain.models.AlarmsModel;
+import be.cegeka.alarms.android.client.presenter.MainPresenter;
+import be.cegeka.alarms.android.client.shouldertap.events.AlarmEvent;
+import be.cegeka.android.ShouldrTap.Shoulder;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
-public class SavedAlarmsActivity extends Activity implements Observer {
+public class SavedAlarmsActivity extends Activity {
 
 	private ListView listView;
-
+	private AlarmShoulder alarmShoulder;
+	private MainPresenter mainPresenter;
+	
+	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		AlarmsModel.getInstance().addObserver(this);
+		mainPresenter = new MainPresenter(this);
+		alarmShoulder = new AlarmShoulder();
+		AlarmsModel.getInstance().addShoulder(alarmShoulder);
 		showAlarms();
 	}
 
 	@Override
 	protected void onDestroy() {
-		AlarmsModel.getInstance().deleteObserver(this);
+		AlarmsModel.getInstance().removeShoulder(alarmShoulder);
 		super.onDestroy();
 	}
 
@@ -39,13 +45,22 @@ public class SavedAlarmsActivity extends Activity implements Observer {
 		listView.setAdapter(arrayAdapter);
 		listView.setOnItemClickListener(new AlarmListItemClickListener());
 	}
+	
+	public void syncAlarms(View view) {
+		mainPresenter.updateAlarms();
+	}
+	
+	private class AlarmShoulder extends Shoulder<AlarmEvent>{
 
-	@Override
-	public void update(Observable observable, Object data) {
-		if (data instanceof List<?>) {
-			List<AlarmTO> alarms = (List<AlarmTO>) data;
+		public AlarmShoulder() {
+			super(AlarmEvent.class);
+		}
+
+		@Override
+		public void update(AlarmEvent alarmEvent) {
+			List<AlarmTO> alarms = alarmEvent.getData();
 			listView = (ListView) findViewById(R.id.AlarmenListView);
-			ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(this, android.R.layout.simple_list_item_1, alarms);
+			ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(SavedAlarmsActivity.this, android.R.layout.simple_list_item_1, alarms);
 			listView.setAdapter(arrayAdapter);
 			listView.setOnItemClickListener(new AlarmListItemClickListener());
 		}
@@ -70,4 +85,5 @@ public class SavedAlarmsActivity extends Activity implements Observer {
 		getMenuInflater().inflate(R.menu.saved_alarms, menu);
 		return true;
 	}
+	
 }

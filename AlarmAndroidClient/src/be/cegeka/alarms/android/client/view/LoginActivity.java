@@ -1,10 +1,10 @@
 package be.cegeka.alarms.android.client.view;
 
-import static be.cegeka.android.flibture.Future.whenResolved;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,15 +14,16 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.domain.infrastructure.InternetChecker;
-import be.cegeka.alarms.android.client.domain.login.LoginController;
-import be.cegeka.android.alarms.transferobjects.UserTO;
-import be.cegeka.android.flibture.Future;
-import be.cegeka.android.flibture.FutureCallable;
+import be.cegeka.alarms.android.client.domain.models.LoginModel;
+import be.cegeka.alarms.android.client.presenter.MainPresenter;
+import be.cegeka.alarms.android.client.shouldertap.events.LoginErrorEvent;
+import be.cegeka.alarms.android.client.shouldertap.events.LoginEvent;
+import be.cegeka.android.ShouldrTap.Shoulder;
 
 public class LoginActivity extends Activity {
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
@@ -35,13 +36,23 @@ public class LoginActivity extends Activity {
 	private View loginFormView;
 	private View loginStatusView;
 	private TextView loginStatusMessageView;
+	private LoginShoulder loginShoulder;
+	private loginErrorShoulder loginErrorShoulder;
+
+	private MainPresenter mainPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState); 
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		setupActionBar();
+		
+		loginShoulder = new LoginShoulder();
+		LoginModel.getInstance().addShoulder(loginShoulder);
+		loginErrorShoulder = new loginErrorShoulder();
+		LoginModel.getInstance().addShoulder(loginErrorShoulder);
 
+		mainPresenter = new MainPresenter(this);
 		email = getIntent().getStringExtra(EXTRA_EMAIL);
 		emailView = (EditText) findViewById(R.id.email);
 		emailView.setText(email);
@@ -49,13 +60,9 @@ public class LoginActivity extends Activity {
 		passwordView = (EditText) findViewById(R.id.password);
 		passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
-			public boolean onEditorAction(TextView textView, int id,
-					KeyEvent keyEvent) {
-				if (id == R.id.login || id == EditorInfo.IME_NULL) {
-					attemptLogin();
-					return true;
-				}
-				return false;
+			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+				attemptLogin();
+				return true;
 			}
 		});
 
@@ -77,6 +84,13 @@ public class LoginActivity extends Activity {
 			}
 
 		});
+	}
+
+	@Override
+	protected void onDestroy() {
+		LoginModel.getInstance().removeShoulder(loginShoulder);
+		LoginModel.getInstance().removeShoulder(loginErrorShoulder);
+		super.onDestroy();
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -104,6 +118,9 @@ public class LoginActivity extends Activity {
 	}
 
 	public void attemptLogin() {
+
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(passwordView.getWindowToken(), 0);
 
 		emailView.setError(null);
 		passwordView.setError(null);
@@ -146,24 +163,37 @@ public class LoginActivity extends Activity {
 
 	private void tryToLoginOnServer() {
 		if (new InternetChecker().isNetworkAvailable(this)) {
-			Future<UserTO> future = new LoginController(this).logInUser(email, password);
-			whenResolved(future, new FutureCallable<UserTO>() {
-
-				@Override
-				public void onSucces(UserTO result) {
-					showProgress(false);
-					startActivity(new Intent(getApplicationContext(), InfoActivity.class));
-				}
-
-				@Override
-				public void onError(Exception e) {
-					DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), e.getMessage(), LoginActivity.this);
-					LoginActivity.this.showProgress(false);
-				}
-			});
+			mainPresenter.login(email, password);
 		} else {
 			DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), getString(R.string.error_message_no_internet), this);
 			showProgress(false);
+		}
+	}
+
+	private class LoginShoulder extends Shoulder<LoginEvent> {
+
+		public LoginShoulder() {
+			super(LoginEvent.class);
+		}
+
+		@Override
+		public void update(LoginEvent loginEvent) {
+			showProgress(false);
+			startActivity(new Intent(getApplicationContext(), InfoActivity.class));
+		}
+	}
+
+	private class loginErrorShoulder extends Shoulder<LoginErrorEvent> {
+
+		public loginErrorShoulder() {
+			super(LoginErrorEvent.class);
+		}
+
+		@Override
+		public void update(LoginErrorEvent event) {
+			Exception exception = event.getData();
+			DialogCreator.buildAndShowDialog(getString(R.string.error_title_general), exception.getMessage(), LoginActivity.this);
+			LoginActivity.this.showProgress(false);
 		}
 	}
 
@@ -174,21 +204,15 @@ public class LoginActivity extends Activity {
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 			loginStatusView.setVisibility(View.VISIBLE);
-			loginStatusView.animate().setDuration(shortAnimTime).alpha(show
-					? 1
-					: 0).setListener(new AnimatorListenerAdapter() {
+			loginStatusView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
-					loginStatusView.setVisibility(show
-							? View.VISIBLE
-							: View.GONE);
+					loginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 				}
 			});
 
 			loginFormView.setVisibility(View.VISIBLE);
-			loginFormView.animate().setDuration(shortAnimTime).alpha(show
-					? 0
-					: 1).setListener(new AnimatorListenerAdapter() {
+			loginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);

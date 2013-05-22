@@ -18,19 +18,23 @@ import be.cegeka.android.alarms.transferobjects.UserTO;
 import be.cegeka.android.flibture.FutureTask;
 
 public class LoginUserTask extends FutureTask<UserTO, String> {
-	
+
 	private Context context;
-	public LoginUserTask(Context context){
-		this.context=context;
+	public LoginUserTask(Context context) {
+		this.context = context;
 	}
 
 	@Override
-	protected UserTO doInBackgroundFuture(String... uri) throws Exception {
+	protected UserTO doInBackgroundFuture(String... uri) throws TechnicalException {
 		UserTO userTO = null;
 		SoapObject response = null;
 		String email = uri[0];
 		String paswoord = uri[1];
-		response = getUserResponse(email, paswoord);
+		try {
+			response = getUserResponse(email, paswoord);
+		} catch (Exception exception) {
+			throw new TechnicalException(getProperty(context, "exceptions.properties", "OTHER"));
+		}
 		userTO = getUser(response);
 		return userTO;
 	}
@@ -50,20 +54,21 @@ public class LoginUserTask extends FutureTask<UserTO, String> {
 	 */
 	private SoapObject getUserResponse(String username, String paswoord) throws IOException, XmlPullParserException, SocketTimeoutException {
 		System.out.println("GETUSERRESPONSE");
-		SoapObject request = new SoapObject(getProperty(context, "NAMESPACE"), getProperty(context, "LOGIN"));
+		SoapObject request = new SoapObject(getProperty(context, "config.properties", "NAMESPACE"), getProperty(context, "config.properties", "LOGIN"));
 		request.addProperty("username", username);
 		request.addProperty("paswoord", paswoord);
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.setOutputSoapObject(request);
 
 		SoapObject response = null;
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "URL"), 10000);
-		ht.call(getProperty(context, "NAMESPACE") + getProperty(context, "LOGIN"), envelope);
+		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties", "URL"), 10000);
+		ht.call(getProperty(context, "config.properties", "NAMESPACE") + getProperty(context, "config.properties", "LOGIN"), envelope);
 		response = (SoapObject) envelope.getResponse();
 		return response;
 	}
 
 	/**
+	 * 
 	 * Make a {@link User} object from the response from the server.
 	 * 
 	 * @param response
@@ -80,8 +85,10 @@ public class LoginUserTask extends FutureTask<UserTO, String> {
 			boolean admin = Boolean.getBoolean(userto.getPropertySafelyAsString("admin").toString());
 			String gcmID = userto.getPropertySafelyAsString("GCMid");
 			return new UserTO(id, naam, achternaam, email, admin, gcmID);
+		} else if (result == ServerResult.WRONG_USER_CREDENTIALS) {
+			throw new TechnicalException(getProperty(context, "exceptions.properties", "CREDENTIALS"));
 		} else {
-			throw new TechnicalException(result.toString());
+			throw new TechnicalException(getProperty(context, "exceptions.properties", "OTHER"));
 		}
 	}
 }

@@ -10,7 +10,7 @@ package be.cegeka.android.alarms.transferobjects;
  */
 public enum ServerResult
 {
-        SUCCESS("SUCCES"),
+        SUCCESS("Success"),
 	WRONG_USER_CREDENTIALS("These user credentials are not in our database"),
 	EXCEPTION("Something went wrong.");
 

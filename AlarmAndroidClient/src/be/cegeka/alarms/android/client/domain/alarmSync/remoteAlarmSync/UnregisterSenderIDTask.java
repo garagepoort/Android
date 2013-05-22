@@ -30,13 +30,13 @@ public class UnregisterSenderIDTask extends FutureTask<Boolean, String> {
 	private SoapPrimitive soapUnregisterSenderID(String email) throws IOException, XmlPullParserException {
 		
 		
-		SoapObject request = new SoapObject(getProperty(context,"NAMESPACE"), getProperty(context,"UNREGISTER_SENDERID"));
+		SoapObject request = new SoapObject(getProperty(context, "config.properties", "NAMESPACE"), getProperty(context, "config.properties", "UNREGISTER_SENDERID"));
 		request.addProperty("registrationID", email);
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.setOutputSoapObject(request);
 		SoapPrimitive response = null;
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "URL"), 10000);
-		ht.call(getProperty(context, "NAMESPACE") + getProperty(context, "UNREGISTER_SENDERID"), envelope);
+		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties",  "URL"), 10000);
+		ht.call(getProperty(context, "config.properties",  "NAMESPACE") + getProperty(context, "config.properties",  "UNREGISTER_SENDERID"), envelope);
 		response = (SoapPrimitive) envelope.getResponse();
 		return response;
 

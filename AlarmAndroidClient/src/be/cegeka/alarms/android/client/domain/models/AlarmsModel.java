@@ -3,11 +3,12 @@ package be.cegeka.alarms.android.client.domain.models;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Observable;
 
+import be.cegeka.alarms.android.client.shouldertap.events.AlarmEvent;
+import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 
-public class AlarmsModel extends Observable{
+public class AlarmsModel extends Tapper{
 
 	private List<AlarmTO> alarms;
 	private static final AlarmsModel instance = new AlarmsModel();
@@ -26,8 +27,9 @@ public class AlarmsModel extends Observable{
 
 	public void setAlarms(List<AlarmTO> alarms) {
 		this.alarms = alarms;
-		setChanged();
-		notifyObservers(alarms);
+		AlarmEvent alarmEvent = new AlarmEvent();
+		alarmEvent.setData(alarms);
+		tapShoulders(alarmEvent);
 	}
 	
 	

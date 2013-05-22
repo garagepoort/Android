@@ -10,6 +10,7 @@
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/davidm/Documents/GitHub/Android/AlarmAndroidClient/libs/AlarmManagerTransferObjects.jar"/>
+	<classpathentry kind="lib" path="libs/shouldrtap.jar"/>
 	<classpathentry kind="src" path="/FLibture"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>

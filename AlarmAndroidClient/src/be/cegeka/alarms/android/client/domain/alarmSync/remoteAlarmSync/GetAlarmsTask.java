@@ -34,14 +34,14 @@ public class GetAlarmsTask extends FutureTask<List<AlarmTO>, String> {
 	}
 
 	private SoapObject soapGetAlarmsFromUserResponse(String username) throws IOException, XmlPullParserException, SocketTimeoutException {
-		SoapObject request = new SoapObject(getProperty(context, "NAMESPACE"), getProperty(context, "GET_ALARMS_FROM_USER"));
+		SoapObject request = new SoapObject(getProperty(context, "config.properties", "NAMESPACE"), getProperty(context, "config.properties", "GET_ALARMS_FROM_USER"));
 		request.addProperty("username", username);
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		envelope.setOutputSoapObject(request);
 		SoapObject response = null;
 
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "URL"), 10000);
-		ht.call(getProperty(context, "NAMESPACE") + getProperty(context, "GET_ALARMS_FROM_USER"), envelope);
+		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties", "URL"), 10000);
+		ht.call(getProperty(context, "config.properties", "NAMESPACE") + getProperty(context, "config.properties", "GET_ALARMS_FROM_USER"), envelope);
 		response = (SoapObject) envelope.bodyIn;
 
 		return response;

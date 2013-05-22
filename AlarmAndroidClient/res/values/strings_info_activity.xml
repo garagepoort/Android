@@ -6,7 +6,7 @@
     <string name="button_show_alarms">Show Alarms</string>
     <string name="button_log_in">Log In</string>
     <string name="button_log_out">Log Out</string>
-    <string name="button_sync_now">Sync Now</string>
+    <string name="button_sync_now">Synchronize</string>
     <string name="error_message_no_internet">No internet connection. Try again later</string>
     <string name="error_message_not_logged_in">U need to log in before you can view your alarms</string>
     <string name="error_title_general">Problem</string>
