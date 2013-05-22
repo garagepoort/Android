@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.widget.Toast;
+import be.cegeka.alarms.android.client.R;
 import be.cegeka.alarms.android.client.domain.controllers.LocalAlarmRepository;
 import be.cegeka.alarms.android.client.domain.controllers.ServerCalls;
 import be.cegeka.alarms.android.client.domain.login.LoginController;
@@ -32,6 +33,7 @@ public class AlarmSyncer {
 			@Override
 			public void onError(Exception e) {
 				e.printStackTrace();
+				Toast.makeText(context, context.getString(R.string.alarm_sync_error), Toast.LENGTH_LONG).show();
 			}
 
 		});

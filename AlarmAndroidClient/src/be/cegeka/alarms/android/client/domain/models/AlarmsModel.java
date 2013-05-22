@@ -31,7 +31,4 @@ public class AlarmsModel extends Tapper{
 		alarmEvent.setData(alarms);
 		tapShoulders(alarmEvent);
 	}
-	
-	
-	
 }

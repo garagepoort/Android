@@ -1,6 +1,8 @@
 package be.cegeka.android.alarms.transferobjects;
 
 import be.cegeka.android.alarms.transferobjects.calendarExtensions.CalendarUnitEnum;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -127,13 +129,17 @@ public class RepeatedAlarmTO extends AlarmTO
     @Override
     public String toDetailedString()
     {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(repeatEnddate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        
         if (repeatQuantity == 1)
         {
-            return super.toDetailedString() + "\nRepeated every " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase();
+            return super.toDetailedString() + "\nRepeated every " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase() + "untill\n" + dateFormat.format(calendar.getTime());
         }
         else
         {
-            return super.toDetailedString() + "\nRepeated every " + repeatQuantity + " " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase() + "s";
+            return super.toDetailedString() + "\nRepeated every " + repeatQuantity + " " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase() + "s untill\n" + dateFormat.format(calendar.getTime());
         }
     }
 }

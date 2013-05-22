@@ -1,17 +1,19 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".LoginActivity" >
-    
+
     <!-- Login progress -->
 
     <LinearLayout
         android:id="@+id/login_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center"
         android:gravity="center_vertical|center_horizontal"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone"
+        android:background="@drawable/bg2"
+         >
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -34,7 +36,8 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/bg2" >
 
         <LinearLayout
             style="@style/LoginFormContainer"
@@ -62,35 +65,31 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:text="pass" />
-		
-            <LinearLayout 
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-          		android:layout_width="wrap_content"
-          		android:layout_height="wrap_content">
-          		
-          		<Button
+                android:layout_marginTop="30dp"
+                android:weightSum="100" >
+
+                <Button
                     android:id="@+id/cancel_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="16dp"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:text="@string/cancelButton" />
+                    android:layout_height="70dp"
+                    android:text="@string/cancelButton"
+                    android:layout_weight="10"
+                    android:background="@android:drawable/btn_default" />
 
                 <Button
                     android:id="@+id/sign_in_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="16dp"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:text="@string/action_sign_in_short" />
-                
+                    android:layout_height="70dp"
+                    android:text="@string/action_sign_in_short"
+                    android:layout_weight="90"
+                    android:background="@android:drawable/btn_default" />
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

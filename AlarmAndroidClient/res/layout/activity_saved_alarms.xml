@@ -3,16 +3,22 @@
     android:id="@+id/SavedAlarmsContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".LoginActivity" >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
 
         <ListView
             android:id="@+id/AlarmenListView"
@@ -26,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:layout_weight="0"
+            android:background="@android:drawable/btn_default"
             android:contentDescription="This button forces synchronization"
             android:drawableLeft="@anim/rotation"
             android:onClick="syncAlarms"

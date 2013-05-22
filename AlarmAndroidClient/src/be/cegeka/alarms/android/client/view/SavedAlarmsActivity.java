@@ -41,7 +41,7 @@ public class SavedAlarmsActivity extends Activity {
 
 	public void showAlarms() {
 		listView = (ListView) findViewById(R.id.AlarmenListView);
-		ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(this, android.R.layout.simple_list_item_1, AlarmsModel.getInstance().getAlarms());
+		ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(this, R.layout.my_list_tem, AlarmsModel.getInstance().getAlarms());
 		listView.setAdapter(arrayAdapter);
 		listView.setOnItemClickListener(new AlarmListItemClickListener());
 	}
@@ -60,7 +60,7 @@ public class SavedAlarmsActivity extends Activity {
 		public void update(AlarmEvent alarmEvent) {
 			List<AlarmTO> alarms = alarmEvent.getData();
 			listView = (ListView) findViewById(R.id.AlarmenListView);
-			ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(SavedAlarmsActivity.this, android.R.layout.simple_list_item_1, alarms);
+			ArrayAdapter<AlarmTO> arrayAdapter = new ArrayAdapter<AlarmTO>(SavedAlarmsActivity.this, R.layout.my_list_tem, alarms);
 			listView.setAdapter(arrayAdapter);
 			listView.setOnItemClickListener(new AlarmListItemClickListener());
 		}

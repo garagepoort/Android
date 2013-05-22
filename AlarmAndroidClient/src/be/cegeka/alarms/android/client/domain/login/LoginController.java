@@ -51,7 +51,6 @@ public class LoginController {
 	}
 
 	public void logInUser(String email, String password) {
-		final Future<UserTO> returnFuture = new Future<UserTO>();
 		Future<UserTO> future = new ServerCalls(context).checkUserCredentials(email, password);
 		Future.whenResolved(future, new FutureCallable<UserTO>() {
 
@@ -64,14 +63,14 @@ public class LoginController {
 					LoginModel.getInstance().setLoggedInUser(result);
 					
 				} catch (IOException e1) {
-					LoginModel.getInstance().setException(e1);
+					LoginModel.getInstance().raiseException(e1);
 					e1.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onError(Exception e) {
-				LoginModel.getInstance().setException(e);
+				LoginModel.getInstance().raiseException(e);
 				e.printStackTrace();
 			}
 		});

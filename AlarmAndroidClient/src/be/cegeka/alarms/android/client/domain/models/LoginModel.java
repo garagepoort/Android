@@ -27,7 +27,7 @@ public class LoginModel extends Tapper {
 		tapShoulders(event);
 	}
 	
-	public void setException(Exception exception){
+	public void raiseException(Exception exception){
 		LoginErrorEvent event = new LoginErrorEvent();
 		event.setData(exception);
 		tapShoulders(event);

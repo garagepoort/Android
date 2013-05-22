@@ -40,6 +40,7 @@ public class ConnectivityReceiver extends BroadcastReceiver
 				@Override
 				public void onError(Exception e)
 				{
+					e.printStackTrace();
 				}
 				
 			});
