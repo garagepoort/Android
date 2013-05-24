@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_activity_button_ik">Ik</string>
+    <string name="main_activity_button_contacts">Mijn contacten</string>
+    <string name="main_activity_button_tags">Mijn tags</string>
+    <string name="contactsList_activity_button_add_contact">Voeg contact toe</string>
+    <string name="contactsList_activity_button_send_contacts">Verzend contacten</string>
+    <string name="taglist_activity_button_join_tag">Voeg jezelf toe aan een tag</string>
+    <string name="taglist_activity_button_create_tag">Voeg een nieuwe tag toe</string>
+    <string name="contactDetails_activity_button_save">Opslaan</string>
+</resources>
