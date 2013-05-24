@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_no_button">Nee</string>
+    <string name="dialog_yes_button">Ja</string>
+    <string name="dialog_send_to_tag_title">Tag invoeren</string>
+    <string name="dialog_send_to_tag_message">Gelieve een tag in te voeren:</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_delete_tag_title">Tag verwijderen</string>
+    <string name="dialog_delete_tag_message">Weet u zeker dat u deze tag wilt verwijderen?</string>
+    <string name="dialog_delete_contact_message">Weet u zeker dat u deze contact wilt verwijderen?</string>
+    <string name="dialog_delete_contact_title">Contact verwijderen</string>
+	
+</resources>

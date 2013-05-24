@@ -29,6 +29,7 @@
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:drawableLeft="@drawable/socialaddperson"
+            android:onClick="addToTagClicked"
             android:text="@string/taglist_activity_button_join_tag" />
 
         <Button
@@ -38,6 +39,7 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:drawableLeft="@drawable/newtag"
+            android:onClick="addTagClicked"
             android:text="@string/taglist_activity_button_create_tag" />
 
     </LinearLayout>

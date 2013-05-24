@@ -22,19 +22,21 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
+        android:layout_marginTop="10dp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/socialaddperson"
-        android:text="@string/taglist_activity_button_join_tag"
-        android:layout_marginTop="10dp" />
+        android:onClick="addToTagClicked"
+        android:text="@string/taglist_activity_button_join_tag" />
 
     <Button
         android:id="@+id/button_send_contacts"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
+        android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/newtag"
-        android:text="@string/taglist_activity_button_create_tag"
-        android:layout_marginTop="5dp" />
+        android:onClick="addTagClicked"
+        android:text="@string/taglist_activity_button_create_tag" />
 
 </LinearLayout>

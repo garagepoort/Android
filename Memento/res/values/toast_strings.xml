@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="toast_confirmation_contact_saved">Het contact werd opgeslagen</string>
+    <string name="toast_send_contacts_trying">Contacten worden verzonden...</string>
+    <string name="toast_add_to_tag_trying">Tag wordt opgezocht...</string>
+    <string name="toast_add_tag_trying">Tag wordt toegevoegd...</string>
 </resources>

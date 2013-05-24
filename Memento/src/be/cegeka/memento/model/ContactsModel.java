@@ -5,6 +5,7 @@ import java.util.List;
 
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.memento.entities.Contact;
+import be.cegeka.memento.events.ContactListUpdatedEvent;
 
 public class ContactsModel extends Tapper{
 	
