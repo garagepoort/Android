@@ -257,4 +257,17 @@ public class JPARepository implements Repository {
         updateUser(user);
         return true;
     }
+
+    @Override
+    public void unregisterUser(String registrationID) throws RepositoryException {
+        Query q = entityManager.createQuery("SELECT u FROM User u WHERE u.GCMid = ?1", User.class);
+        q.setParameter(1, registrationID);
+        List<User> users = q.getResultList();
+        if(users.isEmpty()){
+            throw new RepositoryException("User with this GCMID could not be found.");
+        }
+        User user = users.get(0);
+        user.setGCMid(null);
+        updateUser(user);
+    }
 }

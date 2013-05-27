@@ -245,5 +245,9 @@ public class Facade {
         }
     }
 
+    public void unregisterUser(String registrationID) throws RepositoryException {
+        service.unregisterUser(registrationID);
+    }
+
    
 }

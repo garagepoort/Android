@@ -194,4 +194,8 @@ public class Service {
     void setGCMCommunication(GCMCommunication gcmCommunication) {
         this.gcmCommunication = gcmCommunication;
     }
+
+    public void unregisterUser(String registrationID) throws RepositoryException {
+        repository.unregisterUser(registrationID);
+    }
 }
