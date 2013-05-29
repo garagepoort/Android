@@ -11,7 +11,6 @@ import exceptions.DatabaseException;
 import exceptions.GCMException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.jws.WebService;
@@ -37,7 +36,7 @@ public class MementoWebService {
         try {
             result.setData((String[]) groupDB.getTagsFromUser(gcmID).toArray());
         } catch (DatabaseException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             return result;
@@ -53,7 +52,7 @@ public class MementoWebService {
         try {
             groupDB.subscribeUserToTag(gcmID, tag);
         } catch (DatabaseException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             return result;
@@ -69,7 +68,7 @@ public class MementoWebService {
         try {
             groupDB.unsubscribeUserFromTag(gcmID, tag);
         } catch (DatabaseException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             return result;
@@ -87,7 +86,7 @@ public class MementoWebService {
             gcmIDs.addAll(groupDB.getUsersFromTag(tag));
             ContactSender.sendContactsToGroup(gcmIDs, contacts);
         } catch (GCMException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             return result;
@@ -103,7 +102,7 @@ public class MementoWebService {
         try {
             result.setData(groupDB.tagExists(tag));
         } catch (DatabaseException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             return result;
@@ -119,7 +118,7 @@ public class MementoWebService {
         try {
             groupDB.createTag(gcmID, tag);
         } catch (DatabaseException ex) {
-            result.setException(ex);
+            result.setExceptionMessage(ex.getMessage());
             Logger.getLogger(MementoWebService.class.getName()).log(Level.SEVERE, null, ex);
         }
         finally {
