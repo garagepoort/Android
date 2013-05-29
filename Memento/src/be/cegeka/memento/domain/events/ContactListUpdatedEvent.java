@@ -1,4 +1,4 @@
-package be.cegeka.memento.events;
+package be.cegeka.memento.domain.events;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,6 +1,7 @@
 package be.cegeka.memento.view;
 
 import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -31,6 +32,30 @@ public class DialogCreator
 						{
 							public void onClick(DialogInterface dialog, int id)
 							{
+								dialog.dismiss();
+							}
+						});
+				builder.create().show();
+			}
+		});
+	}
+	
+	public static void showErrorDialog(final String errorMessage, final Activity activity, final DialogOKedListener<Void> listener)
+	{
+		activity.runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+						.setTitle(activity.getString(R.string.dialog_error_title))
+						.setMessage(errorMessage)
+						.setIcon(android.R.drawable.ic_dialog_alert)
+						.setNeutralButton(activity.getString(R.string.dialog_ok_button), new DialogInterface.OnClickListener()
+						{
+							public void onClick(DialogInterface dialog, int id)
+							{
+								listener.okayed(null);
 								dialog.dismiss();
 							}
 						});

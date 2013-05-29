@@ -11,24 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import be.cegeka.memento.R;
+import be.cegeka.memento.domain.utilities.PersonalContactSaver;
 import be.cegeka.memento.entities.Contact;
 import be.cegeka.memento.exceptions.ContactException;
 import be.cegeka.memento.presenter.Presenter;
 
-
-public class ContactDetailsActivity extends Activity
-{
+public class ContactDetailsActivity extends Activity {
 	private Presenter presenter;
 	private EditText naam;
-	private EditText voornaam;
 	private EditText email;
 	private EditText tel;
 	private Contact contact;
 
-
 	@Override
-	protected void onCreate(Bundle savedInstanceState)
-	{
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_contact_details);
 		setupActionBar();
@@ -37,99 +33,65 @@ public class ContactDetailsActivity extends Activity
 		fillViews();
 	}
 
-
-	private void initialize()
-	{
+	private void initialize() {
 		presenter = new Presenter();
 	}
 
-
-	private void initializeViews()
-	{
+	private void initializeViews() {
 		naam = (EditText) findViewById(R.id.editText_naam);
-		voornaam = (EditText) findViewById(R.id.editText_voornaam);
 		email = (EditText) findViewById(R.id.editText_email);
 		tel = (EditText) findViewById(R.id.editText_tel);
 	}
 
+	private void fillViews() {
 
-	private void fillViews()
-	{
-		Bundle bundle = getIntent().getExtras();
-		if (bundle != null)
-		{
-			contact = (Contact) bundle.get("contact");
-			if (contact != null)
-			{
-				naam.setText(contact.getNaam());
-				voornaam.setText(contact.getVoornaam());
-				email.setText(contact.getEmail());
-				tel.setText(contact.getTel());
-				setTitle(contact.getNaam() + " " + contact.getVoornaam());
-			}
+		contact = presenter.getPersoonlijkContact(this);
+		if (contact != null) {
+			naam.setText(contact.getNaam());
+			email.setText(contact.getEmail());
+			tel.setText(contact.getTel());
+			setTitle(contact.getNaam());
 		}
+
 	}
 
-
-	public void saveContact(View view)
-	{
-		boolean persoonlijkContact = false;
-		Bundle bundle = getIntent().getExtras();
-		if (bundle != null)
-		{
-			persoonlijkContact = bundle.getBoolean("persoonlijkContact");
-		}
-		try
-		{
-			if (contact != null)
-			{
+	public void saveContact(View view) {
+		try {
+			if (contact != null) {
 				contact.setNaam(naam.getText().toString());
-				contact.setVoornaam(voornaam.getText().toString());
 				contact.setEmail(email.getText().toString());
 				contact.setTel(tel.getText().toString());
+			} else {
+				contact = new Contact(naam.getText().toString(), email.getText().toString(), tel.getText().toString());
 			}
-			else
-			{
-				contact = new Contact(naam.getText().toString(), voornaam.getText().toString(), email.getText().toString(), tel.getText().toString());
-			}
-			presenter.saveContact(contact, persoonlijkContact);
+			presenter.saveContact(this, contact);
 			showBlueToast(this, getString(R.string.toast_confirmation_contact_saved));
 			this.finish();
-		}
-		catch (ContactException e)
-		{
+		} catch (ContactException e) {
 			e.printStackTrace();
 			DialogCreator.showErrorDialog(e.getMessage(), this);
 		}
 	}
 
-
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	private void setupActionBar()
-	{
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-		{
+	private void setupActionBar() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
-
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
+	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.contact_details, menu);
 		return true;
 	}
 
-
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home :
+				NavUtils.navigateUpFromSameTask(this);
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

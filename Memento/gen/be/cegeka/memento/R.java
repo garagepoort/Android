@@ -28,52 +28,55 @@ public final class R {
         public static final int socialforward=0x7f020004;
         public static final int socialgroup=0x7f020005;
         public static final int socialperson=0x7f020006;
+        public static final int splashmemento=0x7f020007;
     }
     public static final class id {
         public static final int action_settings=0x7f080016;
-        public static final int button1=0x7f080009;
+        public static final int button1=0x7f080007;
         public static final int button_add_contact=0x7f08000f;
         public static final int button_contacts=0x7f080012;
         public static final int button_ik=0x7f080011;
         public static final int button_join_tag=0x7f080015;
         public static final int button_send_contacts=0x7f080010;
         public static final int button_tags=0x7f080013;
-        public static final int editText_email=0x7f080006;
+        public static final int editText_email=0x7f080004;
         public static final int editText_naam=0x7f080002;
-        public static final int editText_tel=0x7f080008;
-        public static final int editText_voornaam=0x7f080004;
+        public static final int editText_tel=0x7f080006;
+        public static final int editText_voornaam=0x7f08000b;
         public static final int listViewTags=0x7f080014;
         public static final int listView_contacts=0x7f08000e;
-        public static final int llh1=0x7f08000a;
-        public static final int llh2=0x7f08000b;
+        public static final int llh1=0x7f080008;
+        public static final int llh2=0x7f080009;
         public static final int llh3=0x7f08000c;
         public static final int llh4=0x7f08000d;
         public static final int scrollView1=0x7f080000;
         public static final int textView1=0x7f080001;
-        public static final int textView2=0x7f080003;
-        public static final int textView3=0x7f080005;
-        public static final int textView4=0x7f080007;
+        public static final int textView2=0x7f08000a;
+        public static final int textView3=0x7f080003;
+        public static final int textView4=0x7f080005;
     }
     public static final class layout {
         public static final int activity_contact_details=0x7f030000;
         public static final int activity_contacts_list=0x7f030001;
         public static final int activity_main=0x7f030002;
-        public static final int activity_tags_list=0x7f030003;
+        public static final int activity_splash_screen=0x7f030003;
+        public static final int activity_tags_list=0x7f030004;
     }
     public static final class menu {
         public static final int contact_details=0x7f070000;
         public static final int contacts_list=0x7f070001;
         public static final int main=0x7f070002;
-        public static final int tagslist=0x7f070003;
+        public static final int splash_screen=0x7f070003;
+        public static final int tagslist=0x7f070004;
     }
     public static final class string {
-        public static final int action_settings=0x7f040018;
-        public static final int app_name=0x7f040017;
+        public static final int action_settings=0x7f040019;
+        public static final int app_name=0x7f040018;
         public static final int contactDetails_activity_button_save=0x7f040008;
-        public static final int contact_details_label_email=0x7f040015;
-        public static final int contact_details_label_naam=0x7f040013;
-        public static final int contact_details_label_tel=0x7f040016;
-        public static final int contact_details_label_voornaam=0x7f040014;
+        public static final int contact_details_label_email=0x7f040016;
+        public static final int contact_details_label_naam=0x7f040014;
+        public static final int contact_details_label_tel=0x7f040017;
+        public static final int contact_details_label_voornaam=0x7f040015;
         public static final int contactsList_activity_button_add_contact=0x7f040003;
         public static final int contactsList_activity_button_cancel_send_contacts=0x7f040005;
         public static final int contactsList_activity_button_send_contacts=0x7f040004;
@@ -83,23 +86,28 @@ public final class R {
         public static final int dialog_delete_tag_title=0x7f04000f;
         public static final int dialog_error_title=0x7f04000e;
         public static final int dialog_no_button=0x7f04000a;
+        public static final int dialog_no_internet=0x7f040013;
         public static final int dialog_ok_button=0x7f040009;
         public static final int dialog_send_to_tag_message=0x7f04000d;
         public static final int dialog_send_to_tag_title=0x7f04000c;
         public static final int dialog_yes_button=0x7f04000b;
-        public static final int hello_world=0x7f040019;
+        public static final int hello_world=0x7f04001a;
         public static final int main_activity_button_contacts=0x7f040001;
         public static final int main_activity_button_ik=0x7f040000;
         public static final int main_activity_button_tags=0x7f040002;
+        public static final int tab=0x7f04001e;
         public static final int taglist_activity_button_create_tag=0x7f040007;
         public static final int taglist_activity_button_join_tag=0x7f040006;
-        public static final int title_activity_contact_details=0x7f04001b;
-        public static final int title_activity_contacts_list=0x7f04001a;
-        public static final int title_activity_tagslist=0x7f04001c;
-        public static final int toast_add_tag_trying=0x7f040020;
-        public static final int toast_add_to_tag_trying=0x7f04001f;
-        public static final int toast_confirmation_contact_saved=0x7f04001d;
-        public static final int toast_send_contacts_trying=0x7f04001e;
+        public static final int title_activity_contact_details=0x7f04001c;
+        public static final int title_activity_contacts_list=0x7f04001b;
+        public static final int title_activity_splash_screen=0x7f04001f;
+        public static final int title_activity_tagslist=0x7f04001d;
+        public static final int toast_add_personal_contact=0x7f040025;
+        public static final int toast_add_tag_trying=0x7f040024;
+        public static final int toast_add_to_tag_trying=0x7f040023;
+        public static final int toast_confirmation_contact_saved=0x7f040020;
+        public static final int toast_send_contacts_send=0x7f040022;
+        public static final int toast_send_contacts_trying=0x7f040021;
     }
     public static final class style {
         /** 
