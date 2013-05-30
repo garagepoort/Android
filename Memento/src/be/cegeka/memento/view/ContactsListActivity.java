@@ -118,8 +118,7 @@ public class ContactsListActivity extends Activity {
 		try {
 			initialize();
 		} catch (ContactException e) {
-			// TODO Auto-generated catch block
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
 			e.printStackTrace();
 		}
 	}
@@ -130,6 +129,7 @@ public class ContactsListActivity extends Activity {
 			presenter.sendContacts(getCheckedContacts(), tag, ContactsListActivity.this);
 			toast = showBlueToast(this, getString(R.string.toast_send_contacts_trying));
 		} catch (ContactException e) {
+			toast.cancel();
 			toast = showBlueToast(this, "Something went wrong retrieving the contacts' information.");
 			e.printStackTrace();
 		}

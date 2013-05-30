@@ -1,6 +1,6 @@
 package be.cegeka.memento.domain.futuretasks;
 
-import static be.cegeka.memento.domain.infrastructure.PropertyReader.getProperty;
+import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;

@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import be.cegeka.memento.R;
-import be.cegeka.memento.domain.utilities.PersonalContactSaver;
 import be.cegeka.memento.entities.Contact;
 import be.cegeka.memento.exceptions.ContactException;
 import be.cegeka.memento.presenter.Presenter;

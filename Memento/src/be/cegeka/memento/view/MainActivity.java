@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.View;
 import be.cegeka.memento.R;
 import be.cegeka.memento.domain.gcm.GCMRegister;
-import be.cegeka.memento.domain.infrastructure.InternetChecker;
+import be.cegeka.memento.domain.utilities.InternetChecker;
 import be.cegeka.memento.presenter.Presenter;
 
 public class MainActivity extends Activity {

@@ -1,4 +1,4 @@
-package be.cegeka.memento.domain.infrastructure;
+package be.cegeka.memento.domain.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

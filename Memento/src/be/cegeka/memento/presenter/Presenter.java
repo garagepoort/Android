@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
@@ -34,10 +35,6 @@ import com.google.android.gcm.GCMRegistrar;
 
 public class Presenter extends Tapper
 {
-
-
-
-
 	public void saveContact(Context context, Contact contact)
 	{
 		try {
@@ -85,6 +82,7 @@ public class Presenter extends Tapper
 	}
 
 
+	@SuppressLint("InlinedApi")
 	public void sendContacts(List<Contact> checkedContacts, String tag, Context context) throws ContactException
 	{
 		for(Contact c : checkedContacts){
@@ -161,7 +159,6 @@ public class Presenter extends Tapper
 				errorEvent.setData(exception);
 				tapShoulders(errorEvent);
 			}
-
 
 			@Override
 			public void onSucces(Integer integer)

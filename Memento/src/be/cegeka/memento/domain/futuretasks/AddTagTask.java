@@ -1,6 +1,6 @@
 package be.cegeka.memento.domain.futuretasks;
 
-import static be.cegeka.memento.domain.infrastructure.PropertyReader.getProperty;
+import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -14,9 +14,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.Context;
 import be.cegeka.android.flibture.FutureTask;
 import be.cegeka.memento.domain.exception.TechnicalException;
+import be.cegeka.memento.domain.utilities.PropertyReader;
 
 public class AddTagTask extends FutureTask<Void, String> {
 	private Context context;
+	private SoapObject response;
 
 	public AddTagTask(Context context) {
 		this.context = context;
@@ -26,12 +28,13 @@ public class AddTagTask extends FutureTask<Void, String> {
 		try {
 			String gcmID = uri[0];
 			String tag = uri[1];
-			SoapObject response = soapGetAddTagResponse(gcmID, tag);
-			handleResponse(response);
-			return null;
+			response = soapGetAddTagResponse(gcmID, tag);
 		} catch (Exception exception) {
-			throw new TechnicalException(exception);
+			throw new TechnicalException(PropertyReader.getProperty(context, "exceptions.properties", "NO_SERVER_CONNECTION"));
 		}
+
+		handleResponse(response);
+		return null;
 	}
 
 	private SoapObject soapGetAddTagResponse(String gcmID, String tag) throws IOException, XmlPullParserException, SocketTimeoutException {
@@ -48,8 +51,7 @@ public class AddTagTask extends FutureTask<Void, String> {
 
 		return response;
 	}
-	
-	
+
 	private void handleResponse(SoapObject response) throws Exception {
 		SoapObject so = (SoapObject) response.getProperty("return");
 		String message = so.getPropertySafelyAsString("exceptionMessage");
@@ -57,38 +59,4 @@ public class AddTagTask extends FutureTask<Void, String> {
 			throw new Exception(message);
 		}
 	}
-	//
-	// private ArrayList<AlarmTO> handleResponse(SoapObject response) {
-	// ArrayList<AlarmTO> alarms = new ArrayList<AlarmTO>();
-	// for (int i = 0; i < response.getPropertyCount(); i++) {
-	// SoapObject o = (SoapObject) response.getProperty(i);
-	// String info = o.getProperty("info").toString();
-	// int id =
-	// Integer.parseInt(o.getPropertySafelyAsString("alarmID").toString());
-	// String titel = o.getPropertySafelyAsString("title").toString();
-	// long date =
-	// Long.parseLong(o.getPropertySafelyAsString("dateInMillis").toString());
-	//
-	// int repeatUnit =
-	// Integer.parseInt(o.getPropertySafelyAsString("repeatUnit",
-	// 0).toString());
-	// int repeatQuantity =
-	// Integer.parseInt(o.getPropertySafelyAsString("repeatQuantity",
-	// 0).toString());
-	// long endDate =
-	// Long.parseLong(o.getPropertySafelyAsString("repeatEnddate",
-	// 0).toString());
-	//
-	// AlarmTO a = null;
-	// if (repeatUnit == 0) {
-	// a = new AlarmTO(id, titel, info, date);
-	// alarms.add(a);
-	// } else {
-	// a = new RepeatedAlarmTO(repeatUnit, repeatQuantity, endDate, id, titel,
-	// info, date);
-	// alarms.add(a);
-	// }
-	// }
-	// return alarms;
-	// }
 }

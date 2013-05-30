@@ -1,4 +1,4 @@
-package be.cegeka.memento.domain.infrastructure;
+package be.cegeka.memento.domain.utilities;
 
 import java.io.InputStream;
 import java.util.Properties;

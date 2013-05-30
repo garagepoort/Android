@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.OperationApplicationException;
@@ -34,6 +35,7 @@ public class ContactsPersistence {
 	 *            The {@link User} to be saved in the {@link SharedPreferences}.
 	 * @throws IOException
 	 */
+	@SuppressLint("InlinedApi")
 	public void saveContact(Contact contact) throws IOException {
 		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 

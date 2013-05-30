@@ -1,6 +1,6 @@
 package be.cegeka.memento.domain.futuretasks;
 
-import static be.cegeka.memento.domain.infrastructure.PropertyReader.getProperty;
+import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -64,6 +64,7 @@ public class GetTagFromUserTask extends FutureTask<ArrayList<Group>, String> {
 		if (message != null && !message.equals("")) {
 			throw new Exception(message);
 		} else {
+			@SuppressWarnings("unchecked")
 			HashMap<String, Double> tags = new Gson().fromJson(data, HashMap.class);
 			ArrayList<Group> groups = new ArrayList<Group>();
 			for (Entry<String, Double> e : tags.entrySet()) {
