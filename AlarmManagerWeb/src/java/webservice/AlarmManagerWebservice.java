@@ -6,6 +6,7 @@ package webservice;
 
 import be.cegeka.android.alarms.domain.exceptions.BusinessException;
 import be.cegeka.android.alarms.domain.model.Facade;
+import be.cegeka.android.alarms.exceptions.RepositoryException;
 import be.cegeka.android.alarms.transferobjects.AlarmTO;
 import be.cegeka.android.alarms.transferobjects.LoginObject;
 import be.cegeka.android.alarms.transferobjects.RepeatedAlarmTO;
@@ -120,6 +121,20 @@ public class AlarmManagerWebservice
             return loginObject;
         }
     
+    }
+
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "unregisterUser")
+    public boolean unregisterUser(@WebParam(name = "registrationID") String registrationID) {
+        try {
+            facade.unregisterUser(registrationID);
+            return true;
+        } catch (RepositoryException ex) {
+            Logger.getLogger(AlarmManagerWebservice.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 }
 

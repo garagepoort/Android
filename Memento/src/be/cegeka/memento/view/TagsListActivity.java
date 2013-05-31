@@ -15,15 +15,15 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import be.cegeka.android.ShouldrTap.Shoulder;
 import be.cegeka.memento.R;
-import be.cegeka.memento.events.TagEvent;
-import be.cegeka.memento.events.TagsListUpdatedEvent;
+import be.cegeka.memento.domain.events.TagEvent;
+import be.cegeka.memento.domain.events.TagsListUpdatedEvent;
+import be.cegeka.memento.domain.shoulders.ErrorShoulder;
+import be.cegeka.memento.domain.utilities.Group;
 import be.cegeka.memento.model.TagsModel;
 import be.cegeka.memento.presenter.Presenter;
-import be.cegeka.memento.shoulders.ErrorShoulder;
 
 
 public class TagsListActivity extends Activity
@@ -59,7 +59,7 @@ public class TagsListActivity extends Activity
 		listViewTags.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
 			@Override
-			public boolean onItemLongClick(AdapterView<?> arg0, final View view, int arg2, long arg3)
+			public boolean onItemLongClick(AdapterView<?> arg0, final View view, final int index, long arg3)
 			{
 				DialogCreator.showOptionsDialog(getString(R.string.dialog_delete_tag_title), getString(R.string.dialog_delete_tag_message), getResources().getDrawable(android.R.drawable.ic_delete), TagsListActivity.this, new DialogOKedListener<Boolean>()
 				{
@@ -68,14 +68,14 @@ public class TagsListActivity extends Activity
 					{
 						if (input)
 						{
-							presenter.deleteTag(((TextView) view).getText().toString());
+							presenter.deleteTag(((Group)listViewTags.getItemAtPosition(index)).getTag(), TagsListActivity.this);
 						}
 					}
 				});
 				return false;
 			}
 		});
-		presenter.getTags();
+		presenter.getTags(this);
 	}
 
 
@@ -87,7 +87,7 @@ public class TagsListActivity extends Activity
 			public void okayed(String input)
 			{
 				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_to_tag_trying));
-				presenter.addToTag(input);
+				presenter.addToTag(TagsListActivity.this, input);
 			}
 		});
 	}
@@ -101,7 +101,7 @@ public class TagsListActivity extends Activity
 			public void okayed(String input)
 			{
 				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
-				presenter.addTag(input);
+				presenter.addTag(input, TagsListActivity.this);
 			}
 		});
 	}
@@ -121,7 +121,7 @@ public class TagsListActivity extends Activity
 		{
 			toast.cancel();
 			showBlueToast(TagsListActivity.this, event.getData());
-			presenter.getTags();
+			presenter.getTags(TagsListActivity.this);
 		}
 	}
 
@@ -137,7 +137,7 @@ public class TagsListActivity extends Activity
 		@Override
 		public void update(TagsListUpdatedEvent event)
 		{
-			ListAdapter adapter = new ArrayAdapter<String>(TagsListActivity.this, android.R.layout.simple_list_item_1, event.getData());
+			ListAdapter adapter = new ArrayAdapter<Group>(TagsListActivity.this, android.R.layout.simple_list_item_1, event.getData());
 			listViewTags.setAdapter(adapter);
 		}
 	}

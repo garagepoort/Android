@@ -4,3 +4,4 @@ bin/
 target/
 .metadata/
 /AlarmManagerWeb/nbproject/private/
+/MementoServer/nbproject/private/

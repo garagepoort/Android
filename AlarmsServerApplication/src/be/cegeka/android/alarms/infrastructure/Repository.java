@@ -43,4 +43,6 @@ public interface Repository
     public void closeDatabase();
 
     public boolean registerUser(String email, String GCMID) throws RepositoryException;
+
+    public void unregisterUser(String registrationID) throws RepositoryException;
 }
