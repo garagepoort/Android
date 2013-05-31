@@ -9,5 +9,6 @@
     <string name="title_activity_tagslist">Mijn tags</string>
     <string name="tab">\u0009</string>
     <string name="title_activity_splash_screen">Memento</string>
+    <string name="result_tag_successful_added">De tag werd succesvol toegevoegd</string>
 
 </resources>

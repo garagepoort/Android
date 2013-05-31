@@ -13,20 +13,9 @@
         android:id="@+id/listView_contacts"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="5" >
+        android:layout_weight="6" >
 
     </ListView>
-
-    <Button
-        android:id="@+id/button_add_contact"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"
-        android:drawableLeft="@drawable/socialaddperson"
-        android:onClick="goToNewContactDetails"
-        android:text="@string/contactsList_activity_button_add_contact" />
 
     <Button
         android:id="@+id/button_send_contacts"

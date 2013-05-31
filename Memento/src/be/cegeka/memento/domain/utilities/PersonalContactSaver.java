@@ -1,7 +1,6 @@
 package be.cegeka.memento.domain.utilities;
 
 import java.io.IOException;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import be.cegeka.memento.entities.Contact;
@@ -46,8 +45,7 @@ public class PersonalContactSaver
 	public Contact loadContact()
 	{
 		SharedPreferences settings = context.getSharedPreferences("file", 0);
-
-		if (!(settings.contains("id") || settings.contains("naam") ||  settings.contains("email") ||  settings.contains("tel")))
+		if (!(settings.contains("id") || settings.contains("naam") || settings.contains("email") || settings.contains("tel")))
 		{
 			return null;
 		}
@@ -56,13 +54,15 @@ public class PersonalContactSaver
 		String email = settings.getString("email", "");
 		String tel = settings.getString("tel", "");
 		Contact contact = null;
-		try {
-			contact = new Contact( naam,  email, tel);
-		} catch (ContactException e) {
+		try
+		{
+			contact = new Contact(naam, email, tel);
+		}
+		catch (ContactException e)
+		{
 			e.printStackTrace();
 		}
 		contact.setId(id);
-
 		return contact;
 	}
 
@@ -81,5 +81,4 @@ public class PersonalContactSaver
 		editor.clear();
 		editor.commit();
 	}
-
 }

@@ -1,7 +1,6 @@
 package be.cegeka.memento.view;
 
 import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import be.cegeka.memento.R;
+import be.cegeka.memento.domain.utilities.Group;
 
 
 public class DialogCreator
@@ -39,7 +39,8 @@ public class DialogCreator
 			}
 		});
 	}
-	
+
+
 	public static void showErrorDialog(final String errorMessage, final Activity activity, final DialogOKedListener<Void> listener)
 	{
 		activity.runOnUiThread(new Runnable()
@@ -93,12 +94,12 @@ public class DialogCreator
 	}
 
 
-	public static void showEditableDropdownDialog(final Activity activity, final DialogOKedListener<String> listener, List<String> tags)
+	public static void showEditableDropdownDialog(final Activity activity, final DialogOKedListener<String> listener, List<Group> tags)
 	{
 		final AutoCompleteTextView autoTextView = new AutoCompleteTextView(activity);
 		autoTextView.setThreshold(0);
 		autoTextView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_dropdown_item_1line, tags);
+		ArrayAdapter<Group> dataAdapter = new ArrayAdapter<Group>(activity, android.R.layout.simple_dropdown_item_1line, tags);
 		autoTextView.setAdapter(dataAdapter);
 		activity.runOnUiThread(new Runnable()
 		{

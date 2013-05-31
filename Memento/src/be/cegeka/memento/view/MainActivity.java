@@ -8,61 +8,86 @@ import android.view.View;
 import be.cegeka.memento.R;
 import be.cegeka.memento.domain.gcm.GCMRegister;
 import be.cegeka.memento.domain.utilities.InternetChecker;
-import be.cegeka.memento.presenter.Presenter;
+import be.cegeka.memento.facade.Facade;
 
-public class MainActivity extends Activity {
-	private Presenter presenter;
 
-	public void goToContactsList(View view) {
-		if (presenter.getPersoonlijkContact(this) == null) {
-			goToMyContactDetails(view);
-			Toast.showBlueToast(this, getString(R.string.toast_add_personal_contact));
-		} else {
+public class MainActivity extends Activity
+{
+	private Facade facade;
+
+
+	public void goToContactsList(final View view)
+	{
+		if (facade.getPersoonlijkContact() == null)
+		{
+			DialogCreator.showOptionsDialog(getString(R.string.dialog_error_title), getString(R.string.toast_add_personal_contact), getResources().getDrawable(android.R.drawable.ic_dialog_alert), this, new DialogOKedListener<Boolean>()
+			{
+				@Override
+				public void okayed(Boolean okayed)
+				{
+					if (okayed)
+					{
+						goToMyContactDetails(view);
+					}
+				}
+			});
+		}
+		else
+		{
 			Intent intent = new Intent(this, ContactsListActivity.class);
 			startActivity(intent);
 		}
 	}
 
-	public void goToMyContactDetails(View view) {
+
+	public void goToMyContactDetails(View view)
+	{
 		Intent intent = new Intent(this, ContactDetailsActivity.class);
 		startActivity(intent);
 	}
 
-	public void goToTagsList(View view) {
+
+	public void goToTagsList(View view)
+	{
 		Intent intent = new Intent(this, TagsListActivity.class);
 		startActivity(intent);
 	}
 
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		presenter = new Presenter();
-		presenter.getTags(this);
+		facade = new Facade(this);
+		facade.getTags();
 		new GCMRegister().registerWithGCMServer(this);
 	}
 
+
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
+
 	@Override
-	protected void onStart() {
+	protected void onStart()
+	{
 		InternetChecker internetChecker = new InternetChecker();
-		if(!internetChecker.isNetworkAvailable(this)){
-			DialogCreator.showErrorDialog(getString(R.string.dialog_no_internet), this, new DialogOKedListener<Void>() {
-				
+		if (!internetChecker.isNetworkAvailable(this))
+		{
+			DialogCreator.showErrorDialog(getString(R.string.dialog_no_internet), this, new DialogOKedListener<Void>()
+			{
 				@Override
-				public void okayed(Void input) {
+				public void okayed(Void input)
+				{
 					MainActivity.this.finish();
 				}
 			});
 		}
 		super.onStart();
 	}
-	
-	
 }

@@ -21,7 +21,7 @@ public class ErrorShoulder extends Shoulder<ErrorEvent>
 	@Override
 	public void update(ErrorEvent event)
 	{
-		System.out.println(event.getData().getMessage());
+		event.getData().printStackTrace();
 		DialogCreator.showErrorDialog(event.getData().getMessage(), activity);
 	}
 

@@ -22,13 +22,13 @@ import be.cegeka.memento.domain.events.TagEvent;
 import be.cegeka.memento.domain.events.TagsListUpdatedEvent;
 import be.cegeka.memento.domain.shoulders.ErrorShoulder;
 import be.cegeka.memento.domain.utilities.Group;
+import be.cegeka.memento.facade.Facade;
 import be.cegeka.memento.model.TagsModel;
-import be.cegeka.memento.presenter.Presenter;
 
 
 public class TagsListActivity extends Activity
 {
-	private Presenter presenter;
+	private Facade facade;
 	private TagsListShoulder tagsListShoulder;
 	private TagShoulder tagShoulder;
 	private ErrorShoulder errorShoulder;
@@ -46,16 +46,22 @@ public class TagsListActivity extends Activity
 	}
 
 
+	@SuppressLint("ShowToast")
 	private void initialize()
 	{
-		presenter = new Presenter();
+		facade = new Facade(this);
+		toast = Toast.makeText(this, "", 0);
+
 		tagShoulder = new TagShoulder();
-		presenter.addShoulder(tagShoulder);
+		facade.addShoulder(tagShoulder);
+
 		errorShoulder = new ErrorShoulder(this);
-		presenter.addShoulder(errorShoulder);
+		facade.addShoulder(errorShoulder);
+
 		tagsListShoulder = new TagsListShoulder();
 		listViewTags = (ListView) findViewById(R.id.listViewTags);
 		TagsModel.getInstance().addShoulder(tagsListShoulder);
+
 		listViewTags.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
 			@Override
@@ -68,40 +74,61 @@ public class TagsListActivity extends Activity
 					{
 						if (input)
 						{
-							presenter.deleteTag(((Group)listViewTags.getItemAtPosition(index)).getTag(), TagsListActivity.this);
+							toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_delete_tag_trying));
+							facade.deleteTag(((Group) listViewTags.getItemAtPosition(index)).getTag());
 						}
 					}
 				});
 				return false;
 			}
 		});
-		presenter.getTags(this);
+
+		ListAdapter adapter = new ArrayAdapter<Group>(TagsListActivity.this, android.R.layout.simple_list_item_1, TagsModel.getInstance().getGroups());
+		listViewTags.setAdapter(adapter);
 	}
 
 
-	public void addToTagClicked(View view)
+	public void addToTagClicked(final View view)
 	{
 		DialogCreator.showEditTextDialog(this, new DialogOKedListener<String>()
 		{
 			@Override
 			public void okayed(String input)
 			{
-				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_to_tag_trying));
-				presenter.addToTag(TagsListActivity.this, input);
+				if (facade.isValidTag(input))
+				{
+					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_to_tag_trying));
+					facade.addToTag(input);
+				}
+				else
+				{
+					addToTagClicked(view);
+					toast.cancel();
+					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
+				}
 			}
 		});
 	}
 
 
-	public void addTagClicked(View view)
+	public void addTagClicked(final View view)
 	{
 		DialogCreator.showEditTextDialog(this, new DialogOKedListener<String>()
 		{
 			@Override
 			public void okayed(String input)
 			{
-				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
-				presenter.addTag(input, TagsListActivity.this);
+				if (facade.isValidTag(input))
+				{
+					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
+					facade.addTag(input);
+				}
+				else
+				{
+					addTagClicked(view);
+					toast.cancel();
+					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
+				}
 			}
 		});
 	}
@@ -121,7 +148,7 @@ public class TagsListActivity extends Activity
 		{
 			toast.cancel();
 			showBlueToast(TagsListActivity.this, event.getData());
-			presenter.getTags(TagsListActivity.this);
+			facade.getTags();
 		}
 	}
 
@@ -146,8 +173,8 @@ public class TagsListActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		presenter.removeShoulder(tagShoulder);
-		presenter.removeShoulder(errorShoulder);
+		facade.removeShoulder(tagShoulder);
+		facade.removeShoulder(errorShoulder);
 		TagsModel.getInstance().removeShoulder(tagsListShoulder);
 		super.onDestroy();
 	}
