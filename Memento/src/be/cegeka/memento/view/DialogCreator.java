@@ -66,7 +66,7 @@ public class DialogCreator
 	}
 
 
-	public static void showEditTextDialog(final Activity activity, final DialogOKedListener<String> listener)
+	public static void showEditTextDialog(final Activity activity, final String title, final String message, final DialogOKedListener<String> listener)
 	{
 		final EditText editText = new EditText(activity);
 		activity.runOnUiThread(new Runnable()
@@ -75,8 +75,8 @@ public class DialogCreator
 			public void run()
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-						.setTitle(R.string.dialog_send_to_tag_title)
-						.setMessage(R.string.dialog_send_to_tag_message)
+						.setTitle(title)
+						.setMessage(message)
 						.setView(editText)
 						.setPositiveButton(activity.getString(R.string.dialog_ok_button), new DialogInterface.OnClickListener()
 						{

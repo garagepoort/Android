@@ -1,12 +1,12 @@
 package be.cegeka.memento.view;
 
+import static be.cegeka.memento.domain.utilities.IPConfigurator.configureIPAddress;
 import static be.cegeka.memento.view.Toast.showBlueToast;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,7 +59,7 @@ public class TagsListActivity extends Activity
 		facade.addShoulder(errorShoulder);
 
 		tagsListShoulder = new TagsListShoulder();
-		listViewTags = (ListView) findViewById(R.id.listViewTags);
+		listViewTags = (ListView) findViewById(R.id.listViewTagsList);
 		TagsModel.getInstance().addShoulder(tagsListShoulder);
 
 		listViewTags.setOnItemLongClickListener(new OnItemLongClickListener()
@@ -90,7 +90,7 @@ public class TagsListActivity extends Activity
 
 	public void addToTagClicked(final View view)
 	{
-		DialogCreator.showEditTextDialog(this, new DialogOKedListener<String>()
+		DialogCreator.showEditTextDialog(this, getString(R.string.dialog_send_to_tag_title), getString(R.string.dialog_send_to_tag_message), new DialogOKedListener<String>()
 		{
 			@Override
 			public void okayed(String input)
@@ -113,7 +113,7 @@ public class TagsListActivity extends Activity
 
 	public void addTagClicked(final View view)
 	{
-		DialogCreator.showEditTextDialog(this, new DialogOKedListener<String>()
+		DialogCreator.showEditTextDialog(this, getString(R.string.dialog_send_to_tag_title), getString(R.string.dialog_send_to_tag_message), new DialogOKedListener<String>()
 		{
 			@Override
 			public void okayed(String input)
@@ -201,11 +201,9 @@ public class TagsListActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		if (item.getItemId() == R.id.action_settings)
 		{
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+			configureIPAddress(this, item);
 		}
 		return super.onOptionsItemSelected(item);
 	}

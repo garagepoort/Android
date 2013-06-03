@@ -1,9 +1,11 @@
 package be.cegeka.memento.view;
 
+import static be.cegeka.memento.domain.utilities.IPConfigurator.configureIPAddress;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import be.cegeka.memento.R;
 import be.cegeka.memento.domain.gcm.GCMRegister;
@@ -70,6 +72,17 @@ public class MainActivity extends Activity
 	{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.getItemId() == R.id.action_settings)
+		{
+			configureIPAddress(this, item);
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 

@@ -15,6 +15,7 @@ import android.content.Context;
 import be.cegeka.android.flibture.FutureTask;
 import be.cegeka.memento.domain.exception.TechnicalException;
 import be.cegeka.memento.domain.utilities.Group;
+import be.cegeka.memento.domain.utilities.SharedPrefsManager;
 import com.google.gson.Gson;
 
 
@@ -50,7 +51,7 @@ public class GetTagFromUserTask extends FutureTask<ArrayList<Group>, String>
 		envelope.setOutputSoapObject(request);
 		SoapObject response = null;
 
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties", "URL"), 10000);
+		HttpTransportSE ht = new HttpTransportSE(SharedPrefsManager.getSharedPreference(context, "URL", "http://1.1.1.1:8080/MementoServer/MementoWebService"), 10000);
 		ht.call(getProperty(context, "config.properties", "NAMESPACE") + getProperty(context, "config.properties", "GET_TAGS_FROM_USER"), envelope);
 		response = (SoapObject) envelope.bodyIn;
 		System.out.println(response);

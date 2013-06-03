@@ -1,6 +1,7 @@
 package be.cegeka.memento.domain.futuretasks;
 
 import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
+import static be.cegeka.memento.domain.utilities.SharedPrefsManager.getSharedPreference;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import org.ksoap2.SoapEnvelope;
@@ -46,7 +47,7 @@ public class AddTagTask extends FutureTask<Void, String>
 		envelope.setOutputSoapObject(request);
 		SoapObject response = null;
 
-		HttpTransportSE ht = new HttpTransportSE(getProperty(context, "config.properties", "URL"), 10000);
+		HttpTransportSE ht = new HttpTransportSE(getSharedPreference(context, "URL", "http://1.1.1.1:8080/MementoServer/MementoWebService"), 10000);
 		ht.call(getProperty(context, "config.properties", "NAMESPACE") + getProperty(context, "config.properties", "ADD_TAG"), envelope);
 		response = (SoapObject) envelope.bodyIn;
 

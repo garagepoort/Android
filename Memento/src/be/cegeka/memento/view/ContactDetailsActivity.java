@@ -1,11 +1,11 @@
 package be.cegeka.memento.view;
 
+import static be.cegeka.memento.domain.utilities.IPConfigurator.configureIPAddress;
 import static be.cegeka.memento.view.Toast.showBlueToast;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,11 +111,9 @@ public class ContactDetailsActivity extends Activity
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
-		switch (item.getItemId())
+		if (item.getItemId() == R.id.action_settings)
 		{
-		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
-			return true;
+			configureIPAddress(this, item);
 		}
 		return super.onOptionsItemSelected(item);
 	}

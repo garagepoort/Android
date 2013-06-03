@@ -1,5 +1,6 @@
 package be.cegeka.memento.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.memento.domain.events.TagsListUpdatedEvent;
@@ -9,7 +10,7 @@ import be.cegeka.memento.domain.utilities.Group;
 public class TagsModel extends Tapper
 {
 	private final static TagsModel INSTANCE = new TagsModel();
-	private List<Group> groups;
+	private List<Group> groups = new ArrayList<Group>();
 
 
 	public static TagsModel getInstance()

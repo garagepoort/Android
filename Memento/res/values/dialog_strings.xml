@@ -11,6 +11,8 @@
     <string name="dialog_delete_tag_message">Weet u zeker dat u deze tag wilt verwijderen?</string>
     <string name="dialog_delete_contact_message">Weet u zeker dat u deze contact wilt verwijderen?</string>
     <string name="dialog_delete_contact_title">Contact verwijderen</string>
-    <string name="dialog_no_internet">You have no internet connection.</string>
+    <string name="dialog_no_internet">U heeft momenteel geen internetconnectie</string>
+    <string name="dialog_configure_IP_title">IP-adres instellen</string>
+    <string name="dialog_configure_IP_message">Gelieve een nieuw geldig IP-adres in te voeren:</string>
 	
 </resources>
