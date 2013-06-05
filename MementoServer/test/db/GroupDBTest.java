@@ -5,8 +5,7 @@
 package db;
 
 import exceptions.DatabaseException;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +32,7 @@ public class GroupDBTest {
 
     @Before
     public void setUp() throws DatabaseException {
-        db.subscribeUserToTag(user1, tag);
+        db.createTag(user1, tag);
         db.subscribeUserToTag(user2, tag);
         db.subscribeUserToTag(user3, tag);
         db.subscribeUserToTag(user4, tag);
@@ -58,17 +57,17 @@ public class GroupDBTest {
 
     @Test
     public void testGetTagsFromUser() throws Exception {
-        db.subscribeUserToTag(user1, tag2);
-        List<String> tags = db.getTagsFromUser(user1);
-        assertTrue(tags.contains(tag));
-        assertTrue(tags.contains(tag2));
+        db.createTag(user1, tag2);
+        Map<String, Integer> tags = db.getTagsFromUser(user1);
+        assertTrue(tags.keySet().contains(tag));
+        assertTrue(tags.keySet().contains(tag2));
     }
 
     @Test
     public void testUnsubscribeUserFromTag() throws Exception {
-        assertTrue(db.getTagsFromUser(user1).contains(tag));
+        assertTrue(db.getTagsFromUser(user1).keySet().contains(tag));
         db.unsubscribeUserFromTag(user1, tag);
-        assertFalse(db.getTagsFromUser(user1).contains(tag));
+        assertFalse(db.getTagsFromUser(user1).keySet().contains(tag));
     }
 
     @Test
