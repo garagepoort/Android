@@ -2,11 +2,11 @@ package be.cegeka.memento.entities;
 
 import java.io.Serializable;
 
-public class ServerResult<T> implements Serializable{
+public class ServerResult implements Serializable{
 	
 	private static final long serialVersionUID = -6199167455198207928L;
 	private String exceptionMessage;
-	private T data;
+	private String data;
 	
 	public void setExceptionMessage(String e){
 		this.exceptionMessage = e;
@@ -23,11 +23,11 @@ public class ServerResult<T> implements Serializable{
 		return false;
 	}
 	
-	public T getData(){
+	public String getData(){
 		return data;
 	}
 	
-	public void setData(T data){
+	public void setData(String data){
 		this.data = data;
 	}
 	
