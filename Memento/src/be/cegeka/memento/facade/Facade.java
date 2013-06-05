@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.android.flibture.Future;
@@ -28,6 +29,7 @@ import be.cegeka.memento.exceptions.ContactException;
 import be.cegeka.memento.model.ContactsModel;
 import be.cegeka.memento.model.TagsModel;
 import com.google.android.gcm.GCMRegistrar;
+import com.google.zxing.integration.android.IntentIntegrator;
 
 
 public class Facade extends Tapper
@@ -236,6 +238,13 @@ public class Facade extends Tapper
 		ErrorEvent errorEvent = new ErrorEvent();
 		errorEvent.setData(exception);
 		tapShoulders(errorEvent);
+	}
+
+
+	public void openScanner(Activity activity)
+	{
+		IntentIntegrator integrator = new IntentIntegrator(activity);
+		integrator.initiateScan();
 	}
 
 }

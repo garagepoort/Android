@@ -10,5 +10,8 @@
     <string name="tab">\u0009</string>
     <string name="title_activity_splash_screen">Memento</string>
     <string name="result_tag_successful_added">De tag werd succesvol toegevoegd</string>
+    <string name="title_activity_qrcode">QRCodeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>

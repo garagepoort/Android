@@ -1,6 +1,7 @@
 package be.cegeka.memento.view;
 
 import static be.cegeka.memento.domain.utilities.IPConfigurator.configureIPAddress;
+import static be.cegeka.memento.view.Toast.showBlueToast;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 import be.cegeka.memento.R;
 import be.cegeka.memento.domain.gcm.GCMRegister;
+import be.cegeka.memento.domain.shoulders.ErrorShoulder;
 import be.cegeka.memento.domain.utilities.InternetChecker;
 import be.cegeka.memento.facade.Facade;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 
 public class MainActivity extends Activity
 {
 	private Facade facade;
+	private ErrorShoulder errorShoulder;
 
 
 	public void goToContactsList(final View view)
@@ -56,6 +61,38 @@ public class MainActivity extends Activity
 	}
 
 
+	public void openScanner(View view)
+	{
+		facade.openScanner(this);
+	}
+
+
+	public void onActivityResult(int requestCode, int resultCode, Intent intent)
+	{
+		if (intent != null)
+		{
+			IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+			if (scanResult != null && scanResult.getContents().startsWith("memento://be.cegeka.memento/#"))
+			{
+				String tag = scanResult.getContents().split("#")[1];
+				if (facade.isValidTag(tag))
+				{
+					facade.addToTag(tag);
+					showBlueToast(getApplicationContext(), getString(R.string.toast_add_to_tag_trying));
+				}
+				else
+				{
+					showBlueToast(getApplicationContext(), getString(R.string.toast_tag_invalid_input));
+				}
+			}
+			else
+			{
+				DialogCreator.showErrorDialog(getString(R.string.dialog_qrscan_invalid_qr_code), this);
+			}
+		}
+	}
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -90,6 +127,7 @@ public class MainActivity extends Activity
 	protected void onStart()
 	{
 		InternetChecker internetChecker = new InternetChecker();
+		errorShoulder = new ErrorShoulder(this);
 		if (!internetChecker.isNetworkAvailable(this))
 		{
 			DialogCreator.showErrorDialog(getString(R.string.dialog_no_internet), this, new DialogOKedListener<Void>()
@@ -101,6 +139,16 @@ public class MainActivity extends Activity
 				}
 			});
 		}
+		facade.addShoulder(errorShoulder);
 		super.onStart();
 	}
+
+
+	@Override
+	protected void onDestroy()
+	{
+		facade.removeShoulder(errorShoulder);
+		super.onDestroy();
+	}
+
 }

@@ -13,8 +13,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <permission
         android:name="be.cegeka.memento.permission.C2D_MESSAGE"
@@ -53,27 +53,27 @@
         </activity>
         <activity
             android:name="be.cegeka.memento.view.ContactsListActivity"
+            android:icon="@drawable/socialgroup"
             android:label="@string/title_activity_contacts_list"
-            android:parentActivityName="be.cegeka.memento.view.MainActivity"
-            android:icon="@drawable/socialgroup" >
+            android:parentActivityName="be.cegeka.memento.view.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.cegeka.automvp.view.MainActivity" />
         </activity>
         <activity
             android:name="be.cegeka.memento.view.ContactDetailsActivity"
+            android:icon="@drawable/socialperson"
             android:label="@string/title_activity_contact_details"
-            android:parentActivityName="be.cegeka.memento.view.ContactsListActivity"
-            android:icon="@drawable/socialperson" >
+            android:parentActivityName="be.cegeka.memento.view.ContactsListActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.cegeka.memento.ContactsList" />
         </activity>
         <activity
             android:name="be.cegeka.memento.view.TagsListActivity"
+            android:icon="@drawable/collectionslabels"
             android:label="@string/title_activity_tagslist"
-            android:parentActivityName="be.cegeka.memento.view.MainActivity"
-            android:icon="@drawable/collectionslabels" >
+            android:parentActivityName="be.cegeka.memento.view.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.cegeka.memento.MainActivity" />
@@ -81,6 +81,17 @@
         <activity
             android:name="be.cegeka.memento.view.SplashScreen"
             android:label="@string/title_activity_splash_screen" >
+        </activity>
+        <activity
+            android:name="be.cegeka.memento.view.QRCodeActivity"
+            android:icon="@drawable/qr"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_qrcode"
+            android:parentActivityName="be.cegeka.memento.view.TagsListActivity"
+            android:theme="@style/FullscreenTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.cegeka.memento.view.TagsListActivity" />
         </activity>
     </application>
 

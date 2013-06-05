@@ -5,12 +5,14 @@ import static be.cegeka.memento.view.Toast.showBlueToast;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -62,6 +64,19 @@ public class TagsListActivity extends Activity
 		listViewTags = (ListView) findViewById(R.id.listViewTagsList);
 		TagsModel.getInstance().addShoulder(tagsListShoulder);
 
+		listViewTags.setOnItemClickListener(new OnItemClickListener()
+		{
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+			{
+				String tag = ((Group) listViewTags.getItemAtPosition(arg2)).getTag();
+				Intent intent = new Intent(TagsListActivity.this, QRCodeActivity.class);
+				intent.putExtra("TAG", tag);
+				startActivity(intent);
+			}
+		});
+
 		listViewTags.setOnItemLongClickListener(new OnItemLongClickListener()
 		{
 			@Override
@@ -95,17 +110,7 @@ public class TagsListActivity extends Activity
 			@Override
 			public void okayed(String input)
 			{
-				if (facade.isValidTag(input))
-				{
-					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_to_tag_trying));
-					facade.addToTag(input);
-				}
-				else
-				{
-					addToTagClicked(view);
-					toast.cancel();
-					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
-				}
+				addToTag(view, input);
 			}
 		});
 	}
@@ -118,17 +123,7 @@ public class TagsListActivity extends Activity
 			@Override
 			public void okayed(String input)
 			{
-				if (facade.isValidTag(input))
-				{
-					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
-					facade.addTag(input);
-				}
-				else
-				{
-					addTagClicked(view);
-					toast.cancel();
-					toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
-				}
+				addTag(view, input, true);
 			}
 		});
 	}
@@ -206,5 +201,40 @@ public class TagsListActivity extends Activity
 			configureIPAddress(this, item);
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+
+	private void addTag(final View view, String input, boolean showInputDialogWhenInvalid)
+	{
+		if (facade.isValidTag(input))
+		{
+			toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
+			facade.addTag(input);
+		}
+		else
+		{
+			if (showInputDialogWhenInvalid)
+			{
+				addTagClicked(view);
+			}
+			toast.cancel();
+			toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
+		}
+	}
+
+
+	private void addToTag(final View view, String input)
+	{
+		if (facade.isValidTag(input))
+		{
+			toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_to_tag_trying));
+			facade.addToTag(input);
+		}
+		else
+		{
+			toast.cancel();
+			toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
+			addToTagClicked(view);
+		}
 	}
 }

@@ -10,11 +10,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    
+    <LinearLayout 
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginRight="5dp">
+        
     <Button
         android:id="@+id/button_ik"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/socialperson"
         android:onClick="goToMyContactDetails"
@@ -22,21 +30,42 @@
 
     <Button
         android:id="@+id/button_contacts"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/socialgroup"
         android:onClick="goToContactsList"
-        android:text="@string/main_activity_button_contacts" />
+        android:text="@string/main_activity_button_contacts"
+        android:layout_marginTop="5dp" />
 
+    </LinearLayout>
+    
+   <LinearLayout 
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="5dp">
+        
     <Button
         android:id="@+id/button_tags"
-        android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="10dp"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
         android:layout_weight="1"
         android:drawableLeft="@drawable/collectionslabels"
         android:onClick="goToTagsList"
         android:text="@string/main_activity_button_tags" />
+    
+      <Button
+            android:id="@+id/button_scan_qrcode"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/qr"
+            android:onClick="openScanner"
+            android:text="@string/taglist_activity_button_open_scanner" />
 
+    </LinearLayout>
 </LinearLayout>

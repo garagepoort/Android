@@ -38,5 +38,6 @@
         android:drawableLeft="@drawable/newtag"
         android:onClick="addTagClicked"
         android:text="@string/taglist_activity_button_create_tag" />
+    
 
 </LinearLayout>
