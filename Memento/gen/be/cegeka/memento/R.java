@@ -87,8 +87,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int tagslist=0x7f080004;
     }
     public static final class string {
-        public static final int action_settings=0x7f040020;
-        public static final int app_name=0x7f04001f;
+        public static final int action_settings=0x7f040021;
+        public static final int app_name=0x7f040020;
         public static final int contactDetails_activity_button_save=0x7f040008;
         public static final int contact_details_label_email=0x7f04001b;
         public static final int contact_details_label_naam=0x7f040019;
@@ -112,36 +112,37 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int dialog_send_to_tag_message=0x7f04000e;
         public static final int dialog_send_to_tag_title=0x7f04000d;
         public static final int dialog_yes_button=0x7f04000c;
-        public static final int dummy_button=0x7f040029;
-        public static final int dummy_content=0x7f04002a;
-        public static final int hello_world=0x7f040021;
+        public static final int dummy_button=0x7f04002a;
+        public static final int dummy_content=0x7f04002b;
+        public static final int hello_world=0x7f040022;
         public static final int main_activity_button_contacts=0x7f040001;
         public static final int main_activity_button_ik=0x7f040000;
         public static final int main_activity_button_tags=0x7f040002;
         public static final int qrcode_instructions=0x7f04001d;
-        public static final int qrcode_title=0x7f04001e;
-        public static final int result_tag_successful_added=0x7f040027;
-        public static final int tab=0x7f040025;
+        public static final int qrcode_title_contact=0x7f04001f;
+        public static final int qrcode_title_tag=0x7f04001e;
+        public static final int result_tag_successful_added=0x7f040028;
+        public static final int tab=0x7f040026;
         public static final int taglist_activity_button_create_tag=0x7f040007;
         public static final int taglist_activity_button_join_tag=0x7f040006;
         public static final int taglist_activity_button_open_scanner=0x7f040009;
-        public static final int title_activity_contact_details=0x7f040023;
-        public static final int title_activity_contacts_list=0x7f040022;
-        public static final int title_activity_qrcode=0x7f040028;
-        public static final int title_activity_splash_screen=0x7f040026;
-        public static final int title_activity_tagslist=0x7f040024;
-        public static final int toast_add_personal_contact=0x7f040030;
-        public static final int toast_add_tag_trying=0x7f04002f;
-        public static final int toast_add_to_tag_trying=0x7f04002e;
-        public static final int toast_added_to_tag_part_1=0x7f040032;
-        public static final int toast_added_to_tag_part_2_plural=0x7f040034;
-        public static final int toast_added_to_tag_part_2_single=0x7f040033;
-        public static final int toast_confirmation_contact_saved=0x7f04002b;
-        public static final int toast_delete_tag_trying=0x7f040036;
-        public static final int toast_send_contacts_sent=0x7f04002d;
-        public static final int toast_send_contacts_trying=0x7f04002c;
-        public static final int toast_something_went_wrong_retrieving_contact_info=0x7f040031;
-        public static final int toast_tag_invalid_input=0x7f040035;
+        public static final int title_activity_contact_details=0x7f040024;
+        public static final int title_activity_contacts_list=0x7f040023;
+        public static final int title_activity_qrcode=0x7f040029;
+        public static final int title_activity_splash_screen=0x7f040027;
+        public static final int title_activity_tagslist=0x7f040025;
+        public static final int toast_add_personal_contact=0x7f040031;
+        public static final int toast_add_tag_trying=0x7f040030;
+        public static final int toast_add_to_tag_trying=0x7f04002f;
+        public static final int toast_added_to_tag_part_1=0x7f040033;
+        public static final int toast_added_to_tag_part_2_plural=0x7f040035;
+        public static final int toast_added_to_tag_part_2_single=0x7f040034;
+        public static final int toast_confirmation_contact_saved=0x7f04002c;
+        public static final int toast_delete_tag_trying=0x7f040037;
+        public static final int toast_send_contacts_sent=0x7f04002e;
+        public static final int toast_send_contacts_trying=0x7f04002d;
+        public static final int toast_something_went_wrong_retrieving_contact_info=0x7f040032;
+        public static final int toast_tag_invalid_input=0x7f040036;
     }
     public static final class style {
         /** 

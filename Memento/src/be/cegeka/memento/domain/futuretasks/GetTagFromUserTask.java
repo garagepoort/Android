@@ -37,6 +37,7 @@ public class GetTagFromUserTask extends FutureTask<ArrayList<Group>, String>
 		SoapObject response = null;
 		ArrayList<Group> strings = null;
 		String gcmID = arguments[0];
+		System.out.println("GCMID: " + gcmID);
 		response = soapGetAlarmsFromUserResponse(gcmID);
 		strings = handleResponse(response);
 		return strings;

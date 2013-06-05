@@ -70,7 +70,7 @@ public class TagsListActivity extends Activity
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 			{
-				String tag = ((Group) listViewTags.getItemAtPosition(arg2)).getTag();
+				String tag = "memento://be.cegeka.memento.tag/#" + ((Group) listViewTags.getItemAtPosition(arg2)).getTag();
 				Intent intent = new Intent(TagsListActivity.this, QRCodeActivity.class);
 				intent.putExtra("TAG", tag);
 				startActivity(intent);
@@ -123,7 +123,7 @@ public class TagsListActivity extends Activity
 			@Override
 			public void okayed(String input)
 			{
-				addTag(view, input, true);
+				addTag(view, input);
 			}
 		});
 	}
@@ -204,7 +204,7 @@ public class TagsListActivity extends Activity
 	}
 
 
-	private void addTag(final View view, String input, boolean showInputDialogWhenInvalid)
+	private void addTag(final View view, String input)
 	{
 		if (facade.isValidTag(input))
 		{
@@ -213,10 +213,7 @@ public class TagsListActivity extends Activity
 		}
 		else
 		{
-			if (showInputDialogWhenInvalid)
-			{
-				addTagClicked(view);
-			}
+			addTagClicked(view);
 			toast.cancel();
 			toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_tag_invalid_input));
 		}

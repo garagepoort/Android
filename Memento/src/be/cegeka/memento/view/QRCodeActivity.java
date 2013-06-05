@@ -12,9 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import be.cegeka.memento.R;
-import be.cegeka.memento.R.id;
-import be.cegeka.memento.R.layout;
-import be.cegeka.memento.R.string;
 import be.cegeka.memento.domain.qrhelpers.Contents;
 import be.cegeka.memento.domain.qrhelpers.QRCodeEncoder;
 import be.cegeka.memento.util.SystemUiHider;
@@ -30,6 +27,8 @@ public class QRCodeActivity extends Activity
 	private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
 	private SystemUiHider mSystemUiHider;
 	private String tag;
+	private String contact;
+	private Bitmap qrcode;
 
 
 	@Override
@@ -42,7 +41,19 @@ public class QRCodeActivity extends Activity
 
 		tag = getIntent().getExtras().getString("TAG");
 		if (tag != null)
-			setTitle(getString(R.string.qrcode_title) + " " + tag);
+		{
+			setTitle(getString(R.string.qrcode_title_tag) + " " + tag);
+			qrcode = generateQRBitmap(tag);
+		}
+		else
+		{
+			contact = getIntent().getExtras().getString("CONTACT");
+			if (contact != null)
+			{
+				setTitle(getString(R.string.qrcode_title_contact));
+				qrcode = generateQRBitmap(contact);
+			}
+		}
 
 		setQRImage();
 		setUpAutoUIHide();
@@ -52,10 +63,9 @@ public class QRCodeActivity extends Activity
 	private void setQRImage()
 	{
 		ImageView qrImageView = (ImageView) findViewById(R.id.qrImage);
-		Bitmap bitmap = generateQRBitmap(tag);
-		if (bitmap != null)
+		if (qrcode != null)
 		{
-			qrImageView.setImageBitmap(bitmap);
+			qrImageView.setImageBitmap(qrcode);
 		}
 	}
 
@@ -72,7 +82,7 @@ public class QRCodeActivity extends Activity
 			try
 			{
 				int qrCodeDimention = 250;
-				QRCodeEncoder qrCodeEncoder = new QRCodeEncoder("memento://be.cegeka.memento/#" + tag, null,
+				QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(tag, null,
 						Contents.Type.TEXT, BarcodeFormat.QR_CODE.toString(), qrCodeDimention);
 				bitmap = qrCodeEncoder.encodeAsBitmap();
 			}

@@ -8,6 +8,7 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.android.flibture.Future;
 import be.cegeka.android.flibture.FutureCallable;
@@ -28,6 +29,7 @@ import be.cegeka.memento.entities.Contact;
 import be.cegeka.memento.exceptions.ContactException;
 import be.cegeka.memento.model.ContactsModel;
 import be.cegeka.memento.model.TagsModel;
+import be.cegeka.memento.view.QRCodeActivity;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.zxing.integration.android.IntentIntegrator;
 
@@ -74,6 +76,8 @@ public class Facade extends Tapper
 			@Override
 			public void onError(Exception exception)
 			{
+				exception.printStackTrace();
+
 				if (exception instanceof TechnicalException)
 				{
 					handleError(exception);
@@ -140,6 +144,8 @@ public class Facade extends Tapper
 			@Override
 			public void onError(Exception exception)
 			{
+				exception.printStackTrace();
+
 				if (exception instanceof TechnicalException)
 				{
 					handleError(exception);
@@ -218,6 +224,27 @@ public class Facade extends Tapper
 				getTags();
 			}
 		});
+	}
+
+
+	public void showContactQRCode(Contact contact, Context context)
+	{
+		try
+		{
+			contact = new ContactsPersistence(context).getCompleteContact(contact);
+			String url = "memento://be.cegeka.memento.contact/";
+			url += "#" + contact.getNaam();
+			url += "#" + contact.getEmail();
+			url += "#" + contact.getTel();
+
+			Intent intent = new Intent(context, QRCodeActivity.class);
+			intent.putExtra("CONTACT", url);
+			context.startActivity(intent);
+		}
+		catch (ContactException e)
+		{
+			handleError(e);
+		}
 	}
 
 

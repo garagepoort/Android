@@ -118,22 +118,30 @@ public class ContactsPersistence
 	@SuppressLint("InlinedApi")
 	public List<Contact> completeContacts(List<Contact> checkedContacts) throws ContactException
 	{
+		List<Contact> result = new ArrayList<Contact>();
 		for (Contact c : checkedContacts)
 		{
-			Cursor mailCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
-			while (mailCur.moveToNext())
-			{
-				c.setEmail(mailCur.getString(mailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
-			}
-			mailCur.close();
-			Cursor numberCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
-			while (numberCur.moveToNext())
-			{
-				c.setTel(numberCur.getString(numberCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-			}
-			numberCur.close();
+			result.add(getCompleteContact(c));
 		}
-		return checkedContacts;
+		return result;
+	}
+
+
+	public Contact getCompleteContact(Contact c) throws ContactException
+	{
+		Cursor mailCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
+		while (mailCur.moveToNext())
+		{
+			c.setEmail(mailCur.getString(mailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
+		}
+		mailCur.close();
+		Cursor numberCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
+		while (numberCur.moveToNext())
+		{
+			c.setTel(numberCur.getString(numberCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+		}
+		numberCur.close();
+		return c;
 	}
 
 

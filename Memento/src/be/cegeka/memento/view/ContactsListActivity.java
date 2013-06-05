@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -217,6 +218,18 @@ public class ContactsListActivity extends Activity
 						sendContactsButton.setText(getString(R.string.contactsList_activity_button_cancel_send_contacts));
 					}
 				}
+			}
+		});
+
+		listViewContacts.setOnItemLongClickListener(new OnItemLongClickListener()
+		{
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int index, long arg3)
+			{
+				Contact contact = (Contact) listViewContacts.getItemAtPosition(index);
+				facade.showContactQRCode(contact, ContactsListActivity.this);
+
+				return false;
 			}
 		});
 	}
