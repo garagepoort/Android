@@ -28,7 +28,7 @@
         android:allowBackup="true"
         android:icon="@drawable/appicon"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme" >
+        android:theme="@style/AppBaseTheme" android:persistent="false">
         <service android:name="be.cegeka.memento.domain.gcm.GCMIntentService" />
 
         <receiver
