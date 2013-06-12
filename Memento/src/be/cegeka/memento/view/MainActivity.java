@@ -69,43 +69,19 @@ public class MainActivity extends Activity
 
 	public void openScanner(View view)
 	{
-		facade.openScanner(this);
+		facade.openScanner();
 	}
 
 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
-		toast = showBlueToast(this, getString(R.string.toast_add_to_tag_trying));
-
 		if (intent != null)
 		{
 			IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-			if (scanResult != null && scanResult.getContents().startsWith("memento://be.cegeka.memento.tag/#"))
-			{
-				String tag = scanResult.getContents().split("#")[1];
-				if (facade.isValidTag(tag))
-				{
-					facade.addToTag(tag);
-				}
-				else
-				{
-					toast.cancel();
-					showBlueToast(getApplicationContext(), getString(R.string.toast_tag_invalid_input));
-				}
-			}
-			else if (scanResult != null && scanResult.getContents().startsWith("memento://be.cegeka.memento.contact/#"))
-			{
-				System.out.println(scanResult.getContents());
-			}
-			else
-			{
-				toast.cancel();
-				showErrorDialog(getString(R.string.dialog_qr_show_no_tag_message), this);
-			}
+			facade.handleQRCodeRead(scanResult, toast);
 		}
 		else
 		{
-			toast.cancel();
 			showErrorDialog(getString(R.string.dialog_qr_show_no_tag_message), this);
 		}
 	}
@@ -123,8 +99,11 @@ public class MainActivity extends Activity
 		@Override
 		public void update(TagEvent event)
 		{
-			toast.cancel();
-			showBlueToast(MainActivity.this, event.getData());
+			if (toast != null)
+			{
+				toast.cancel();
+			}
+			toast = showBlueToast(MainActivity.this, event.getData());
 			facade.getTags();
 		}
 	}

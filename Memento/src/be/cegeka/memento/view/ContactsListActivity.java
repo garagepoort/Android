@@ -227,7 +227,7 @@ public class ContactsListActivity extends Activity
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int index, long arg3)
 			{
 				Contact contact = (Contact) listViewContacts.getItemAtPosition(index);
-				facade.showContactQRCode(contact, ContactsListActivity.this);
+				facade.showContactQRCode(contact);
 
 				return false;
 			}

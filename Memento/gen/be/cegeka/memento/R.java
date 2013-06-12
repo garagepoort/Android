@@ -36,21 +36,23 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int applogo=0x7f020001;
         public static final int collectionslabels=0x7f020002;
         public static final int ic_launcher=0x7f020003;
-        public static final int newtag=0x7f020004;
-        public static final int qr=0x7f020005;
-        public static final int socialaddperson=0x7f020006;
-        public static final int socialforward=0x7f020007;
-        public static final int socialgroup=0x7f020008;
-        public static final int socialperson=0x7f020009;
-        public static final int splashmemento=0x7f02000a;
+        public static final int mementobg=0x7f020004;
+        public static final int mementosplash=0x7f020005;
+        public static final int newtag=0x7f020006;
+        public static final int qr=0x7f020007;
+        public static final int socialaddperson=0x7f020008;
+        public static final int socialforward=0x7f020009;
+        public static final int socialgroup=0x7f02000a;
+        public static final int socialperson=0x7f02000b;
+        public static final int splashmemento=0x7f02000c;
     }
     public static final class id {
-        public static final int action_settings=0x7f090018;
+        public static final int action_settings=0x7f090019;
         public static final int button1=0x7f090007;
-        public static final int button_add_contact=0x7f090017;
+        public static final int button_add_contact=0x7f090018;
         public static final int button_contacts=0x7f09000e;
         public static final int button_ik=0x7f09000d;
-        public static final int button_join_tag=0x7f090016;
+        public static final int button_join_tag=0x7f090017;
         public static final int button_scan_qrcode=0x7f090010;
         public static final int button_send_contacts=0x7f09000c;
         public static final int button_tags=0x7f09000f;
@@ -59,7 +61,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int editText_tel=0x7f090006;
         public static final int fullscreen_content=0x7f090011;
         public static final int fullscreen_content_controls=0x7f090013;
-        public static final int listViewTagsList=0x7f090015;
+        public static final int listViewTagsList=0x7f090016;
         public static final int listView_contacts=0x7f09000b;
         public static final int llh1=0x7f090008;
         public static final int llh3=0x7f090009;
@@ -67,6 +69,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int qrImage=0x7f090012;
         public static final int qr_code_instructions=0x7f090014;
         public static final int scrollView1=0x7f090000;
+        public static final int splashScreenProgressBar=0x7f090015;
         public static final int textView1=0x7f090001;
         public static final int textView3=0x7f090003;
         public static final int textView4=0x7f090005;
@@ -139,6 +142,10 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int toast_added_to_tag_part_2_single=0x7f040034;
         public static final int toast_confirmation_contact_saved=0x7f04002c;
         public static final int toast_delete_tag_trying=0x7f040037;
+        public static final int toast_get_contact_from_qr_already_existed=0x7f04003b;
+        public static final int toast_get_contact_from_qr_error=0x7f040039;
+        public static final int toast_get_contact_from_qr_success=0x7f04003a;
+        public static final int toast_get_contact_from_qr_trying=0x7f040038;
         public static final int toast_send_contacts_sent=0x7f04002e;
         public static final int toast_send_contacts_trying=0x7f04002d;
         public static final int toast_something_went_wrong_retrieving_contact_info=0x7f040032;

@@ -45,11 +45,6 @@
         <activity
             android:name="be.cegeka.memento.view.MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="be.cegeka.memento.view.ContactsListActivity"
@@ -79,13 +74,20 @@
                 android:value="be.cegeka.memento.MainActivity" />
         </activity>
         <activity
-            android:name="be.cegeka.memento.view.SplashScreen"
-            android:label="@string/title_activity_splash_screen" >
+            android:name="be.cegeka.memento.view.SplashScreenActivity"
+            android:label="@string/title_activity_splash_screen"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="be.cegeka.memento.view.QRCodeActivity"
-            android:icon="@drawable/qr"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@drawable/qr"
             android:label="@string/title_activity_qrcode"
             android:parentActivityName="be.cegeka.memento.view.TagsListActivity"
             android:theme="@style/FullscreenTheme" >

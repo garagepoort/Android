@@ -12,4 +12,8 @@
     <string name="toast_added_to_tag_part_2_plural">leden</string>
     <string name="toast_tag_invalid_input">Een tag mag enkel letters, cijfers en underscore bevatten</string>
     <string name="toast_delete_tag_trying">De tag wordt verwijderd...</string>
+    <string name="toast_get_contact_from_qr_trying">Het contact wordt toegevoegd...</string>
+    <string name="toast_get_contact_from_qr_error">Er ging iets mis bij het toevoegen van het contact</string>
+    <string name="toast_get_contact_from_qr_success">Het contact werd toegevoegd aan het contactenboek</string>
+    <string name="toast_get_contact_from_qr_already_existed">Het contact werd niet toegevoegd omdat het reeds bestond</string>
 </resources>

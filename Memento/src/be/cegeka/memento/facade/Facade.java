@@ -2,13 +2,15 @@ package be.cegeka.memento.facade;
 
 import static be.cegeka.android.flibture.Future.whenResolved;
 import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
+import static be.cegeka.memento.view.DialogCreator.showErrorDialog;
+import static be.cegeka.memento.view.Toast.showBlueToast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.android.flibture.Future;
 import be.cegeka.android.flibture.FutureCallable;
@@ -32,14 +34,15 @@ import be.cegeka.memento.model.TagsModel;
 import be.cegeka.memento.view.QRCodeActivity;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 
 public class Facade extends Tapper
 {
-	private Context context;
+	private Activity context;
 
 
-	public Facade(Context context)
+	public Facade(Activity context)
 	{
 		this.context = context;
 	}
@@ -227,7 +230,7 @@ public class Facade extends Tapper
 	}
 
 
-	public void showContactQRCode(Contact contact, Context context)
+	public void showContactQRCode(Contact contact)
 	{
 		try
 		{
@@ -268,10 +271,70 @@ public class Facade extends Tapper
 	}
 
 
-	public void openScanner(Activity activity)
+	public void openScanner()
 	{
-		IntentIntegrator integrator = new IntentIntegrator(activity);
+		IntentIntegrator integrator = new IntentIntegrator(context);
 		integrator.initiateScan();
 	}
 
+
+	public void handleQRCodeRead(IntentResult scanResult, Toast toast)
+	{
+		if (scanResult != null && scanResult.getContents().startsWith("memento://be.cegeka.memento.tag/#"))
+		{
+			toast = showBlueToast(context, context.getString(R.string.toast_add_to_tag_trying));
+			String tag = scanResult.getContents().split("#")[1];
+			if (isValidTag(tag))
+			{
+				addToTag(tag);
+			}
+			else
+			{
+				toast.cancel();
+				toast = showBlueToast(context, context.getString(R.string.toast_tag_invalid_input));
+			}
+		}
+		else if (scanResult != null && scanResult.getContents().startsWith("memento://be.cegeka.memento.contact/#"))
+		{
+			toast = showBlueToast(context, context.getString(R.string.toast_get_contact_from_qr_trying));
+			try
+			{
+				String result = scanResult.getContents();
+				String[] split = result.split("#");
+				String naam = split[1];
+				String email = split[2];
+				String tel = split[3];
+				Contact contact = new Contact(naam, email, tel);
+				if (!ContactsModel.getInstance().getContacts().contains(contact))
+				{
+					ContactsPersistence contactsPersistence = new ContactsPersistence(context);
+					contactsPersistence.saveContact(contact);
+					ContactsModel.getInstance().addContact(contact);
+					toast.cancel();
+					toast = showBlueToast(context, context.getString(R.string.toast_get_contact_from_qr_success));
+				}
+				else
+				{
+					toast.cancel();
+					showErrorDialog(context.getString(R.string.toast_get_contact_from_qr_already_existed), context);
+				}
+			}
+			catch (ContactException e)
+			{
+				toast.cancel();
+				showErrorDialog(context.getString(R.string.toast_get_contact_from_qr_error), context);
+				e.printStackTrace();
+			}
+			catch (IOException e)
+			{
+				toast.cancel();
+				showErrorDialog(context.getString(R.string.toast_get_contact_from_qr_error), context);
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			showErrorDialog(context.getString(R.string.dialog_qr_show_no_tag_message), context);
+		}
+	}
 }
