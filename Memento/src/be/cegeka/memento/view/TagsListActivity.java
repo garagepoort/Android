@@ -89,25 +89,17 @@ public class TagsListActivity extends Activity
 					{
 						if (input)
 						{
-<<<<<<< HEAD
-							presenter.deleteTag(TagsListActivity.this, ((Group)listViewTags.getItemAtPosition(index)).getTag());
-=======
 							toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_delete_tag_trying));
 							facade.deleteTag(((Group) listViewTags.getItemAtPosition(index)).getTag());
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 						}
 					}
 				});
 				return false;
 			}
 		});
-<<<<<<< HEAD
-		presenter.getTags(TagsListActivity.this);
-=======
 
 		ListAdapter adapter = new ArrayAdapter<Group>(TagsListActivity.this, android.R.layout.simple_list_item_1, TagsModel.getInstance().getGroups());
 		listViewTags.setAdapter(adapter);
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 	}
 
 
@@ -131,12 +123,7 @@ public class TagsListActivity extends Activity
 			@Override
 			public void okayed(String input)
 			{
-<<<<<<< HEAD
-				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
-				presenter.addTag(TagsListActivity.this, input);
-=======
 				addTag(view, input);
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 			}
 		});
 	}

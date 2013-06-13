@@ -8,8 +8,7 @@ import android.content.res.AssetManager;
 
 public class PropertyReader
 {
-	public static String getProperty(Context context, String fileName, String
-			key)
+	public static String getProperty(Context context, String fileName, String key)
 	{
 		try
 		{

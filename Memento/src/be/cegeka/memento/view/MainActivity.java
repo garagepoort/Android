@@ -114,11 +114,7 @@ public class MainActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-<<<<<<< HEAD
-		presenter = new Presenter();
-//		presenter.getTags(this);
-=======
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
+
 		new GCMRegister().registerWithGCMServer(this);
 
 		facade = new Facade(this);

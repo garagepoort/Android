@@ -1,10 +1,7 @@
 package be.cegeka.memento.view;
 
-<<<<<<< HEAD
-import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
-=======
 import static be.cegeka.memento.domain.utilities.IPConfigurator.configureIPAddress;
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
+import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
 import static be.cegeka.memento.view.Toast.showBlueToast;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,13 +151,6 @@ public class ContactsListActivity extends Activity
 
 
 	@SuppressLint("InlinedApi")
-<<<<<<< HEAD
-	private void sendContacts(String tag) {
-		try {
-			presenter.sendContacts(this, getCheckedContacts(), tag);
-			toast = showBlueToast(this, getString(R.string.toast_send_contacts_trying));
-		} catch (ContactException e) {
-=======
 	private void sendContacts(String tag)
 	{
 		try
@@ -181,7 +171,6 @@ public class ContactsListActivity extends Activity
 		}
 		catch (ContactException e)
 		{
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 			toast.cancel();
 			toast = showBlueToast(this, getString(R.string.toast_something_went_wrong_retrieving_contact_info));
 			e.printStackTrace();
@@ -246,17 +235,11 @@ public class ContactsListActivity extends Activity
 		});
 	}
 
-<<<<<<< HEAD
-	private class ContactsListShoulder extends Shoulder<ContactListUpdatedEvent> {
-
-		public ContactsListShoulder() {
-=======
 
 	private class ContactsListShoulder extends Shoulder<ContactListUpdatedEvent>
 	{
 		public ContactsListShoulder()
 		{
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 			super(ContactListUpdatedEvent.class);
 		}
 
@@ -324,20 +307,25 @@ public class ContactsListActivity extends Activity
 
 
 	@Override
-<<<<<<< HEAD
-	protected void onStart() {
-		try {
-			presenter.getContacts(this);
-		} catch (ContactException e) {
+	protected void onStart()
+	{
+		try
+		{
+			facade.getContacts();
+		}
+		catch (ContactException e)
+		{
 			e.printStackTrace();
 			DialogCreator.showErrorDialog(getProperty(this, "exceptions.properties", "CONTACTS_NOT_LOADED"), this);
-=======
+		}
+	}
+
+
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		if (item.getItemId() == R.id.action_settings)
 		{
 			configureIPAddress(this, item);
->>>>>>> e9ab020a279a8156c55a898b59404c3f5733da84
 		}
 		return super.onOptionsItemSelected(item);
 	}
