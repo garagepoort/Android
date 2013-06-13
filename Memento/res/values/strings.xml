@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Memento</string>
+    <string name="action_settings">Server IP instellen</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_contacts_list">Mijn contacten</string>
+    <string name="title_activity_contact_details">Nieuw contact</string>
+    <string name="title_activity_tagslist">Mijn tags</string>
+    <string name="tab">\u0009</string>
+    <string name="title_activity_splash_screen">Memento</string>
+    <string name="result_tag_successful_added">De tag werd succesvol toegevoegd</string>
+    <string name="title_activity_qrcode">QRCodeActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+</resources>

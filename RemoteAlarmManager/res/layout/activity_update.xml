@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".UpdateActivity" >
+
+    <Button
+        android:id="@+id/updateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:onClick="updateAlarms"
+        android:text="@string/buttonUpdateAlarmString" />
+
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/updateButton"
+        android:layout_alignRight="@+id/listViewAlarms"
+        android:onClick="logOut"
+        android:text="@string/buttonLogOut" />
+
+    <ListView
+        android:id="@+id/listViewAlarms"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_alignLeft="@+id/updateButton"
+        android:layout_below="@+id/updateButton"
+		android:dividerHeight="1dp"
+		android:divider="#FFCC00" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/textViewOffline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/updateButton"
+        android:layout_alignBottom="@+id/updateButton"
+        android:layout_alignLeft="@+id/updateButton" />
+
+</RelativeLayout>

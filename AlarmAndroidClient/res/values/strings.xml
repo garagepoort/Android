@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">AlarmAndroidClient</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_spinner">SpinnerActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="alarm_sync_error">Unfortunately, the alarms could not be synchronised</string>
+
+</resources>

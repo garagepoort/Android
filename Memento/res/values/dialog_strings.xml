@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_no_button">Nee</string>
+    <string name="dialog_yes_button">Ja</string>
+    <string name="dialog_send_to_tag_title">Tag invoeren</string>
+    <string name="dialog_send_to_tag_message">Gelieve een tag in te voeren:</string>
+    <string name="dialog_error_title">Error</string>
+    <string name="dialog_delete_tag_title">Tag verwijderen</string>
+    <string name="dialog_delete_tag_message">Weet u zeker dat u deze tag wilt verwijderen?</string>
+    <string name="dialog_delete_contact_message">Weet u zeker dat u deze contact wilt verwijderen?</string>
+    <string name="dialog_delete_contact_title">Contact verwijderen</string>
+    <string name="dialog_no_internet">U heeft momenteel geen internetconnectie</string>
+    <string name="dialog_configure_IP_title">IP-adres instellen</string>
+    <string name="dialog_configure_IP_message">Gelieve een nieuw geldig IP-adres in te voeren:</string>
+    <string name="dialog_qrscan_invalid_qr_code">Deze QR code is niet geldig. Probeer de code opnieuw te scannen</string>
+    <string name="dialog_qr_show_no_tag_message">Deze QR code is niet geldig voor deze applicatie</string>
+	
+</resources>

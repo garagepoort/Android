@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+build/
+dist/
+bin/
+target/
+.metadata/
+=======
+/dist
+/build
+/nbproject/private
+>>>>>>> d98222fd412cf6417571175642912cad06609e50

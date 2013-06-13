@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DwaalDetectie</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_settings">Adres instellen</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="text_settings_address">Adres</string>
+    <string name="text_settings_place">Plaats</string>
+    <string name="button_save">Opslaan</string>
+    <string name="button_cancel">Annuleer</string>
+    <string name="toast_address_saved">Adres opgeslagen</string>
+    <string name="toast_invalid_input">Geef een waarde in voor de invulvelden</string>
+    <string name="toast_too_far">U bent te ver verwijderd van uw thuislocatie</string>
+    <string name="service_disabled">De service is niet ingeschakeld</string>
+    <string name="title_activity_map_view">MapView</string>
+    <string name="view_map">Toon kaart</string>
+    <string name="map_dialog_title">Gebruik adres</string>
+    <string name="map_dialog_message">Wilt u het volgende adres instellen als thuisadres?</string>
+    <string name="map_dialog_button_positive">Ja</string>
+    <string name="map_dialog_button_negative">Nee</string>
+    <string name="map_marker_message_no_address_found">Locatie zonder beschrijving</string>
+    <string name="map_info_click_here">Klik lang op de map om een punt toe te voegen, klik dan op de beschrijving om het adres op te slaan.</string>
+    <string name="map_info_no_internet">Er is momenteel geen internetconnectie. Daarom is het niet mogelijk een nieuw adres in te stellen.</string>
+    <string name="map_info_no_internet_title">Geen internet!</string>
+	<string name="main_button_set_maxDistance">Maximale afstand instellen</string>
+    <string name="main_dialogMaxDistance_title">Maximale afstand instellen</string>
+    <string name="main_dialogMaxDistance_message">Gelieve de maximale afstand in te stellen in meters.</string>
+    <string name="map_dialog_search_title">Geef een adres in</string>
+    <string name="map_dialog_search_button_positive">Zoeken</string>
+    <string name="map_dialog_search_button_negative">Annuleer</string>
+    <string name="map_address_success">Adres succesvol ingesteld</string>
+    <string name="map_address_fail">Adres kon niet ingesteld worden</string>
+    <string name="map_dialog_not_found_title">Geen resultaat</string>
+    <string name="map_dialog_not_found_message">Het ingevoerde adres kon niet gevonden worden</string>
+    <string name="map_dialog_not_found_button">Okay :(</string>
+    <string name="error_unable_to_start">Dwaaldetectie kon niet worden gestart. Open de applicatie om Dwaaldetectie te starten.</string>
+    <string name="error_unable_to_save">Het adres kon niet opgeslagen worden</string>
+    <string name="error_error">Probleem</string>
+    <string name="error_no_address_saved">Er is momenteel nog geen adres ingesteld. Gelieve op de kaart een adres in te stellen.</string>
+    <string name="error_no_max_distance_saved">Er is momenteel nog geen maximale afstand tot de thuislocatie ingesteld. Gelieve een afstand in te stellen.</string>
+    <string name="error_button_positive">Instellen</string>
+    <string name="error_no_valid_number">De afstand die u ingaf kan niet gebruikt worden. Gelieve een andere afstand in te geven.</string>
+    
+</resources>

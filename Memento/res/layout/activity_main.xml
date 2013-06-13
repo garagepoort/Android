@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:background="@drawable/mementobg" >
+
+    <Button
+        android:id="@+id/button_ik"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/socialperson"
+        android:onClick="goToMyContactDetails"
+        android:text="@string/main_activity_button_ik" />
+
+    <Button
+        android:id="@+id/button_contacts"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/socialgroup"
+        android:onClick="goToContactsList"
+        android:text="@string/main_activity_button_contacts" />
+
+    <Button
+        android:id="@+id/button_tags"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/collectionslabels"
+        android:onClick="goToTagsList"
+        android:text="@string/main_activity_button_tags" />
+    
+    <Button
+        android:id="@+id/button_scan_qrcode"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:drawableLeft="@drawable/qr"
+        android:onClick="openScanner"
+        android:text="@string/taglist_activity_button_open_scanner" />
+
+</LinearLayout>
