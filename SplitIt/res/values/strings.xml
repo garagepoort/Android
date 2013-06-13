@@ -3,8 +3,19 @@
 
     <string name="app_name">SplitIt</string>
     <string name="action_settings">Settings</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
+    <string name="reset_amounts">Reset amounts</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_message_person_1">Please enter a name for the first person</string>
+    <string name="settings_message_person_2">Please enter a name for the other person</string>
+    <string name="settings_save_button">Save</string>
+    <string name="settings_next_button">Next</string>
+    <string name="settings_cancel_button">Cancel</string>
+    <string name="error_title">Error</string>
+    <string name="error_message">Something went wrong</string>
+    <string name="error_button">OK :-(</string>
+    <string name="confirmation_title">Reset amounts</string>
+    <string name="confirmation_message">Are you sure you want to reset the amounts spent?</string>
+    <string name="confirmation_confirm_button">OK</string>
+    <string name="confirmation_cancel_button">Cancel</string>
 
 </resources>
