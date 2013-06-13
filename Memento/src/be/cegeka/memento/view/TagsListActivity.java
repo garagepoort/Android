@@ -68,14 +68,14 @@ public class TagsListActivity extends Activity
 					{
 						if (input)
 						{
-							presenter.deleteTag(((Group)listViewTags.getItemAtPosition(index)).getTag(), TagsListActivity.this);
+							presenter.deleteTag(TagsListActivity.this, ((Group)listViewTags.getItemAtPosition(index)).getTag());
 						}
 					}
 				});
 				return false;
 			}
 		});
-		presenter.getTags(this);
+		presenter.getTags(TagsListActivity.this);
 	}
 
 
@@ -101,7 +101,7 @@ public class TagsListActivity extends Activity
 			public void okayed(String input)
 			{
 				toast = showBlueToast(TagsListActivity.this, getString(R.string.toast_add_tag_trying));
-				presenter.addTag(input, TagsListActivity.this);
+				presenter.addTag(TagsListActivity.this, input);
 			}
 		});
 	}

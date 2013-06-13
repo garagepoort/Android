@@ -8,8 +8,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.ContactsContract;
 import be.cegeka.android.ShouldrTap.Tapper;
 import be.cegeka.android.flibture.Future;
 import be.cegeka.android.flibture.FutureCallable;
@@ -32,113 +30,76 @@ import be.cegeka.memento.view.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
 
+public class Presenter extends Tapper {
 
-public class Presenter extends Tapper
-{
-	public void saveContact(Context context, Contact contact)
-	{
+	public void saveContact(Context context, Contact contact) {
 		try {
 			new PersonalContactSaver(context).saveContact(contact);
 		} catch (IOException e) {
-			ErrorEvent errorEvent = new ErrorEvent();
-			errorEvent.setData(e);
-			tapShoulders(errorEvent);
+			handleErrorEvent(e);
 		}
 	}
 
-
-	public void getContacts(Context context) throws ContactException
-	{
-		List <Contact> contacts = new ContactsPersistence(context).loadContacts();
+	public void getContacts(Context context) throws ContactException {
+		List<Contact> contacts = new ContactsPersistence(context).loadContacts();
 		contacts.add(0, new PersonalContactSaver(context).loadContact());
 		ContactsModel.getInstance().setContacts(contacts);
 	}
 
-
-	public void getTags(final Context context)
-	{
+	public void getTags(final Context context) {
 		String gcmID = GCMRegistrar.getRegistrationId(context);
-		GetTagFromUserTask fromUserTask= new GetTagFromUserTask(context);
+		GetTagFromUserTask fromUserTask = new GetTagFromUserTask(context);
 		Future<ArrayList<Group>> future = fromUserTask.executeFuture(gcmID);
 		Future.whenResolved(future, new FutureCallable<ArrayList<Group>>() {
 
 			@Override
 			public void onError(Exception e) {
-				e.printStackTrace();
+				handleErrorEvent(e);
 			}
 
 			@Override
 			public void onSucces(ArrayList<Group> tags) {
 				TagsModel.getInstance().setTags(tags);
-				Toast.showBlueToast(context, tags.toString());	
+				Toast.showBlueToast(context, tags.toString());
 			}
 		});
 	}
 
-
-	public Contact getPersoonlijkContact(Context context)
-	{
+	public Contact getPersoonlijkContact(Context context) {
 		return new PersonalContactSaver(context).loadContact();
 	}
 
-
 	@SuppressLint("InlinedApi")
-	public void sendContacts(List<Contact> checkedContacts, String tag, Context context) throws ContactException
-	{
-		for(Contact c : checkedContacts){
-			
-			Cursor mailCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
-			while (mailCur.moveToNext()) {
-				c.setEmail(mailCur.getString(mailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
-			}
-			mailCur.close();
-			
-			Cursor numberCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + String.valueOf(c.getId()), null, null);
-			while (numberCur.moveToNext()) {
-				c.setTel(numberCur.getString(numberCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
-			}
-			numberCur.close();
-		}
-		
+	public void sendContacts(Context context, List<Contact> checkedContacts, String tag) throws ContactException {
+
+		ContactsPersistence contactsPersistence = new ContactsPersistence(context);
+		checkedContacts = contactsPersistence.completeContacts(checkedContacts);
+
 		Future<Void> future = new SendContactsTask(context).executeFuture(tag, checkedContacts);
-		whenResolved(future, new FutureCallable<Void>()
-		{
+		whenResolved(future, new FutureCallable<Void>() {
 			@Override
-			public void onError(Exception exception)
-			{
-				ErrorEvent errorEvent = new ErrorEvent();
-				errorEvent.setData(exception);
-				tapShoulders(errorEvent);
+			public void onError(Exception exception) {
+				handleErrorEvent(exception);
 			}
 
-
 			@Override
-			public void onSucces(Void ontvangers)
-			{
+			public void onSucces(Void ontvangers) {
 				SendContactsEvent contactsEvent = new SendContactsEvent();
 				tapShoulders(contactsEvent);
 			}
 		});
 	}
 
-
-	public void addTag(final String tag, Context context)
-	{
+	public void addTag(Context context, final String tag) {
 		Future<Void> future = new AddTagTask(context).executeFuture(GCMRegistrar.getRegistrationId(context), tag);
-		whenResolved(future, new FutureCallable<Void>()
-		{
+		whenResolved(future, new FutureCallable<Void>() {
 			@Override
-			public void onError(Exception exception)
-			{
-				ErrorEvent errorEvent = new ErrorEvent();
-				errorEvent.setData(exception);
-				tapShoulders(errorEvent);
+			public void onError(Exception exception) {
+				handleErrorEvent(exception);
 			}
 
-
 			@Override
-			public void onSucces(Void arg0)
-			{
+			public void onSucces(Void arg0) {
 				TagEvent event = new TagEvent();
 				event.setData("Tag succesvol toegevoegd.");
 				tapShoulders(event);
@@ -146,23 +107,16 @@ public class Presenter extends Tapper
 		});
 	}
 
-
-	public void addToTag(Context context, String tag)
-	{
+	public void addToTag(Context context, String tag) {
 		Future<Integer> future = new SubscribeToTagTask(context).executeFuture(GCMRegistrar.getRegistrationId(context), tag);
-		whenResolved(future, new FutureCallable<Integer>()
-		{
+		whenResolved(future, new FutureCallable<Integer>() {
 			@Override
-			public void onError(Exception exception)
-			{
-				ErrorEvent errorEvent = new ErrorEvent();
-				errorEvent.setData(exception);
-				tapShoulders(errorEvent);
+			public void onError(Exception exception) {
+				handleErrorEvent(exception);
 			}
 
 			@Override
-			public void onSucces(Integer integer)
-			{
+			public void onSucces(Integer integer) {
 				TagEvent event = new TagEvent();
 				event.setData("Succesvol toegevoegd aan tag met " + integer + " leden.");
 				tapShoulders(event);
@@ -170,17 +124,13 @@ public class Presenter extends Tapper
 		});
 	}
 
-
-	public void deleteTag(String tag, final Context context)
-	{
+	public void deleteTag(final Context context, String tag) {
 		Future<Void> future = new UnsubscribeFromTagTask(context).executeFuture(GCMRegistrar.getRegistrationId(context), tag);
 		whenResolved(future, new FutureCallable<Void>() {
 
 			@Override
 			public void onError(Exception exception) {
-				ErrorEvent errorEvent = new ErrorEvent();
-				errorEvent.setData(exception);
-				tapShoulders(errorEvent);
+				handleErrorEvent(exception);
 			}
 
 			@Override
@@ -190,4 +140,9 @@ public class Presenter extends Tapper
 		});
 	}
 
+	private void handleErrorEvent(Exception e) {
+		ErrorEvent errorEvent = new ErrorEvent();
+		errorEvent.setData(e);
+		tapShoulders(errorEvent);
+	}
 }

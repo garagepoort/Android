@@ -40,31 +40,14 @@ public class ContactsPersistence {
 		ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
 
 		int rawContactInsertIndex = ops.size();
-		ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
-				.withValue(RawContacts.ACCOUNT_TYPE, null)
-				.withValue(RawContacts.ACCOUNT_NAME, null)
-				.build());
+		ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI).withValue(RawContacts.ACCOUNT_TYPE, null).withValue(RawContacts.ACCOUNT_NAME, null).build());
 
-		
+		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI).withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex).withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE).withValue(Phone.NUMBER, contact.getTel()).build());
 
-		ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-				.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, rawContactInsertIndex)
-				.withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-				.withValue(Phone.NUMBER, contact.getTel())
-				.build());
-		
-		ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-				.withValueBackReference(Data.RAW_CONTACT_ID, rawContactInsertIndex)
-				.withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
-				.withValue(StructuredName.DISPLAY_NAME, contact.getNaam())
-				.build());
-		
-		ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-				.withValueBackReference(Data.RAW_CONTACT_ID, rawContactInsertIndex)
-				.withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE)
-				.withValue(Email.ADDRESS, contact.getEmail())
-				.build());
-		
+		ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI).withValueBackReference(Data.RAW_CONTACT_ID, rawContactInsertIndex).withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE).withValue(StructuredName.DISPLAY_NAME, contact.getNaam()).build());
+
+		ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI).withValueBackReference(Data.RAW_CONTACT_ID, rawContactInsertIndex).withValue(Data.MIMETYPE, Email.CONTENT_ITEM_TYPE).withValue(Email.ADDRESS, contact.getEmail()).build());
+
 		try {
 			System.out.println("bezig met opslaan");
 			context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
@@ -85,28 +68,23 @@ public class ContactsPersistence {
 	@SuppressWarnings("unchecked")
 	public List<Contact> loadContacts() throws ContactException {
 		List<Contact> contacts = new ArrayList<Contact>();
-		
-		String WHERE_CONDITION = ContactsContract.Data.MIMETYPE + " = '" +   ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'";
-	    String[] PROJECTION = {ContactsContract.Data.DISPLAY_NAME, ContactsContract.Data.CONTACT_ID};
-	    String SORT_ORDER = ContactsContract.Data.DISPLAY_NAME;
 
-	    Cursor cur = context.getContentResolver().query(
-	            ContactsContract.Data.CONTENT_URI,
-	            PROJECTION,
-	            WHERE_CONDITION,
-	            null,
-	            SORT_ORDER);
-	    
-	    while(cur.moveToNext()){
-	    	String displayName = cur.getString(0);
-	    	String contactID = cur.getString(1);
-	    	Contact c = new Contact();
+		String WHERE_CONDITION = ContactsContract.Data.MIMETYPE + " = '" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'";
+		String[] PROJECTION = {ContactsContract.Data.DISPLAY_NAME, ContactsContract.Data.CONTACT_ID};
+		String SORT_ORDER = ContactsContract.Data.DISPLAY_NAME;
+
+		Cursor cur = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI, PROJECTION, WHERE_CONDITION, null, SORT_ORDER);
+
+		while (cur.moveToNext()) {
+			String displayName = cur.getString(0);
+			String contactID = cur.getString(1);
+			Contact c = new Contact();
 			c.setId(Long.valueOf(contactID));
 			c.setNaam(displayName);
 			contacts.add(c);
-	    }
-	    cur.close();
-		
+		}
+		cur.close();
+
 		Collections.sort(contacts);
 		return contacts;
 	}
@@ -125,4 +103,25 @@ public class ContactsPersistence {
 		editor.commit();
 	}
 
+	@SuppressLint("InlinedApi")
+	public List<Contact> completeContacts(List<Contact> checkedContacts) throws ContactException {
+		for (Contact c : checkedContacts) {
+
+			Cursor mailCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null, ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = "
+					+ String.valueOf(c.getId()), null, null);
+			while (mailCur.moveToNext()) {
+				c.setEmail(mailCur.getString(mailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.ADDRESS)));
+			}
+			mailCur.close();
+
+			Cursor numberCur = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = "
+					+ String.valueOf(c.getId()), null, null);
+			while (numberCur.moveToNext()) {
+				c.setTel(numberCur.getString(numberCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)));
+			}
+			numberCur.close();
+		}
+
+		return checkedContacts;
+	}
 }

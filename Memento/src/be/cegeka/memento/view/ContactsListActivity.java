@@ -1,5 +1,6 @@
 package be.cegeka.memento.view;
 
+import static be.cegeka.memento.domain.utilities.PropertyReader.getProperty;
 import static be.cegeka.memento.view.Toast.showBlueToast;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class ContactsListActivity extends Activity {
 	@SuppressLint("InlinedApi")
 	private void sendContacts(String tag) {
 		try {
-			presenter.sendContacts(getCheckedContacts(), tag, ContactsListActivity.this);
+			presenter.sendContacts(this, getCheckedContacts(), tag);
 			toast = showBlueToast(this, getString(R.string.toast_send_contacts_trying));
 		} catch (ContactException e) {
 			toast.cancel();
@@ -169,6 +170,7 @@ public class ContactsListActivity extends Activity {
 	}
 
 	private class ContactsListShoulder extends Shoulder<ContactListUpdatedEvent> {
+
 		public ContactsListShoulder() {
 			super(ContactListUpdatedEvent.class);
 		}
@@ -234,8 +236,8 @@ public class ContactsListActivity extends Activity {
 		try {
 			presenter.getContacts(this);
 		} catch (ContactException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			DialogCreator.showErrorDialog(getProperty(this, "exceptions.properties", "CONTACTS_NOT_LOADED"), this);
 		}
 		super.onStart();
 	}

@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		presenter = new Presenter();
-		presenter.getTags(this);
+//		presenter.getTags(this);
 		new GCMRegister().registerWithGCMServer(this);
 	}
 
