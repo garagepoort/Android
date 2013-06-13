@@ -37,15 +37,16 @@ public class AlarmReceiverActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		
+
 		System.out.println("AlarmReceiverActivity erin");
-		
+
 		this.localAlarmRepository = new LocalAlarmRepository(this);
 		this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		checkAlarm();
 		initAndShowViews();
 		playSound(this, getAlarmUri());
 		deleteIfNotRepeatedAlarm();
+
 	}
 
 

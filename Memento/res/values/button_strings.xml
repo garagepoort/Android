@@ -9,4 +9,5 @@
     <string name="taglist_activity_button_join_tag">Voeg jezelf toe aan een tag</string>
     <string name="taglist_activity_button_create_tag">Voeg een nieuwe tag toe</string>
     <string name="contactDetails_activity_button_save">Opslaan</string>
+    <string name="taglist_activity_button_open_scanner">Scan QR Code</string>
 </resources>

@@ -11,6 +11,10 @@
     <string name="dialog_delete_tag_message">Weet u zeker dat u deze tag wilt verwijderen?</string>
     <string name="dialog_delete_contact_message">Weet u zeker dat u deze contact wilt verwijderen?</string>
     <string name="dialog_delete_contact_title">Contact verwijderen</string>
-    <string name="dialog_no_internet">You have no internet connection.</string>
+    <string name="dialog_no_internet">U heeft momenteel geen internetconnectie</string>
+    <string name="dialog_configure_IP_title">IP-adres instellen</string>
+    <string name="dialog_configure_IP_message">Gelieve een nieuw geldig IP-adres in te voeren:</string>
+    <string name="dialog_qrscan_invalid_qr_code">Deze QR code is niet geldig. Probeer de code opnieuw te scannen</string>
+    <string name="dialog_qr_show_no_tag_message">Deze QR code is niet geldig voor deze applicatie</string>
 	
 </resources>

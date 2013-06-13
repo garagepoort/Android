@@ -26,7 +26,7 @@
     <string name="map_info_no_internet_title">Geen internet!</string>
 	<string name="main_button_set_maxDistance">Maximale afstand instellen</string>
     <string name="main_dialogMaxDistance_title">Maximale afstand instellen</string>
-    <string name="main_dialogMaxDistance_message">Gelieve de maximale afstand in te stellen in meters. Wanneer de afstand te groot wordt dan vergaat de wereld.</string>
+    <string name="main_dialogMaxDistance_message">Gelieve de maximale afstand in te stellen in meters.</string>
     <string name="map_dialog_search_title">Geef een adres in</string>
     <string name="map_dialog_search_button_positive">Zoeken</string>
     <string name="map_dialog_search_button_negative">Annuleer</string>

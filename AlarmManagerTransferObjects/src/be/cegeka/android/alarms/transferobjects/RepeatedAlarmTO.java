@@ -135,7 +135,7 @@ public class RepeatedAlarmTO extends AlarmTO
         
         if (repeatQuantity == 1)
         {
-            return super.toDetailedString() + "\nRepeated every " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase() + "untill\n" + dateFormat.format(calendar.getTime());
+            return super.toDetailedString() + "\nRepeated every " + CalendarUnitEnum.of(repeatUnit).toString().toLowerCase() + " untill\n" + dateFormat.format(calendar.getTime());
         }
         else
         {

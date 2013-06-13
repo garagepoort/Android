@@ -2,8 +2,18 @@
 <resources>
     <string name="toast_confirmation_contact_saved">Het contact werd opgeslagen</string>
     <string name="toast_send_contacts_trying">Contacten worden verzonden...</string>
-    <string name="toast_send_contacts_send">Contacten verzonden</string>
+    <string name="toast_send_contacts_sent">Contacten verzonden</string>
     <string name="toast_add_to_tag_trying">Tag wordt opgezocht...</string>
     <string name="toast_add_tag_trying">Tag wordt toegevoegd...</string>
     <string name="toast_add_personal_contact">Maak eerst je eigen contact aan</string>
+    <string name="toast_something_went_wrong_retrieving_contact_info">Er ging iets mis bij het ophalen van de contacten</string>
+    <string name="toast_added_to_tag_part_1">Succesvol toegevoegd aan tag met</string>
+    <string name="toast_added_to_tag_part_2_single">lid</string>
+    <string name="toast_added_to_tag_part_2_plural">leden</string>
+    <string name="toast_tag_invalid_input">Een tag mag enkel letters, cijfers en underscore bevatten</string>
+    <string name="toast_delete_tag_trying">De tag wordt verwijderd...</string>
+    <string name="toast_get_contact_from_qr_trying">Het contact wordt toegevoegd...</string>
+    <string name="toast_get_contact_from_qr_error">Er ging iets mis bij het toevoegen van het contact</string>
+    <string name="toast_get_contact_from_qr_success">Het contact werd toegevoegd aan het contactenboek</string>
+    <string name="toast_get_contact_from_qr_already_existed">Het contact werd niet toegevoegd omdat het reeds bestond</string>
 </resources>

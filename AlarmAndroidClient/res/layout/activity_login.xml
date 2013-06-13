@@ -50,8 +50,7 @@
                 android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:text="david.s.maes@gmail.com" />
+                android:singleLine="true" />
 
             <EditText
                 android:id="@+id/password"
@@ -63,8 +62,7 @@
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true"
-                android:text="pass" />
+                android:singleLine="true" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
