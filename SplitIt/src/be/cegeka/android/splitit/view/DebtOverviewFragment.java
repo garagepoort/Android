@@ -66,7 +66,7 @@ public class DebtOverviewFragment extends Fragment implements Observer
 		debtPerson = (TextView) rootView.findViewById(R.id.debt_person);
 		creditPerson = (TextView) rootView.findViewById(R.id.credit_person);
 		debtAmount = (TextView) rootView.findViewById(R.id.debt_amount);
-		arrow = (ImageView) rootView.findViewById(R.id.arrow);
+		arrow = (ImageView) rootView.findViewById(R.id.buttonAdd1);
 	}
 
 

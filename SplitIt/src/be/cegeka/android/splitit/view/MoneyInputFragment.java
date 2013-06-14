@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import be.cegeka.android.splitit.R;
 
@@ -56,6 +58,16 @@ public class MoneyInputFragment extends Fragment implements Observer
 		TextView person2Label = (TextView) rootView.findViewById(R.id.person_2);
 		person2Label.setText(getPeopleModel().getPerson2().toString());
 	}
+
+
+//	private void addListeners()
+//	{
+//		ImageView addToPerson1Button = (ImageView) rootView.findViewById(R.id.buttonAdd1);
+//		addToPerson1Button.set
+//
+//		ImageView addToPerson2Button = (ImageView) rootView.findViewById(R.id.buttonAdd2);
+//		;
+//	}
 
 
 	@Override

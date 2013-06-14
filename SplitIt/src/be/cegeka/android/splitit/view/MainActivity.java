@@ -1,5 +1,6 @@
 package be.cegeka.android.splitit.view;
 
+import static be.cegeka.android.splitit.domain.PeopleModel.getPeopleModel;
 import static be.cegeka.android.splitit.view.DialogCreator.showConfirmationDialog;
 import static be.cegeka.android.splitit.view.DialogCreator.showErrorDialog;
 import static be.cegeka.android.splitit.view.DialogCreator.showSetPeopleDialog;
@@ -35,50 +36,56 @@ public class MainActivity extends FragmentActivity
 	public void addMoneyToPerson1(View view)
 	{
 		person1InputField = (EditText) moneyInputFragment.getView().findViewById(R.id.add_amount_p1);
-
-		// TODO opvangen exception parsing
 		double amount = 0;
-		amount = Double.parseDouble(person1InputField.getText().toString());
-
 		try
 		{
-			facade.addMoneyToPerson1(amount);
+			amount = Double.parseDouble(person1InputField.getText().toString());
+			try
+			{
+				facade.addMoneyToPerson1(amount);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				showErrorDialog(this);
+			}
+			person1InputField.setText("");
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(person1InputField.getWindowToken(), 0);
+			Toast.makeText(view.getContext(), "€ " + String.format("%.2f", amount) + " was added to " + getPeopleModel().getPerson1().toString(), Toast.LENGTH_LONG).show();
 		}
-		catch (IOException e)
+		catch (Exception exception)
 		{
-			e.printStackTrace();
-			showErrorDialog(this);
+			exception.printStackTrace();
 		}
-
-		person1InputField.setText("");
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(person1InputField.getWindowToken(), 0);
-		Toast.makeText(view.getContext(), "added to 1", Toast.LENGTH_LONG).show();
 	}
 
 
 	public void addMoneyToPerson2(View view)
 	{
 		person2InputField = (EditText) moneyInputFragment.getView().findViewById(R.id.add_amount_p2);
-
-		// TODO opvangen exception parsing
 		double amount = 0;
-		amount = Double.parseDouble(person2InputField.getText().toString());
-
 		try
 		{
-			facade.addMoneyToPerson2(amount);
+			amount = Double.parseDouble(person2InputField.getText().toString());
+			try
+			{
+				facade.addMoneyToPerson2(amount);
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				showErrorDialog(this);
+			}
+			person2InputField.setText("");
+			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(person2InputField.getWindowToken(), 0);
+			Toast.makeText(view.getContext(), "€ " + String.format("%.2f", amount) + " was added to " + getPeopleModel().getPerson2().toString(), Toast.LENGTH_LONG).show();
 		}
-		catch (IOException e)
+		catch (Exception exception)
 		{
-			e.printStackTrace();
-			showErrorDialog(this);
+			exception.printStackTrace();
 		}
-
-		person2InputField.setText("");
-		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(person1InputField.getWindowToken(), 0);
-		Toast.makeText(view.getContext(), "added to 2", Toast.LENGTH_LONG).show();
 	}
 
 
